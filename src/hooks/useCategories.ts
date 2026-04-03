@@ -1,6 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
 import {
-  categoryIconMapping,
   getCategoryMapping,
   getSubCategoryMapping,
   getCategoryIcon,

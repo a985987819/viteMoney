@@ -24,6 +24,8 @@ export interface CategoryMapping {
   type: 'expense' | 'income';
   /** 默认图标 */
   defaultIcon: string;
+  /** 近义词列表 */
+  synonyms?: string[];
   /** 子分类列表 */
   subCategories: SubCategoryMapping[];
 }

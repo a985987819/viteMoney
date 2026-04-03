@@ -1,4 +1,4 @@
-@import '../../styles/stardew-theme.scss';
+@use '../../styles/stardew-theme.scss' as *;
 
 // 进度条颜色 - 橙黄色主题色
 $progress-color: #dc964e;

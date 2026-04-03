@@ -1,4 +1,4 @@
-@import '../../styles/stardew-theme.scss';
+@use '../../styles/stardew-theme.scss' as *;
 
 // CDN 基础地址
 $cdn-base-url: 'https://vercel-icons.vercel.app';

@@ -12,9 +12,6 @@ import PageHeader from '../../components/PageHeader';
 import {
   expenseCategoryList,
   incomeCategoryList,
-  getCategoryIcon,
-  getCategoryEnglishName,
-  type CategoryMapping,
 } from '../../constants/categoryIconMapping';
 import { getLocalCategories, saveLocalCategories } from '../../utils/storage';
 import styles from './index.module.scss';

@@ -5,10 +5,7 @@
 
 import {
   matchCategory,
-  normalizeCategoryName,
-  normalizeSubCategoryName,
   getCategoryMapping,
-  getSubCategoryMapping,
   type CategoryMapping,
   type SubCategoryMapping,
 } from '../constants/categoryIconMapping';
@@ -334,43 +331,43 @@ export function detectColumnMapping(headers: string[]): {
 
   // 分类列检测
   const categoryPatterns = ['分类', 'category', '类别', 'type', '种类', '项目'];
-  mapping.category = headers.find((h, i) =>
+  mapping.category = headers.find((_h, i) =>
     categoryPatterns.some(p => lowerHeaders[i].includes(p.toLowerCase()))
   ) || null;
 
   // 子分类列检测
   const subCategoryPatterns = ['子分类', 'subcategory', '子类别', '子项', '二级分类'];
-  mapping.subCategory = headers.find((h, i) =>
+  mapping.subCategory = headers.find((_h, i) =>
     subCategoryPatterns.some(p => lowerHeaders[i].includes(p.toLowerCase()))
   ) || null;
 
   // 金额列检测
   const amountPatterns = ['金额', 'amount', 'money', 'price', 'cost', 'sum', '总数', '数额'];
-  mapping.amount = headers.find((h, i) =>
+  mapping.amount = headers.find((_h, i) =>
     amountPatterns.some(p => lowerHeaders[i].includes(p.toLowerCase()))
   ) || null;
 
   // 类型列检测
   const typePatterns = ['类型', 'type', '收支', '收入支出', 'income_expense'];
-  mapping.type = headers.find((h, i) =>
+  mapping.type = headers.find((_h, i) =>
     typePatterns.some(p => lowerHeaders[i].includes(p.toLowerCase()))
   ) || null;
 
   // 日期列检测
   const datePatterns = ['日期', 'date', '时间', 'time', 'datetime', '年月日'];
-  mapping.date = headers.find((h, i) =>
+  mapping.date = headers.find((_h, i) =>
     datePatterns.some(p => lowerHeaders[i].includes(p.toLowerCase()))
   ) || null;
 
   // 备注列检测
   const remarkPatterns = ['备注', 'remark', 'note', 'notes', 'comment', '描述', '说明'];
-  mapping.remark = headers.find((h, i) =>
+  mapping.remark = headers.find((_h, i) =>
     remarkPatterns.some(p => lowerHeaders[i].includes(p.toLowerCase()))
   ) || null;
 
   // 账户列检测
   const accountPatterns = ['账户', 'account', '支付方式', '付款方式', '银行卡', '钱包'];
-  mapping.account = headers.find((h, i) =>
+  mapping.account = headers.find((_h, i) =>
     accountPatterns.some(p => lowerHeaders[i].includes(p.toLowerCase()))
   ) || null;
 

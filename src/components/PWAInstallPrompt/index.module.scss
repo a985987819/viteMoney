@@ -1,5 +1,6 @@
 // 导入星露谷物语主题
-@import '../../styles/stardew-theme.scss';
+@use '../../styles/stardew-theme.scss' as *;
+@use 'sass:color';
 
 // Mixins
 @mixin flex-center {
@@ -98,7 +99,7 @@
     0 3px 0 $stardew-grass-deep;
 
   &:hover {
-    background: linear-gradient(180deg, lighten($stardew-grass-light, 5%) 0%, lighten($stardew-grass, 5%) 100%);
+    background: linear-gradient(180deg, color.adjust($stardew-grass-light, $lightness: 5%) 0%, color.adjust($stardew-grass, $lightness: 5%) 100%);
     transform: translateY(-1px);
   }
 
@@ -147,13 +148,13 @@
   left: 0;
   right: 0;
   z-index: 9999;
-  background: linear-gradient(180deg, $stardew-warning 0%, darken($stardew-warning, 10%) 100%);
+  background: linear-gradient(180deg, $stardew-warning 0%, color.adjust($stardew-warning, $lightness: -10%) 100%);
   padding: 8px 16px;
   text-align: center;
   font-size: 12px;
   font-family: 'PixelFont', monospace;
   color: $stardew-text-primary;
-  border-bottom: 3px solid darken($stardew-warning, 15%);
+  border-bottom: 3px solid color.adjust($stardew-warning, $lightness: -15%);
   box-shadow: 0 2px 8px rgba($stardew-wood-darkest, 0.3);
 }
 
@@ -169,7 +170,7 @@
 
 .updateContent {
   @include stardew-wood-panel;
-  background: linear-gradient(180deg, $stardew-info 0%, darken($stardew-info, 10%) 100%);
+  background: linear-gradient(180deg, $stardew-info 0%, color.adjust($stardew-info, $lightness: -10%) 100%);
   padding: 12px 16px;
   display: flex;
   align-items: center;
@@ -194,9 +195,9 @@
   transition: all 0.1s ease;
   white-space: nowrap;
   background: white;
-  border: 2px solid darken($stardew-info, 20%);
+  border: 2px solid color.adjust($stardew-info, $lightness: -20%);
   color: $stardew-info;
-  box-shadow: 0 2px 0 darken($stardew-info, 20%);
+  box-shadow: 0 2px 0 color.adjust($stardew-info, $lightness: -20%);
 
   &:hover {
     background: #f5f5f5;
@@ -205,7 +206,7 @@
 
   &:active {
     transform: translateY(2px);
-    box-shadow: 0 0 0 darken($stardew-info, 20%);
+    box-shadow: 0 0 0 color.adjust($stardew-info, $lightness: -20%);
   }
 }
 

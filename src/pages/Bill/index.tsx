@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { List, Empty, Spin, Radio, Modal, message, Input, Button, Checkbox } from 'antd';
 import {
   FilterOutlined,
@@ -63,6 +64,7 @@ type SortOrder = 'asc' | 'desc';
 
 const Bill = () => {
   const { isLoggedIn } = useAuth();
+  const navigate = useNavigate();
   const [records, setRecords] = useState<RecordItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
@@ -307,7 +309,7 @@ const Bill = () => {
     // 且只有在下滑过程中才自动收起，上滑不自动展开
     if (isScrollingDownRef.current) {
       console.log(`不动`);
-      
+
     } else if (manualChartControl === null) {
       setChartCollapsed(true);
     }

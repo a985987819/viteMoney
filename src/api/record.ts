@@ -8,6 +8,7 @@ export interface RecordItem {
   category: string;
   subCategory?: string;
   categoryIcon: string;
+  subCategoryIcon?: string;
   amount: number;
   remark: string;
   date: number; // 时间戳格式，包含日期和时间

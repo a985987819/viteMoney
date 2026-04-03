@@ -40,7 +40,7 @@ import {
   ClockCircleOutlined,
 } from '@ant-design/icons';
 import { useAuth } from '../../hooks/useAuth';
-import { exportToCSV, exportToXLSX, importFromCSV, importFromXLSX, parseDate, compareDate, generateImportReport, type ImportStats } from '../../utils/importExport';
+import { exportToCSV, exportToXLSX, importFromCSV, importFromXLSX, parseDate, compareDate, generateImportReport } from '../../utils/importExport';
 import { getLocalRecords, saveLocalRecords, clearAllData } from '../../utils/storage';
 import { importRecords, deleteImportedRecords, removeDuplicates, type RecordItem } from '../../api/record';
 

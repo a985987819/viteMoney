@@ -1,5 +1,6 @@
 // 导入星露谷物语主题
-@import './styles/stardew-theme.scss';
+@use './styles/stardew-theme.scss' as *;
+@use 'sass:color';
 
 // 变量定义
 $bg-color: $stardew-panel-bg;
@@ -88,7 +89,7 @@ $cdn-base-url: 'https://vercel-icons.vercel.app';
 
     &-danger {
       // background: linear-gradient(180deg, #d4756a 0%, $stardew-danger 100%);
-      border-color: darken($stardew-danger, 10%);
+      border-color: color.adjust($stardew-danger, $lightness: -10%);
       color: white;
     }
   }

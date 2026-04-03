@@ -1,4 +1,4 @@
-@import url('@/styles/stardew-theme.scss');
+@use '@/styles/stardew-theme.scss' as *;
 // 变量定义
 $expense-color: #ff6b6b;
 $income-color: #51cf66;

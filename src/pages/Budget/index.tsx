@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 import {
   Card,
   Button,
@@ -15,7 +14,6 @@ import {
   Tag,
 } from 'antd';
 import {
-  LeftOutlined,
   PlusOutlined,
   EditOutlined,
   DeleteOutlined,
@@ -50,7 +48,6 @@ const DEFAULT_BUDGET_AMOUNT = 1000;
  */
 const Budget = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const { isLoggedIn } = useAuth();
 
   // 状态

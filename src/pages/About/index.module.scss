@@ -1,4 +1,4 @@
-@import '../../styles/stardew-theme.scss';
+@use '../../styles/stardew-theme.scss' as *;
 
 // 过渡动画 mixin
 @mixin transition($property: all, $duration: 0.3s) {

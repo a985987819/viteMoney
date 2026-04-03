@@ -5,12 +5,6 @@ import dayjs from 'dayjs';
 import {
   matchCategory,
   getCategoryMapping,
-  getSubCategoryMapping,
-  getCategoryIcon,
-  normalizeCategoryName,
-  normalizeSubCategoryName,
-  type CategoryMapping,
-  type SubCategoryMapping,
 } from '../constants/categoryIconMapping';
 
 // ==================== 导出功能 ====================
@@ -206,7 +200,7 @@ const parseAndTransformImportedData = (data: Record<string, string>[]): ImportTr
   data.forEach((row, index) => {
     // 解析金额（处理数字或字符串类型）
     let amountStr: string;
-    const rawAmount = row['金额'] || row['amount'] || '0';
+    const rawAmount: unknown = row['金额'] || row['amount'] || '0';
     if (typeof rawAmount === 'number') {
       amountStr = rawAmount.toString();
     } else {
@@ -243,7 +237,6 @@ const parseAndTransformImportedData = (data: Record<string, string>[]): ImportTr
     let finalSubCategory: string | undefined;
     let finalCategoryIcon: string;
     let finalSubCategoryIcon: string | undefined;
-    let isMatched: boolean;
     let finalRemark = remark;
 
     if (categoryMatch.mainCategory) {
@@ -261,7 +254,6 @@ const parseAndTransformImportedData = (data: Record<string, string>[]): ImportTr
         finalSubCategoryIcon = undefined;
       }
 
-      isMatched = true;
       matchedCount++;
 
       // 统计
@@ -281,7 +273,6 @@ const parseAndTransformImportedData = (data: Record<string, string>[]): ImportTr
         finalRemark = remark ? `${remark} (原分类: ${categoryInput}${subCategoryInput ? `/${subCategoryInput}` : ''})` : `(原分类: ${categoryInput})`;
       }
 
-      isMatched = false;
       unmatchedCount++;
       if (categoryInput) {
         unmatchedSet.add(categoryInput);
@@ -347,19 +338,6 @@ export const generateImportReport = (stats: ImportStats): string => {
   }
 
   return lines.join('\n');
-};
-
-// ==================== 兼容旧代码的辅助函数 ====================
-
-// 解析导入的数据（兼容旧接口，返回记录数组）
-const parseImportedData = (data: Record<string, string>[]): Partial<RecordItem>[] => {
-  const result = parseAndTransformImportedData(data);
-  return result.records;
-};
-
-// 根据分类获取图标（兼容旧代码）
-const getCategoryIconLegacy = (category: string): string => {
-  return getCategoryIcon(category);
 };
 
 export default {

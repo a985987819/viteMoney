@@ -1,3 +1,5 @@
+@use 'sass:color';
+
 // 星露谷主题配色
 $primary-color: #d4a574; // 木质暖棕色
 $primary-light: #e8c9a0; // 浅木色
@@ -449,7 +451,7 @@ $border-color: #d4a574; // 木质边框色
 
   &:active {
     cursor: grabbing;
-    background-color: darken($primary-color, 10%);
+    background-color: color.adjust($primary-color, $lightness: -10%);
   }
 
   .scrollbarIcon {
