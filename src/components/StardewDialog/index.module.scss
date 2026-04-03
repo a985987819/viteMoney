@@ -1,0 +1,194 @@
+@import '../../styles/stardew-theme.scss';
+
+// CDN 基础地址
+$cdn-base-url: 'https://vercel-icons.vercel.app';
+
+// 对话框背景图
+$dialog-bg-url: '#{$cdn-base-url}/dialogBg.png';
+
+.dialogOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: flex-end;
+  z-index: 1000;
+}
+
+.dialogContainer {
+  bottom: 0;
+  width: 100%;
+  max-width: 600px;
+  height: 200px;
+  background: url($dialog-bg-url) no-repeat center center;
+  background-size: 100% 100%;
+  position: relative;
+  display: flex;
+  padding: 5px;
+  box-sizing: border-box;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+// 左侧对话内容区域
+.contentSection {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding-right: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.contentText {
+  text-align: left;
+  font-family: 'PixelFont', monospace;
+  font-size: 14px;
+  color: $stardew-text-primary;
+  line-height: 1.6;
+  padding: 10px;
+  max-height: 120px;
+  overflow-y: auto;
+  // 文本阴影增强可读性
+  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.3);
+
+  // 自定义滚动条
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba($stardew-wood-light, 0.3);
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $stardew-wood-mid;
+    border-radius: 3px;
+
+    &:hover {
+      background: $stardew-wood-dark;
+    }
+  }
+}
+
+// 右侧说话人区域
+.speakerSection {
+  width: 140px !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.speakerImageWrapper {
+  margin-left: 5px;
+  width: 90px !important;
+  height: 120px !important;
+  border-radius: 4px;
+  overflow: visible;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.speakerImage {
+  object-fit: cover;
+  image-rendering: pixelated;
+}
+
+.speakerPlaceholder {
+  width: 100%;
+  height: 100%;
+}
+
+// 说话人名称
+.speakerNameWrapper {
+  margin-top: 10px;
+  padding: 4px 12px;
+  border-radius: 4px;
+}
+
+.speakerName {
+  font-family: 'PixelFont', monospace;
+  font-size: 12px;
+  font-weight: bold;
+  color: $stardew-text-primary;
+}
+
+// 底部按钮区域
+.buttonSection {
+  position: absolute;
+  bottom: 15px;
+  left: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.dialogButton {
+  @include stardew-wood-button;
+  padding: 8px 20px;
+  font-family: 'PixelFont', monospace;
+  font-size: 12px;
+  font-weight: bold;
+  min-width: 80px;
+  text-align: center;
+
+  &:hover {
+    filter: brightness(1.15);
+  }
+
+  &:active {
+    filter: brightness(0.9);
+  }
+}
+
+.okButton {
+  // 确定按钮可以添加特殊样式
+}
+
+.cancelButton {
+  // 取消按钮可以添加特殊样式
+  opacity: 0.9;
+}
+
+// 响应式适配
+@media (max-width: 480px) {
+  .dialogContainer {
+    height: 180px;
+    padding: 15px;
+  }
+
+  .contentText {
+    font-size: 12px;
+  }
+
+  .speakerSection {
+    width: 100px;
+  }
+
+  .speakerImageWrapper {
+    width: 60px;
+    height: 60px;
+  }
+
+  .speakerNameWrapper {
+    padding: 3px 8px;
+  }
+
+  .speakerName {
+    font-size: 10px;
+  }
+
+  .dialogButton {
+    padding: 6px 15px;
+    font-size: 11px;
+    min-width: 70px;
+  }
+}

@@ -1,0 +1,117 @@
+// 导入星露谷物语主题
+@import '../../styles/stardew-theme.scss';
+
+// 错误边界容器 - 农场背景
+.errorBoundary {
+  width: 100%;
+  min-height: 100vh;
+  background: $stardew-farm-bg;
+  position: relative;
+  overflow: hidden;
+}
+
+// 开发环境错误详情覆盖层
+.errorDetailsOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 20px;
+}
+
+.errorDetails {
+  background-color: $stardew-panel-bg;
+  border: 4px solid $stardew-wood-dark;
+  border-radius: 8px;
+  padding: 20px;
+  max-width: 600px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+
+  h3 {
+    font-family: 'PixelFont', monospace;
+    font-size: 16px;
+    color: $stardew-text-primary;
+    margin: 0 0 16px 0;
+    text-align: center;
+  }
+}
+
+.errorMessage {
+  font-family: 'PixelFont', monospace;
+  font-size: 12px;
+  color: $stardew-danger;
+  word-break: break-all;
+  margin: 0 0 16px 0;
+  padding: 12px;
+  background-color: rgba($stardew-danger, 0.1);
+  border-radius: 4px;
+}
+
+.errorStack {
+  font-family: 'Courier New', monospace;
+  font-size: 10px;
+  color: $stardew-text-secondary;
+  background-color: rgba($stardew-wood-dark, 0.1);
+  padding: 12px;
+  border-radius: 4px;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-all;
+  margin: 0;
+}
+
+// 装饰元素 - 像素草
+.decorations {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  padding: 0 20px;
+  pointer-events: none;
+}
+
+.pixelGrass {
+  width: 20px;
+  height: 30px;
+  background: linear-gradient(180deg, $stardew-grass-light 0%, $stardew-grass 100%);
+  border-radius: 4px 4px 0 0;
+  opacity: 0.6;
+
+  &:nth-child(2n) {
+    height: 40px;
+    opacity: 0.8;
+  }
+
+  &:nth-child(3n) {
+    height: 25px;
+    opacity: 0.5;
+  }
+}
+
+// 响应式
+@media (max-width: 480px) {
+  .errorDetails {
+    padding: 16px;
+    max-height: 90vh;
+  }
+
+  .errorMessage {
+    font-size: 11px;
+  }
+
+  .errorStack {
+    font-size: 9px;
+  }
+}

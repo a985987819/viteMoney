@@ -1,0 +1,127 @@
+/**
+ * 星露谷物语（Stardew Valley）主题配色系统
+ * 温暖、复古、田园像素风格
+ */
+
+// ==================== 天空与背景 ====================
+$stardew-sky-light: #a1d4ff;
+$stardew-sky-deep: #c8e6ff;
+$stardew-sky-gradient: linear-gradient(180deg, $stardew-sky-light 0%, $stardew-sky-deep 100%);
+
+// ==================== 草地与自然 ====================
+$stardew-grass: #4a9c3d;
+$stardew-grass-light: #5f9c4e;
+$stardew-grass-deep: #3d7a32;
+$stardew-earth: #e19d1d;
+$stardew-earth-light: #f7b327;
+$stardew-earth-gradient: linear-gradient(180deg, $stardew-grass 0%, $stardew-earth 100%);
+
+// ==================== 木质元素（核心主题色） ====================
+$stardew-wood-dark: #8B5A2B;
+$stardew-wood-deep: #6F3F1F;
+$stardew-wood-darkest: #3c2f1f;
+$stardew-wood-light: #d4b48c;
+$stardew-wood-mid: #A67C52;
+$stardew-wood-gradient: linear-gradient(180deg, $stardew-wood-light 0%, $stardew-wood-dark 100%);
+
+// ==================== 面板与背景 ====================
+$stardew-panel-bg: #f5e8c7;
+$stardew-panel-alt: #d4b48c;
+$stardew-parchment: #f0d9b0;
+$stardew-parchment-light: #faf3e0;
+
+// ==================== 文字颜色 ====================
+$stardew-text-primary: #3c2f1f;
+$stardew-text-secondary: #6F3F1F;
+$stardew-text-light: #f0d9b0;
+$stardew-text-highlight: #e8c070;
+
+// ==================== 强调色 ====================
+$stardew-gold: #e8c070;
+$stardew-gold-light: #f0d9b0;
+$stardew-shadow: rgba(60, 47, 31, 0.3);
+
+// ==================== 功能色 ====================
+$stardew-success: #4a9c3d;
+$stardew-danger: #c45c48;
+$stardew-warning: #e8a838;
+$stardew-info: #6b9dc7;
+$content-bg: #fed284;
+
+// ==================== 边框与阴影 ====================
+$stardew-border-wood: 4px solid $stardew-wood-dark;
+$stardew-border-wood-thick: 6px solid $stardew-wood-deep;
+$stardew-shadow-wood: inset 0 0 0 3px $stardew-wood-light;
+$stardew-shadow-soft: 0 4px 8px rgba(60, 47, 31, 0.2);
+$stardew-shadow-pixel: 4px 4px 0 $stardew-wood-darkest;
+
+// ==================== Mixins ====================
+@mixin stardew-wood-panel {
+  background-color: $stardew-panel-bg;
+  border: $stardew-border-wood;
+  box-shadow: $stardew-shadow-wood;
+  border-radius: 8px;
+}
+
+$btn-border-mainColor:#9c521d;
+$btn-text-color:#7d290b;
+$btn-border-dark: #451d00;
+
+// CDN 基础地址
+$cdn-base-url: 'https://vercel-icons.vercel.app';
+
+@mixin stardew-wood-button {
+  background: url('#{$cdn-base-url}/midBtn.png') no-repeat center center;
+  background-size: 100% 100%;
+  border: none;
+  color: $btn-text-color !important;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.1s ease;
+  width: fit-content !important;
+  position: relative;
+  // box-shadow: $stardew-shadow-pixel;
+
+  &:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(2px);
+    filter: brightness(0.95);
+  }
+}
+
+@mixin stardew-parchment-card {
+  background-color: $stardew-parchment-light;
+  // border: 3px solid $stardew-wood-mid;
+  border-radius: 4px;
+  box-shadow: $stardew-shadow-soft;
+}
+
+@mixin stardew-pixel-text {
+  font-family: 'PixelFont', monospace;
+  color: $stardew-text-primary;
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
+  letter-spacing: 0.5px;
+}
+
+// ==================== 背景渐变变量 ====================
+$stardew-farm-bg: linear-gradient(
+  180deg,
+  $stardew-sky-light 0%,
+  $stardew-sky-deep 30%,
+  $stardew-grass-light 30%,
+  $stardew-grass 100%
+);
+
+@mixin stardew-farm-bg-mixin {
+  background: linear-gradient(
+    180deg,
+    $stardew-sky-light 0%,
+    $stardew-sky-deep 30%,
+    $stardew-grass-light 30%,
+    $stardew-grass 100%
+  );
+}

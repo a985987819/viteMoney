@@ -1,0 +1,328 @@
+// 导入星露谷物语主题
+@import '../../styles/stardew-theme.scss';
+
+$header-bg-url: '#{$cdn-base-url}/homePageHead.png';
+$content-bg-url: '#{$cdn-base-url}/homePageBg.png';
+// Mixins
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+@mixin transition($property: all, $duration: 0.3s) {
+  transition: $property $duration ease;
+}
+
+// 主容器
+.homeContainer {
+  width: 100%;
+  height: 100%;
+  // background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), url($content-bg-url) no-repeat center center);
+  background: url($content-bg-url) no-repeat center center;
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  position: relative;
+}
+
+.homeBottom{
+position: relative;
+bottom: 70px;
+z-index: 100;
+width: 100%;
+}
+
+// 顶部背景区域 - 天空风格
+.headerSection {
+  background: url($header-bg-url) no-repeat center center;
+  background-size: cover;
+  padding: 16px 20px 24px;
+  color: $stardew-text-primary;
+}
+
+// 顶部栏
+.headerTop {
+  @include flex-between;
+  margin-bottom: 16px;
+}
+
+.headerTitle {
+  font-size: 20px;
+  font-weight: bold;
+  color: $stardew-text-primary;
+  font-family: 'PixelFont', monospace;
+  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.headerSetting {
+  font-size: 20px;
+  color: $stardew-wood-dark;
+  cursor: pointer;
+  @include transition;
+
+  &:hover {
+    color: $stardew-wood-deep;
+    transform: rotate(30deg);
+  }
+}
+
+// 统计区域
+.statsSection {
+  @include flex-column;
+  gap: 8px;
+}
+
+.statsLabel {
+  font-size: 13px;
+  color: $stardew-text-secondary;
+  font-family: 'PixelFont', monospace;
+}
+
+.statsAmount {
+  @include flex-center;
+  gap: 8px;
+}
+
+.amountValue {
+  font-size: 32px;
+  font-weight: bold;
+  color: $stardew-text-primary;
+  font-family: 'PixelFont', monospace;
+  text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.5);
+}
+
+.amountEye {
+  font-size: 18px;
+  color: $stardew-wood-dark;
+  cursor: pointer;
+  @include transition;
+
+  &:hover {
+    color: $stardew-wood-deep;
+  }
+}
+
+.statsSub {
+  @include flex-between;
+  margin-top: 8px;
+  padding-top: 12px;
+  border-top: 2px dashed rgba($stardew-wood-mid, 0.3);
+}
+
+.statsBudget {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 180px;
+  padding: 0 12px;
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  font-family: 'PixelFont', monospace;
+  image-rendering: pixelated;
+}
+
+.budgetLabel {
+  font-size: 10px;
+  color: #5d4037;
+  font-weight: bold;
+}
+
+.budgetValue {
+  font-size: 19px;
+  color: #c45c48;
+  font-weight: bold;
+  text-align: right;
+  padding-top: 3px;
+  // padding-right: 2px;
+  letter-spacing: 7px;
+}
+
+// 添加按钮区域
+.addButtonSection {
+  padding: 16px 20px;
+}
+
+.addRecordBtn {
+  height: 48px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 3px solid $stardew-wood-dark;
+  color: $stardew-text-primary;
+  font-family: 'PixelFont', monospace;
+  font-weight: bold;
+  @include transition;
+}
+
+// 账单列表
+.recordsSection {
+  padding: 0 16px 80px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+  // background: linear-gradient(180deg, $stardew-grass 0%, $stardew-earth 100%);
+}
+
+.recordsListContainer {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.loadingMore {
+  @include flex-center;
+  padding: 16px;
+  color: $stardew-text-secondary;
+  font-size: 12px;
+  font-family: 'PixelFont', monospace;
+}
+
+.noMore {
+  @include flex-center;
+  padding: 16px;
+  color: $stardew-wood-mid;
+  font-size: 12px;
+  font-family: 'PixelFont', monospace;
+}
+
+// 记录列表头部
+.recordsHeader {
+  @include flex-between;
+  padding: 12px 0;
+  margin-bottom: 8px;
+}
+
+.recordsTitle {
+  font-size: 14px;
+  font-weight: bold;
+  color: $stardew-text-primary;
+  font-family: 'PixelFont', monospace;
+}
+
+.recordsTag {
+  font-size: 12px;
+  color: $stardew-text-secondary;
+  font-family: 'PixelFont', monospace;
+}
+
+// 记录列表
+.recordsList {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+}
+
+// 日期分组
+.recordDayGroup {
+  @include stardew-parchment-card;
+  overflow: hidden;
+}
+
+.recordDayHeader {
+  @include flex-between;
+  padding: 12px 16px;
+  border-bottom: 2px solid $stardew-wood-mid;
+}
+
+.dayTotal {
+  font-size: 12px;
+  color: $stardew-text-secondary;
+  font-family: 'PixelFont', monospace;
+}
+
+// 记录项
+.recordItem {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba($stardew-wood-mid, 0.2);
+  cursor: pointer;
+  @include transition;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background-color: rgba($stardew-wood-light, 0.2);
+  }
+}
+
+.recordLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.recordIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, $stardew-wood-light 0%, $stardew-wood-mid 100%);
+  @include flex-center;
+  font-size: 20px;
+  border: 2px solid $stardew-wood-dark;
+  box-shadow: 0 2px 0 $stardew-wood-deep;
+}
+
+.recordInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.recordCategory {
+  font-size: 14px;
+  font-weight: bold;
+  color: $stardew-text-primary;
+  font-family: 'PixelFont', monospace;
+}
+
+.recordRemark {
+  font-size: 12px;
+  color: $stardew-text-secondary;
+  font-family: 'PixelFont', monospace;
+}
+
+.recordSubCategory {
+  font-size: 11px;
+  color: $stardew-wood-mid;
+  font-family: 'PixelFont', monospace;
+}
+
+.recordAccount {
+  font-size: 11px;
+  color: $stardew-text-secondary;
+  font-family: 'PixelFont', monospace;
+}
+
+.recordAmount {
+  font-size: 16px;
+  font-weight: bold;
+  font-family: 'PixelFont', monospace;
+
+  &.expense {
+    color: $stardew-danger;
+  }
+
+  &.income {
+    color: $stardew-grass;
+  }
+}

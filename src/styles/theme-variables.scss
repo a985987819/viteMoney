@@ -1,0 +1,254 @@
+/**
+ * 主题变量 - CSS 自定义属性
+ * 支持日间/夜间模式切换
+ * 所有颜色都通过 CSS 变量定义，确保主题切换时颜色正确变化
+ */
+
+// 默认日间模式变量
+:root {
+  // 背景色
+  --theme-bg-primary: #faf3e0;
+  --theme-bg-secondary: #f5e8c7;
+  --theme-bg-tertiary: #f0d9b0;
+  --theme-bg-card: #ffffff;
+  --theme-bg-panel: #f5e8c7;
+  --theme-bg-input: #ffffff;
+  --theme-bg-hover: rgba(212, 180, 140, 0.2);
+
+  // 文字色 - 确保可读性
+  --theme-text-primary: #3c2f1f;
+  --theme-text-secondary: #6F3F1F;
+  --theme-text-tertiary: #8B7355;
+  --theme-text-inverse: #f0d9b0;
+
+  // 边框色
+  --theme-border-primary: #8B5A2B;
+  --theme-border-secondary: #A67C52;
+
+  // 强调色
+  --theme-primary: #8B5A2B;
+  --theme-primary-light: #d4b48c;
+  --theme-primary-dark: #6F3F1F;
+  --theme-success: #4a9c3d;
+  --theme-danger: #c45c48;
+  --theme-warning: #e8a838;
+  --theme-info: #6b9dc7;
+
+  // 阴影
+  --theme-shadow-soft: 0 4px 8px rgba(60, 47, 31, 0.15);
+  --theme-shadow-medium: 0 6px 12px rgba(60, 47, 31, 0.2);
+  --theme-shadow-pixel: 4px 4px 0 rgba(60, 47, 31, 0.3);
+}
+
+// 夜间模式变量 - 通过 data-theme="dark" 属性触发
+[data-theme="dark"] {
+  // 背景色 - 深蓝色调，护眼
+  --theme-bg-primary: #1a1a2e;
+  --theme-bg-secondary: #16213e;
+  --theme-bg-tertiary: #0f3460;
+  --theme-bg-card: #252542;
+  --theme-bg-panel: #1e1e3f;
+  --theme-bg-input: #2a2a4a;
+  --theme-bg-hover: rgba(100, 149, 237, 0.15);
+
+  // 文字色 - 浅色系，确保在深色背景上的可读性
+  --theme-text-primary: #e8e6e3;
+  --theme-text-secondary: #b8b5b0;
+  --theme-text-tertiary: #8a8782;
+  --theme-text-inverse: #1a1a2e;
+
+  // 边框色
+  --theme-border-primary: #4a5568;
+  --theme-border-secondary: #2d3748;
+
+  // 强调色 - 调整为适合夜间模式的色调
+  --theme-primary: #e8c070;
+  --theme-primary-light: #f0d9b0;
+  --theme-primary-dark: #c9a050;
+  --theme-success: #68d391;
+  --theme-danger: #fc8181;
+  --theme-warning: #f6e05e;
+  --theme-info: #63b3ed;
+
+  // 阴影
+  --theme-shadow-soft: 0 4px 8px rgba(0, 0, 0, 0.3);
+  --theme-shadow-medium: 0 6px 12px rgba(0, 0, 0, 0.4);
+  --theme-shadow-pixel: 4px 4px 0 rgba(0, 0, 0, 0.5);
+}
+
+// 全局样式应用
+body {
+  background-color: var(--theme-bg-primary);
+  color: var(--theme-text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+// 通用文字颜色类
+.theme-text-primary {
+  color: var(--theme-text-primary);
+}
+
+.theme-text-secondary {
+  color: var(--theme-text-secondary);
+}
+
+.theme-text-tertiary {
+  color: var(--theme-text-tertiary);
+}
+
+// 通用背景类
+.theme-bg-primary {
+  background-color: var(--theme-bg-primary);
+}
+
+.theme-bg-secondary {
+  background-color: var(--theme-bg-secondary);
+}
+
+.theme-bg-card {
+  background-color: var(--theme-bg-card);
+}
+
+// 确保 Ant Design 组件适配主题
+.ant-modal-content,
+.ant-modal-header {
+  background-color: var(--theme-bg-card) !important;
+  color: var(--theme-text-primary) !important;
+}
+
+.ant-modal-title {
+  color: var(--theme-text-primary) !important;
+}
+
+.ant-modal-close-x {
+  color: var(--theme-text-secondary) !important;
+
+  &:hover {
+    color: var(--theme-text-primary) !important;
+  }
+}
+
+.ant-input,
+.ant-input-password,
+.ant-select-selector,
+.ant-picker {
+  background-color: var(--theme-bg-input) !important;
+  border-color: var(--theme-border-secondary) !important;
+  color: var(--theme-text-primary) !important;
+}
+
+.ant-input::placeholder,
+.ant-input-password::placeholder {
+  color: var(--theme-text-tertiary) !important;
+}
+
+.ant-btn-default {
+  background-color: var(--theme-bg-card) !important;
+  border-color: var(--theme-border-secondary) !important;
+  color: var(--theme-text-primary) !important;
+}
+
+.ant-radio-button-wrapper {
+  background-color: var(--theme-bg-input) !important;
+  border-color: var(--theme-border-secondary) !important;
+  color: var(--theme-text-secondary) !important;
+
+  &.ant-radio-button-wrapper-checked {
+    background-color: var(--theme-primary) !important;
+    border-color: var(--theme-primary) !important;
+    color: white !important;
+  }
+}
+
+.ant-form-item-label > label {
+  color: var(--theme-text-primary) !important;
+}
+
+.ant-message-notice-content {
+  background-color: var(--theme-bg-card) !important;
+  color: var(--theme-text-primary) !important;
+}
+
+// 卡片和面板样式适配
+.ant-card {
+  background-color: var(--theme-bg-card) !important;
+  border-color: var(--theme-border-secondary) !important;
+}
+
+.ant-card-head {
+  background-color: var(--theme-bg-secondary) !important;
+  border-bottom-color: var(--theme-border-secondary) !important;
+  color: var(--theme-text-primary) !important;
+}
+
+// 列表样式适配
+.ant-list-item {
+  border-bottom-color: var(--theme-border-secondary) !important;
+}
+
+// 下拉菜单样式适配
+.ant-dropdown-menu {
+  background-color: var(--theme-bg-card) !important;
+}
+
+.ant-dropdown-menu-item {
+  color: var(--theme-text-primary) !important;
+
+  &:hover {
+    background-color: var(--theme-bg-hover) !important;
+  }
+}
+
+// 开关样式适配
+.ant-switch {
+  background-color: var(--theme-bg-tertiary) !important;
+}
+
+.ant-switch-checked {
+  background-color: var(--theme-primary) !important;
+}
+
+// 空状态适配
+.ant-empty-description {
+  color: var(--theme-text-secondary) !important;
+}
+
+// 分割线适配
+.ant-divider {
+  border-color: var(--theme-border-secondary) !important;
+}
+
+// 标签样式适配
+.ant-tag {
+  background-color: var(--theme-bg-secondary) !important;
+  border-color: var(--theme-border-secondary) !important;
+  color: var(--theme-text-primary) !important;
+}
+
+// 统计数字样式
+.ant-statistic-title {
+  color: var(--theme-text-secondary) !important;
+}
+
+.ant-statistic-content {
+  color: var(--theme-text-primary) !important;
+}
+
+// 菜单样式适配
+.ant-menu {
+  background-color: var(--theme-bg-panel) !important;
+  color: var(--theme-text-primary) !important;
+}
+
+.ant-menu-item {
+  color: var(--theme-text-primary) !important;
+
+  &:hover {
+    background-color: var(--theme-bg-hover) !important;
+  }
+}
+
+.ant-menu-item-selected {
+  background-color: var(--theme-bg-hover) !important;
+  color: var(--theme-primary) !important;
+}

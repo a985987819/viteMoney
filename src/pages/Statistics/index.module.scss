@@ -1,0 +1,56 @@
+@import '../../styles/stardew-theme.scss';
+
+.statisticsPage {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: linear-gradient(180deg, $stardew-parchment 0%, $stardew-panel-bg 100%);
+}
+
+.tabHeader {
+  background: linear-gradient(180deg, $stardew-panel-bg 0%, $stardew-parchment 100%);
+  border-bottom: 3px solid $stardew-wood-dark;
+  padding-top: env(safe-area-inset-top, 0);
+
+  :global {
+    .ant-tabs {
+      .ant-tabs-nav {
+        margin-bottom: 0;
+
+        &::before {
+          border-bottom: none;
+        }
+      }
+
+      .ant-tabs-tab {
+        font-family: 'PixelFont', monospace;
+        font-size: 14px;
+        color: $stardew-text-secondary;
+        padding: 12px 24px;
+
+        &:hover {
+          color: $stardew-wood-dark;
+        }
+
+        &.ant-tabs-tab-active {
+          .ant-tabs-tab-btn {
+            color: $stardew-wood-dark;
+            font-weight: bold;
+          }
+        }
+      }
+
+      .ant-tabs-ink-bar {
+        background: $stardew-wood-dark;
+        height: 3px;
+      }
+    }
+  }
+}
+
+.content {
+  flex: 1;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+}

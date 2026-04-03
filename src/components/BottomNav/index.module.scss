@@ -1,0 +1,123 @@
+// 导入星露谷物语主题
+@import '../../styles/stardew-theme.scss';
+
+// Mixins
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin transition($property: all, $duration: 0.3s) {
+  transition: $property $duration cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+// 动画
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes woodPulse {
+  0%, 100% {
+    box-shadow: 0 -4px 0 $stardew-wood-deep;
+  }
+  50% {
+    box-shadow: 0 -6px 0 $stardew-wood-dark;
+  }
+}
+
+// 底部导航 - 木质风格
+.bottomNav {
+  height: 70px;
+  background: linear-gradient(180deg, $stardew-wood-light 0%, $stardew-wood-mid 50%, $stardew-wood-dark 100%);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  // border-top: 4px solid $stardew-wood-deep;
+  box-shadow:
+    0 -4px 0 $stardew-wood-deep,
+    inset 0 2px 0 rgba(255, 255, 255, 0.2);
+  flex-shrink: 0;
+  animation: slideUp 0.4s ease-out;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+}
+
+.navItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  color: $stardew-text-primary;
+  font-size: 11px;
+  cursor: pointer;
+  @include transition;
+  padding: 8px 20px;
+  border-radius: 12px;
+  font-family: 'PixelFont', monospace;
+  text-shadow: 1px 1px 0 $stardew-panel-alt;
+
+  &:hover {
+    background-color: rgba($stardew-wood-light, 0.5);
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: scale(0.98) translateY(0);
+  }
+
+  &.active {
+    height: 98%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: $stardew-grass-deep;
+    gap: 0;
+    background: linear-gradient(180deg, $stardew-parchment 0%, $stardew-panel-bg 100%);
+    border: 2px solid $stardew-wood-dark;
+    box-shadow:
+      inset 0 2px 0 rgba(255, 255, 255, 0.5),
+      0 2px 4px rgba($stardew-wood-darkest, 0.3);
+
+    .navLabel {
+      display: none;
+    }
+
+    .navIcon {
+      transform: scale(1.4);
+      filter: drop-shadow(2px 2px 0 rgba(0, 0, 0, 0.1));
+    }
+  }
+
+  .navIcon {
+    width: 28px;
+    height: 28px;
+    @include transition;
+    image-rendering: pixelated;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      image-rendering: pixelated;
+    }
+  }
+
+  .navLabel {
+    @include transition;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+      color: $stardew-wood-darkest;
+  }
+}

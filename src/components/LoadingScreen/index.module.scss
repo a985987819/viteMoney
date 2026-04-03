@@ -1,0 +1,151 @@
+@import '../../styles/stardew-theme.scss';
+
+// 进度条颜色 - 橙黄色主题色
+$progress-color: #dc964e;
+$progress-color-dark: #c47a3a;
+$progress-bg: rgba(0, 0, 0, 0.3);
+
+.loadingScreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  // 使用百分比定位，确保在不同分辨率下木牌位置对齐
+  padding-bottom: 22%;
+
+  // 底部渐变遮罩，让文字更清晰
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 40%;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.3) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 1;
+  }
+}
+
+// 底部信息区域 - 放置在图1的木牌位置
+.bottomSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(6px, 1.5vh, 12px);
+  width: 100%;
+  // 使用百分比宽度，适配不同屏幕
+  max-width: min(320px, 85vw);
+  padding: 0 20px;
+  position: relative;
+  z-index: 2;
+  // 使用百分比调整垂直位置，对齐木牌
+  margin-bottom: 2%;
+}
+
+// 加载文字 - 使用浅色以适应图1底部
+.loadingText {
+  font-family: 'PixelFont', monospace;
+  font-size: clamp(12px, 3.5vw, 16px);
+  color: #fff;
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+  text-align: center;
+  margin-bottom: clamp(2px, 0.5vh, 6px);
+  white-space: nowrap;
+}
+
+// 进度条容器
+.progressContainer {
+  display: flex;
+  align-items: center;
+  gap: clamp(6px, 1.5vw, 10px);
+  width: 100%;
+  max-width: min(280px, 75vw);
+}
+
+.progressBar {
+  flex: 1;
+  height: clamp(10px, 2.5vh, 14px);
+  background-color: $progress-bg;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  // 橙黄色渐变
+  background: linear-gradient(180deg, $progress-color 0%, $progress-color-dark 100%);
+  transition: width 0.3s ease;
+  border-radius: 3px;
+  box-shadow: 0 0 6px rgba(220, 150, 78, 0.6);
+}
+
+.progressText {
+  font-family: 'PixelFont', monospace;
+  font-size: clamp(11px, 3vw, 13px);
+  font-weight: bold;
+  color: #fff;
+  min-width: 40px;
+  text-align: right;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
+}
+
+// 准备就绪提示
+.readyText {
+  font-family: 'PixelFont', monospace;
+  font-size: clamp(11px, 3vw, 13px);
+  font-weight: bold;
+  color: #f4d03f;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
+}
+
+// 响应式适配 - 针对不同屏幕比例
+@media (max-aspect-ratio: 9/16) {
+  // 更长的屏幕（如全面屏手机）
+  .loadingScreen {
+    padding-bottom: 25%;
+  }
+
+  .bottomSection {
+    margin-bottom: 3%;
+  }
+}
+
+@media (min-aspect-ratio: 9/16) and (max-aspect-ratio: 3/4) {
+  // 标准手机屏幕
+  .loadingScreen {
+    padding-bottom: 22%;
+  }
+}
+
+@media (min-aspect-ratio: 3/4) {
+  // 平板或更宽的屏幕
+  .loadingScreen {
+    padding-bottom: 18%;
+    background-position: center 30%;
+  }
+
+  .bottomSection {
+    max-width: 360px;
+  }
+}
+
+@media (max-width: 360px) {
+  .bottomSection {
+    padding: 0 16px;
+  }
+
+  .progressContainer {
+    max-width: 240px;
+  }
+}

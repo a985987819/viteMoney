@@ -1,0 +1,63 @@
+// 星露谷风格面板 - 暖橙色背景 + 深棕色边框
+$panel-bg: #ffc675; // 暖橙色背景
+$panel-bg-light: #ffe0b2; // 亮橙色（内阴影用）
+$panel-bg-dark: #ffb74d; // 暗橙色（外阴影用）
+$border-dark: #d7770f; // 深棕色边框
+$border-light: #9d4100; // 浅棕色（内边框）
+
+.stardewPanel {
+  background: $panel-bg;
+  border: 6px solid $border-dark;
+  border-radius: 8px;
+  position: relative;
+  box-sizing: border-box;
+  // padding: 0 2px;
+
+  // 内边框效果 - 模拟图片中的双层边框
+  &::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    border: 2px solid $border-light;
+    border-radius: 4px;
+    pointer-events: none;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.15);
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: -6px;
+    left: -6px;
+    right: -6px;
+    bottom: -6px;
+    border: 2px solid $border-light;
+    // border: 2px solid red;
+    border-radius: 4px;
+    pointer-events: none;
+  }
+}
+
+// 阴影效果
+.withShadow {
+  box-shadow:
+    // inset 4px 0 rgba(33, 33, 33, 0.2) ,
+    0 6px 8px rgba(0, 0, 0, 0.3),
+    inset 0 0 0 rgba(255, 255, 255, 0.3);
+}
+
+// 内边距选项
+.paddingSmall {
+  padding: 12px;
+}
+
+.paddingMedium {
+  padding: 20px;
+}
+
+.paddingLarge {
+  padding: 32px;
+}

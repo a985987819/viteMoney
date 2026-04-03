@@ -1,0 +1,13 @@
+.spriteIcon {
+  display: inline-block;
+  flex-shrink: 0;
+  // 像素风格渲染
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  // 平滑过渡
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}

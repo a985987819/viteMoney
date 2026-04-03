@@ -1,0 +1,347 @@
+@import '../../styles/stardew-theme.scss';
+
+.billContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  height: 100%;
+  /* 确保最外层没有滚动条 */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.billHeaderFixed {
+  background: linear-gradient(180deg, $stardew-parchment 0%, $stardew-panel-bg 100%);
+  border-bottom: 3px solid $stardew-wood-dark;
+  z-index: 10;
+  flex-shrink: 0;
+}
+
+.dateSelectorBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: rgba($stardew-wood-light, 0.3);
+}
+
+.dateDisplay {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: $stardew-text-primary;
+  cursor: pointer;
+  font-family: 'PixelFont', monospace;
+
+  .arrowDown {
+    font-size: 10px;
+    color: $stardew-text-secondary;
+  }
+}
+
+.filterBtn {
+  padding: 6px 12px;
+  background: $stardew-wood-dark;
+  border-radius: 6px;
+  font-size: 12px;
+  color: white;
+  cursor: pointer;
+  font-family: 'PixelFont', monospace;
+}
+
+.billStatsOverview {
+  padding: 12px 16px;
+  transition: all 0.3s ease;
+  overflow: hidden;
+
+  &.collapsed {
+    max-height: 0;
+    padding: 0 16px;
+    opacity: 0;
+  }
+}
+
+.statsContent {
+  background: rgba(white, 0.6);
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.statsHeader {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 12px;
+}
+
+.statsItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  padding: 8px 16px;
+  border-radius: 8px;
+  transition: all 0.2s;
+
+  &:hover {
+    background: rgba($stardew-wood-light, 0.2);
+  }
+
+  &.disabled {
+    opacity: 0.5;
+  }
+}
+
+.radioDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+
+  &.expense {
+    background: $stardew-danger;
+  }
+
+  &.income {
+    background: $stardew-success;
+  }
+}
+
+.statsLabel {
+  font-size: 12px;
+  color: $stardew-text-secondary;
+  font-family: 'PixelFont', monospace;
+}
+
+.statsValue {
+  font-size: 18px;
+  font-weight: bold;
+  font-family: 'PixelFont', monospace;
+
+  &.expense {
+    color: $stardew-danger;
+  }
+
+  &.income {
+    color: $stardew-success;
+  }
+}
+
+.chartSection {
+  margin-top: 8px;
+}
+
+.chartContainer {
+  width: 100%;
+}
+
+.balanceSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: rgba($stardew-wood-light, 0.2);
+  transition: all 0.3s ease;
+
+  &.collapsed {
+    max-height: 0;
+    padding: 0 16px;
+    opacity: 0;
+  }
+}
+
+.balanceContent {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.balanceLabel {
+  font-size: 14px;
+  color: $stardew-text-secondary;
+  font-family: 'PixelFont', monospace;
+}
+
+.balanceValue {
+  font-size: 18px;
+  font-weight: bold;
+  font-family: 'PixelFont', monospace;
+
+  &.income {
+    color: $stardew-success;
+  }
+
+  &.expense {
+    color: $stardew-danger;
+  }
+}
+
+.balanceCount {
+  font-size: 12px;
+  color: $stardew-text-secondary;
+  font-family: 'PixelFont', monospace;
+}
+
+.statsToggleBar {
+  display: flex;
+  justify-content: center;
+  padding: 4px;
+  background: rgba($stardew-wood-light, 0.3);
+  cursor: pointer;
+  color: $stardew-text-secondary;
+  font-size: 12px;
+}
+
+.sortBar {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  border-top: 1px solid rgba($stardew-wood-dark, 0.2);
+}
+
+.sortLeft {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sortLabel {
+  font-size: 12px;
+  color: $stardew-text-secondary;
+  font-family: 'PixelFont', monospace;
+}
+
+.sortType {
+  font-size: 12px;
+  color: $stardew-wood-dark;
+  cursor: pointer;
+  font-family: 'PixelFont', monospace;
+  padding: 4px 8px;
+  background: rgba($stardew-wood-light, 0.3);
+  border-radius: 4px;
+}
+
+.sortOrder {
+  font-size: 12px;
+  color: $stardew-text-secondary;
+  cursor: pointer;
+}
+
+.billList {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0 16px 80px;
+  position: relative;
+  min-height: 0;
+  scrollbar-width: thin;
+  scrollbar-color: rgba($stardew-wood-dark, 0.5) transparent;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba($stardew-wood-dark, 0.5);
+    border-radius: 3px;
+  }
+}
+
+.loadingContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+}
+
+.emptyState {
+  margin-top: 60px;
+}
+
+.dayGroup {
+  margin-bottom: 16px;
+}
+
+.dayHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 2px dashed rgba($stardew-wood-dark, 0.3);
+  margin-bottom: 8px;
+}
+
+.dayDate {
+  font-size: 14px;
+  font-weight: bold;
+  color: $stardew-text-primary;
+  font-family: 'PixelFont', monospace;
+}
+
+.dayTotal {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+  font-family: 'PixelFont', monospace;
+
+  .income {
+    color: $stardew-success;
+  }
+
+  .expense {
+    color: $stardew-danger;
+  }
+}
+
+.loadMoreHint {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 20px;
+  color: $stardew-text-secondary;
+  font-size: 12px;
+  cursor: pointer;
+  font-family: 'PixelFont', monospace;
+}
+
+
+.backTopBtn {
+  position: fixed;
+  right: 20px;
+  bottom: 80px;
+}
+
+.filterContent {
+  padding: 16px 0;
+}
+
+.filterSection {
+  margin-bottom: 20px;
+}
+
+.filterLabel {
+  font-size: 14px;
+  font-weight: bold;
+  color: $stardew-text-primary;
+  margin-bottom: 12px;
+  font-family: 'PixelFont', monospace;
+}
+
+.amountRange {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  input {
+    flex: 1;
+  }
+}

@@ -1,0 +1,45 @@
+@import '../../styles/stardew-theme.scss';
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  padding-top: calc(12px + env(safe-area-inset-top, 0));
+  background: linear-gradient(180deg, $stardew-sky-light 0%, $stardew-sky-deep 100%);
+  border-bottom: 4px solid $stardew-wood-mid;
+  flex-shrink: 0;
+}
+
+.backBtn {
+  color: $stardew-text-primary !important;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.2) !important;
+  }
+
+  :global(.anticon) {
+    font-size: 18px;
+  }
+}
+
+.title {
+  font-size: 18px;
+  font-weight: bold;
+  color: $stardew-text-primary;
+  font-family: 'PixelFont', monospace;
+  text-align: center;
+  flex: 1;
+}
+
+.placeholder {
+  width: 40px;
+  height: 40px;
+}

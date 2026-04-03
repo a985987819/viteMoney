@@ -1,0 +1,358 @@
+@import '../../styles/stardew-theme.scss';
+
+// 过渡动画 mixin
+@mixin transition($property: all, $duration: 0.3s) {
+  transition: $property $duration ease;
+}
+
+.featuresPage {
+  min-height: 100vh;
+  background: linear-gradient(180deg, $stardew-sky-light 0%, $stardew-sky-deep 50%, $stardew-grass-light 100%);
+  position: relative;
+  overflow-x: hidden;
+}
+
+// 背景装饰
+.backgroundDecorations {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.cloud1,
+.cloud2 {
+  position: absolute;
+  font-size: 40px;
+  opacity: 0.6;
+  animation: float 20s ease-in-out infinite;
+}
+
+.cloud1 {
+  top: 80px;
+  left: 10%;
+  animation-delay: 0s;
+}
+
+.cloud2 {
+  top: 120px;
+  right: 15%;
+  animation-delay: -10s;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateX(0) translateY(0);
+  }
+  25% {
+    transform: translateX(20px) translateY(-10px);
+  }
+  50% {
+    transform: translateX(-10px) translateY(5px);
+  }
+  75% {
+    transform: translateX(15px) translateY(-5px);
+  }
+}
+
+// 头部导航
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: rgba($stardew-wood-light, 0.95);
+  border-bottom: 4px solid $stardew-wood-dark;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.backButton {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, $stardew-wood-light 0%, $stardew-wood-mid 100%);
+  border: 3px solid $stardew-wood-dark;
+  border-radius: 8px;
+  cursor: pointer;
+  color: $stardew-text-primary;
+  font-size: 18px;
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.3),
+    0 4px 0 $stardew-wood-deep;
+  @include transition;
+
+  &:hover {
+    transform: translateY(2px);
+    box-shadow:
+      inset 0 2px 0 rgba(255, 255, 255, 0.3),
+      0 2px 0 $stardew-wood-deep;
+  }
+
+  &:active {
+    transform: translateY(4px);
+    box-shadow:
+      inset 0 2px 4px rgba(0, 0, 0, 0.2),
+      0 0 0 $stardew-wood-deep;
+  }
+}
+
+.title {
+  font-family: 'PixelFont', monospace;
+  font-size: 20px;
+  font-weight: bold;
+  color: $stardew-text-primary;
+  margin: 0;
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
+}
+
+.placeholder {
+  width: 40px;
+}
+
+// 内容区域
+.content {
+  position: relative;
+  z-index: 1;
+  padding: 20px 16px 80px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+// 装饰插图
+.illustration {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.heroImg {
+  width: 100px;
+  height: 100px;
+  image-rendering: pixelated;
+  animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+// 欢迎卡片
+.welcomeCard {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 20px;
+  border: 4px solid $stardew-wood-mid;
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.8),
+    0 6px 0 $stardew-wood-dark,
+    0 8px 16px rgba(0, 0, 0, 0.15);
+  text-align: center;
+}
+
+.welcomeTitle {
+  font-family: 'PixelFont', monospace;
+  font-size: 18px;
+  font-weight: bold;
+  color: $stardew-text-primary;
+  margin: 0 0 12px 0;
+}
+
+.welcomeText {
+  font-size: 13px;
+  color: $stardew-text-secondary;
+  margin: 0;
+  line-height: 1.6;
+}
+
+// 功能区域
+.featuresSection {
+  margin-bottom: 20px;
+}
+
+.sectionTitle {
+  font-family: 'PixelFont', monospace;
+  font-size: 16px;
+  font-weight: bold;
+  color: $stardew-text-primary;
+  margin: 0 0 16px 0;
+  padding-left: 8px;
+  border-left: 4px solid $stardew-gold;
+}
+
+// 折叠面板
+.featureCollapse {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  border: 4px solid $stardew-wood-mid;
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.8),
+    0 6px 0 $stardew-wood-dark,
+    0 8px 16px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+
+  :global {
+    .ant-collapse-item {
+      border-bottom: 2px dashed rgba($stardew-wood-mid, 0.3);
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+
+    .ant-collapse-header {
+      padding: 16px !important;
+      align-items: center !important;
+    }
+
+    .ant-collapse-content {
+      background: rgba($stardew-wood-light, 0.2);
+    }
+
+    .ant-collapse-content-box {
+      padding: 0 16px 16px !important;
+    }
+  }
+}
+
+.collapseHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.featureIcon {
+  font-size: 28px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba($stardew-wood-light, 0.5);
+  border-radius: 10px;
+}
+
+.featureTitleSection {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.featureTitle {
+  font-family: 'PixelFont', monospace;
+  font-size: 15px;
+  font-weight: bold;
+  color: $stardew-text-primary;
+}
+
+.featureDesc {
+  font-size: 12px;
+  color: $stardew-text-secondary;
+}
+
+.featureDetails {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.detailItem {
+  position: relative;
+  padding-left: 16px;
+  margin-bottom: 8px;
+  font-size: 13px;
+  color: $stardew-text-primary;
+  line-height: 1.5;
+
+  &:before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: $stardew-success;
+    font-weight: bold;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+// 提示卡片
+.tipsCard {
+  background: linear-gradient(135deg, rgba($stardew-info, 0.1) 0%, rgba($stardew-info, 0.05) 100%);
+  border-radius: 16px;
+  padding: 20px;
+  border: 3px solid rgba($stardew-info, 0.3);
+}
+
+.tipsTitle {
+  font-family: 'PixelFont', monospace;
+  font-size: 15px;
+  font-weight: bold;
+  color: $stardew-text-primary;
+  margin: 0 0 12px 0;
+}
+
+.tipsList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.tipsList li {
+  position: relative;
+  padding-left: 20px;
+  margin-bottom: 8px;
+  font-size: 13px;
+  color: $stardew-text-secondary;
+  line-height: 1.5;
+
+  &:before {
+    content: '💡';
+    position: absolute;
+    left: 0;
+    font-size: 12px;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+// 响应式适配
+@media (max-width: 480px) {
+  .title {
+    font-size: 18px;
+  }
+
+  .content {
+    padding: 16px 12px 80px;
+  }
+
+  .welcomeTitle {
+    font-size: 16px;
+  }
+
+  .featureIcon {
+    font-size: 24px;
+    width: 36px;
+    height: 36px;
+  }
+
+  .featureTitle {
+    font-size: 14px;
+  }
+}

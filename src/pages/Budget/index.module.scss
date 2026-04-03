@@ -1,0 +1,284 @@
+@import '../../styles/stardew-theme.scss';
+
+.budgetPage {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: linear-gradient(180deg, $stardew-parchment 0%, $stardew-panel-bg 100%);
+}
+
+.loadingContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(180deg, $stardew-parchment 0%, $stardew-panel-bg 100%);
+}
+
+.addBtn {
+  background: $stardew-wood-dark;
+  border-color: $stardew-wood-dark;
+  font-family: 'PixelFont', monospace;
+
+  &:hover {
+    background: $stardew-wood-deep;
+    border-color: $stardew-wood-deep;
+  }
+}
+
+.content {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+}
+
+// 当前预算卡片
+.currentBudgetCard {
+  margin-bottom: 16px;
+  background: rgba(white, 0.9);
+  border: 2px solid $stardew-wood-dark;
+  border-radius: 12px;
+  box-shadow: 4px 4px 0 rgba($stardew-wood-dark, 0.2);
+
+  :global {
+    .ant-card-body {
+      padding: 16px;
+    }
+  }
+}
+
+.budgetHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.budgetTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  color: $stardew-text-primary;
+  font-family: 'PixelFont', monospace;
+
+  svg {
+    color: $stardew-wood-dark;
+  }
+}
+
+.budgetProgress {
+  margin-bottom: 16px;
+}
+
+.progressText {
+  text-align: center;
+  margin-top: 8px;
+  font-size: 14px;
+  color: $stardew-text-secondary;
+  font-family: 'PixelFont', monospace;
+}
+
+.budgetStats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.statItem {
+  text-align: center;
+  padding: 12px;
+  background: rgba($stardew-parchment, 0.5);
+  border-radius: 8px;
+  border: 1px solid rgba($stardew-wood-dark, 0.2);
+}
+
+.statLabel {
+  font-size: 12px;
+  color: $stardew-text-secondary;
+  margin-bottom: 4px;
+  font-family: 'PixelFont', monospace;
+}
+
+.statValue {
+  font-size: 16px;
+  font-weight: bold;
+  color: $stardew-text-primary;
+  font-family: 'PixelFont', monospace;
+
+  &.expense {
+    color: $stardew-danger;
+  }
+
+  &.remaining {
+    color: $stardew-success;
+  }
+}
+
+// 空状态卡片
+.emptyCard {
+  margin-bottom: 16px;
+  background: rgba(white, 0.9);
+  border: 2px solid $stardew-wood-dark;
+  border-radius: 12px;
+  box-shadow: 4px 4px 0 rgba($stardew-wood-dark, 0.2);
+
+  :global {
+    .ant-card-body {
+      padding: 32px 16px;
+      text-align: center;
+    }
+  }
+}
+
+.setBudgetBtn {
+  margin-top: 16px;
+  background: $stardew-wood-dark;
+  border-color: $stardew-wood-dark;
+  font-family: 'PixelFont', monospace;
+
+  &:hover {
+    background: $stardew-wood-deep;
+    border-color: $stardew-wood-deep;
+  }
+}
+
+// 统计卡片
+.statsCard {
+  margin-bottom: 16px;
+  background: rgba(white, 0.9);
+  border: 2px solid $stardew-wood-dark;
+  border-radius: 12px;
+  box-shadow: 4px 4px 0 rgba($stardew-wood-dark, 0.2);
+
+  :global {
+    .ant-card-head {
+      background: transparent;
+      border-bottom: 1px solid rgba($stardew-wood-dark, 0.2);
+      font-family: 'PixelFont', monospace;
+    }
+
+    .ant-card-body {
+      padding: 16px;
+    }
+  }
+}
+
+.compareStats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.compareItem {
+  text-align: center;
+  padding: 16px;
+  background: rgba($stardew-parchment, 0.5);
+  border-radius: 8px;
+  border: 1px solid rgba($stardew-wood-dark, 0.2);
+}
+
+.compareLabel {
+  font-size: 12px;
+  color: $stardew-text-secondary;
+  margin-bottom: 8px;
+  font-family: 'PixelFont', monospace;
+}
+
+.compareValue {
+  font-size: 20px;
+  font-weight: bold;
+  color: $stardew-text-primary;
+  font-family: 'PixelFont', monospace;
+}
+
+// 历史预算卡片
+.historyCard {
+  background: rgba(white, 0.9);
+  border: 2px solid $stardew-wood-dark;
+  border-radius: 12px;
+  box-shadow: 4px 4px 0 rgba($stardew-wood-dark, 0.2);
+
+  :global {
+    .ant-card-head {
+      background: transparent;
+      border-bottom: 1px solid rgba($stardew-wood-dark, 0.2);
+      font-family: 'PixelFont', monospace;
+    }
+
+    .ant-card-body {
+      padding: 0;
+    }
+  }
+}
+
+.budgetListItem {
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba($stardew-wood-dark, 0.1);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.budgetItemTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'PixelFont', monospace;
+}
+
+.budgetItemDesc {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 4px;
+
+  :global {
+    .ant-progress {
+      flex: 1;
+    }
+  }
+}
+
+.budgetItemStats {
+  font-size: 12px;
+  color: $stardew-text-secondary;
+  white-space: nowrap;
+  font-family: 'PixelFont', monospace;
+}
+
+// 弹窗样式
+.modalContent {
+  padding: 16px 0;
+}
+
+.formItem {
+  margin-bottom: 16px;
+
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: $stardew-text-primary;
+    font-family: 'PixelFont', monospace;
+  }
+}
+
+// 响应式适配
+@media (max-width: 480px) {
+  .budgetStats {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .compareStats {
+    grid-template-columns: 1fr;
+  }
+
+  .statItem,
+  .compareItem {
+    padding: 8px;
+  }
+}

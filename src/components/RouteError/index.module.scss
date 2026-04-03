@@ -1,0 +1,41 @@
+@import '../../styles/stardew-theme.scss';
+
+.errorContainer {
+  width: 100%;
+  min-height: 100vh;
+  background: $stardew-farm-bg;
+  position: relative;
+  overflow: hidden;
+}
+
+// 装饰元素 - 像素草
+.decorations {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  padding: 0 20px;
+  pointer-events: none;
+}
+
+.pixelGrass {
+  width: 20px;
+  height: 30px;
+  background: linear-gradient(180deg, $stardew-grass-light 0%, $stardew-grass 100%);
+  border-radius: 4px 4px 0 0;
+  opacity: 0.6;
+
+  &:nth-child(2n) {
+    height: 40px;
+    opacity: 0.8;
+  }
+
+  &:nth-child(3n) {
+    height: 25px;
+    opacity: 0.5;
+  }
+}

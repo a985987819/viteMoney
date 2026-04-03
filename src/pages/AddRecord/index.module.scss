@@ -1,0 +1,498 @@
+// 星露谷主题配色
+$primary-color: #d4a574; // 木质暖棕色
+$primary-light: #e8c9a0; // 浅木色
+$primary-dark: #8b5a2b; // 深木色
+$secondary-color: #6e3b0b; // 深棕色
+$success-color: #51cf66; // 草绿色（收入）
+$warning-color: #e74c3c; // 暖红色（支出）
+$warning-light: #ff6b6b;
+$warning-dark: #c0392b;
+$text-primary: #5d4037; // 深棕色文字
+$text-secondary: #8d6e63; // 中棕色文字
+$text-tertiary: #a1887f; // 浅棕色文字
+$bg-color: #f4d03f; // 暖黄色背景
+$bg-light: #f7dc6f; // 浅暖黄
+$white: #fff;
+$border-color: #d4a574; // 木质边框色
+
+// Mixins
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin transition($property: all, $duration: 0.3s) {
+  transition: $property $duration ease;
+}
+
+@mixin gradient-bg {
+  background: linear-gradient(135deg, $primary-light 0%, $primary-color 100%);
+}
+
+@mixin gradient-warning {
+  background: linear-gradient(135deg, $warning-light 0%, $warning-color 100%);
+}
+
+// 主容器
+.addRecordContainer {
+  width: 100%;
+  height: 100%;
+  background-color: $bg-color;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+// 顶部导航
+.addHeader {
+  @include flex-between;
+  padding: 12px 16px;
+  @include gradient-bg;
+  border-radius: 0 0 20px 20px;
+  flex-shrink: 0;
+}
+
+.backIcon,
+.settingIcon {
+  font-size: 20px;
+  color: $text-primary;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  @include flex-center;
+}
+
+.typeTabs {
+  display: flex;
+  gap: 4px;
+  background-color: rgba($white, 0.3);
+  border-radius: 20px;
+  padding: 4px;
+}
+
+.typeTab {
+  padding: 6px 14px;
+  border: none;
+  background: transparent;
+  color: #5a7c5a;
+  font-size: 13px;
+  border-radius: 16px;
+  cursor: pointer;
+  @include transition;
+
+  &.active {
+    background-color: $secondary-color;
+    color: $white;
+  }
+}
+
+// 分类选择区域
+.categorySection {
+  flex: 1;
+  padding: 20px 16px;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.categoryGrid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px 8px;
+}
+
+.categoryItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  position: relative;
+  padding: 8px 4px;
+  border-radius: 12px;
+  @include transition;
+
+  &.selected {
+    background-color: rgba($primary-color, 0.2);
+
+    .categoryIcon {
+      background-color: $primary-color;
+      transform: scale(1.05);
+    }
+
+    .categoryName {
+      color: $secondary-color;
+      font-weight: 500;
+    }
+  }
+}
+
+.categoryIconWrapper {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: $bg-light;
+  @include flex-center;
+  @include transition;
+  position: relative;
+  overflow: hidden;
+
+  // SpriteIcon 样式调整
+  > div {
+    width: 40px !important;
+    height: 40px !important;
+  }
+}
+
+.categoryName {
+  font-size: 12px;
+  color: $text-secondary;
+}
+
+.selectedMark {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  font-size: 12px;
+  color: $primary-color;
+}
+
+// 展开子分类按钮
+.expandBtn {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background-color: $primary-dark;
+  color: $white;
+  @include flex-center;
+  font-size: 10px;
+  cursor: pointer;
+  @include transition;
+  z-index: 2;
+
+  &:hover {
+    transform: scale(1.1);
+    background-color: darken($primary-dark, 10%);
+  }
+
+  :global(.anticon) {
+    font-size: 10px;
+  }
+}
+
+// 已选子分类显示
+.selectedSubCategory {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, $primary-light 0%, $primary-color 100%);
+  margin: 0 16px 12px;
+  border-radius: 20px;
+  border: 2px solid $primary-dark;
+
+  .label {
+    font-size: 12px;
+    color: $text-secondary;
+  }
+
+  .value {
+    font-size: 14px;
+    font-weight: bold;
+    color: $primary-dark;
+  }
+}
+
+// 底部输入区域
+.inputSection {
+  background-color: $white;
+  border-radius: 20px 20px 0 0;
+  padding: 12px 16px;
+  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.05);
+  flex-shrink: 0;
+}
+
+.quickTags {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.quickTag {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  background-color: $bg-color;
+  border: none;
+  color: $text-secondary;
+  cursor: pointer;
+
+  &.active {
+    background-color: #e6f7e6;
+    color: $success-color;
+  }
+
+  :global(.anticon) {
+    font-size: 12px;
+  }
+}
+
+// 备注和金额
+.remarkAmountRow {
+  @include flex-between;
+  padding: 8px 0;
+  border-bottom: 1px solid $border-color;
+  margin-bottom: 12px;
+}
+
+.remarkInputWrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.remarkIcon {
+  font-size: 16px;
+  color: $primary-color;
+}
+
+.remarkInput {
+  flex: 1;
+  font-size: 13px;
+
+  &::placeholder {
+    color: $text-tertiary;
+  }
+}
+
+.amountDisplayWrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.dateDisplay {
+  font-size: 13px;
+  color: $primary-color;
+
+  &.clickable {
+    cursor: pointer;
+    text-decoration: underline;
+  }
+}
+
+.amountDisplay {
+  font-size: 24px;
+  font-weight: 600;
+  color: $text-primary;
+  min-width: 100px;
+  text-align: right;
+}
+
+// 数字键盘
+.numberKeyboard {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.keyboardRow {
+  display: flex;
+  gap: 8px;
+}
+
+.keyBtn {
+  flex: 1;
+  height: 48px;
+  border: none;
+  border-radius: 12px;
+  background-color: $bg-color;
+  font-size: 20px;
+  font-weight: 500;
+  color: $text-primary;
+  cursor: pointer;
+  @include transition(all, 0.2s);
+  @include flex-center;
+
+  &:active {
+    background-color: #e0e0e0;
+    transform: scale(0.98);
+  }
+
+  &.deleteBtn,
+  &.operatorBtn,
+  &.saveAgainBtn {
+    background-color: $bg-color;
+    color: $text-secondary;
+  }
+
+  &.deleteBtn {
+    font-size: 24px;
+  }
+
+  &.operatorBtn {
+    font-size: 24px;
+  }
+
+  &.saveAgainBtn {
+    font-size: 14px;
+  }
+
+  &.saveBtn {
+    @include gradient-bg;
+    color: $white;
+    font-size: 16px;
+    font-weight: 500;
+
+    &:active {
+      background: linear-gradient(135deg, #9cc996 0%, $primary-dark 100%);
+    }
+  }
+
+  &.calculateBtn {
+    @include gradient-warning;
+    color: $white;
+    font-size: 16px;
+    font-weight: 500;
+
+    &:active {
+      background: linear-gradient(135deg, #ffc53d 0%, $warning-dark 100%);
+    }
+  }
+}
+
+// 日期选择弹窗
+.datePickerModal {
+  position: absolute !important;
+
+  :global {
+    .ant-modal-wrap {
+      position: absolute;
+      @include flex-center;
+    }
+
+    .ant-modal-content {
+      max-width: 430px;
+      width: 100% !important;
+      max-height: 80vh;
+      border-radius: 12px;
+      overflow: hidden;
+      position: absolute;
+    }
+
+    .ant-modal-body {
+      padding: 0;
+      max-height: calc(80vh - 55px);
+      overflow-y: auto;
+    }
+  }
+}
+
+.datePickerContent {
+  padding: 16px;
+}
+
+.datePickerTabs {
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: center;
+
+  .modeRadio {
+    :global(.ant-radio-button-wrapper-checked) {
+      background-color: $primary-color !important;
+      border-color: $primary-color !important;
+    }
+  }
+}
+
+.datePickerContent {
+  :global {
+    .ant-picker-calendar {
+      background: $white;
+
+      .ant-picker-calendar-header {
+        padding: 8px 0;
+      }
+
+      .ant-picker-calendar-date {
+        height: 50px;
+      }
+    }
+  }
+}
+
+// 年份选择器容器
+.yearPickerContainer {
+  padding: 16px;
+
+  :global(.ant-picker) {
+    width: 100%;
+  }
+}
+
+// 子分类选择弹窗
+.subCategoryModal {
+  :global {
+    .ant-modal-content {
+      border-radius: 12px;
+    }
+  }
+}
+
+.subCategoryList {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.subCategoryItem {
+  padding: 12px 16px;
+  border-bottom: 1px solid $border-color;
+  cursor: pointer;
+  @include transition;
+
+  &:hover {
+    background-color: $bg-color;
+  }
+
+  &.selected {
+    background-color: rgba($primary-color, 0.1);
+    color: $primary-color;
+    font-weight: 500;
+  }
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+// 设置图标
+.settingIcon {
+  font-size: 20px;
+  color: $text-primary;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  @include flex-center;
+}
+
+// 标题
+.headerTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: $text-primary;
+}
