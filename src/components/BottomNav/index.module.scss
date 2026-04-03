@@ -51,6 +51,10 @@
   left: 0;
   right: 0;
   z-index: 100;
+  /* 手机底部导航栏安全区域避让 */
+  padding-bottom: env(safe-area-inset-bottom, 0);
+  /* 确保底部导航栏高度包含安全区域 */
+  min-height: calc(70px + env(safe-area-inset-bottom, 0));
 }
 
 .navItem {

@@ -17,7 +17,10 @@ interface PWAState {
   installPrompt: BeforeInstallPromptEvent | null;
   updateAvailable: boolean;
   needRefresh: boolean;
+  hasShownFirstTime: boolean;
 }
+
+const FIRST_TIME_KEY = 'pwa_first_time_shown';
 
 export function usePWA() {
   const [state, setState] = useState<PWAState>({
@@ -28,6 +31,7 @@ export function usePWA() {
     installPrompt: null,
     updateAvailable: false,
     needRefresh: false,
+    hasShownFirstTime: false,
   });
 
   // 检查是否已安装
@@ -66,11 +70,22 @@ export function usePWA() {
   useEffect(() => {
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
+      
+      // 检查是否是首次访问
+      const hasShownBefore = localStorage.getItem(FIRST_TIME_KEY);
+      const isFirstTime = !hasShownBefore;
+      
       setState((prev) => ({
         ...prev,
         installPrompt: e as BeforeInstallPromptEvent,
         isInstallable: true,
+        hasShownFirstTime: isFirstTime,
       }));
+      
+      // 如果是首次，标记为已显示
+      if (isFirstTime) {
+        localStorage.setItem(FIRST_TIME_KEY, 'true');
+      }
     };
 
     const handleAppInstalled = () => {

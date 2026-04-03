@@ -24,11 +24,15 @@ $cdn-base-url: 'https://vercel-icons.vercel.app';
     -moz-osx-font-smoothing: grayscale;
     height: 100%;
     overflow: hidden;
+    /* 手机底部导航栏避让 */
+    padding-bottom: env(safe-area-inset-bottom, 0);
   }
 
   #root {
     height: 100%;
     width: 100%;
+    /* 确保内容区域也有底部安全区域 */
+    padding-bottom: env(safe-area-inset-bottom, 0);
   }
 
   /* 滚动条样式 - 木质风格 */
@@ -184,6 +188,8 @@ body {
   background: $stardew-farm-bg;
   position: relative;
   overflow: hidden;
+  /* 手机底部导航栏高度避让 - 70px是BottomNav高度 */
+  padding-bottom: calc(70px + env(safe-area-inset-bottom, 0));
 }
 
 /* ==================== 平板设备（占满短边，长边居中）==================== */
