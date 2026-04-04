@@ -1,0 +1,238 @@
+// 导入星露谷物语主题
+@use '../../styles/stardew-theme.scss' as *;
+
+// 主题配色定义
+$spring-theme: (
+  primary: #90EE90,
+  secondary: #98FB98,
+  accent: #FFB6C1,
+  text: #2F4F4F,
+  border: #8FBC8F,
+  shadow: #556B2F,
+  bg-light: #F0FFF0,
+  bg-dark: #8FBC8F,
+);
+
+$summer-theme: (
+  primary: #FF6B6B,
+  secondary: #FFA07A,
+  accent: #FFD700,
+  text: #2C3E50,
+  border: #E74C3C,
+  shadow: #C0392B,
+  bg-light: #FFF5F5,
+  bg-dark: #E74C3C,
+);
+
+$autumn-theme: (
+  primary: #D2691E,
+  secondary: #FF8C00,
+  accent: #FFD700,
+  text: #3E2723,
+  border: #8B4513,
+  shadow: #5D2E0C,
+  bg-light: #FFF8E1,
+  bg-dark: #8B4513,
+);
+
+$winter-theme: (
+  primary: #87CEEB,
+  secondary: #B0E0E6,
+  accent: #E0FFFF,
+  text: #1A237E,
+  border: #4682B4,
+  shadow: #2C3E50,
+  bg-light: #F0F8FF,
+  bg-dark: #4682B4,
+);
+
+// 按钮基础样式
+.themeButton {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px;
+  font-family: 'PixelFont', monospace;
+  font-weight: bold;
+  border: 3px solid;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.2);
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+  
+  &:active {
+    transform: translateY(4px);
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0.2);
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+// 主题样式 - 春
+.spring {
+  background-color: map-get($spring-theme, bg-light);
+  border-color: map-get($spring-theme, border);
+  color: map-get($spring-theme, text);
+  
+  &:not(:disabled):hover {
+    background-color: map-get($spring-theme, bg-dark);
+    border-color: map-get($spring-theme, shadow);
+  }
+  
+  &:active {
+    background-color: map-get($spring-theme, border);
+  }
+}
+
+// 主题样式 - 夏
+.summer {
+  background-color: map-get($summer-theme, bg-light);
+  border-color: map-get($summer-theme, border);
+  color: map-get($summer-theme, text);
+  
+  &:not(:disabled):hover {
+    background-color: lighten(map-get($summer-theme, primary), 10%);
+    border-color: map-get($summer-theme, shadow);
+  }
+  
+  &:active {
+    background-color: map-get($summer-theme, border);
+  }
+}
+
+// 主题样式 - 秋
+.autumn {
+  background-color: map-get($autumn-theme, bg-light);
+  border-color: map-get($autumn-theme, border);
+  color: map-get($autumn-theme, text);
+  
+  &:not(:disabled):hover {
+    background-color: lighten(map-get($autumn-theme, primary), 15%);
+    border-color: map-get($autumn-theme, shadow);
+  }
+  
+  &:active {
+    background-color: map-get($autumn-theme, border);
+  }
+}
+
+// 主题样式 - 冬
+.winter {
+  background-color: map-get($winter-theme, bg-light);
+  border-color: map-get($winter-theme, border);
+  color: map-get($winter-theme, text);
+  
+  &:not(:disabled):hover {
+    background-color: lighten(map-get($winter-theme, primary), 10%);
+    border-color: map-get($winter-theme, shadow);
+  }
+  
+  &:active {
+    background-color: map-get($winter-theme, border);
+  }
+}
+
+// 默认样式
+.default {
+  background-color: $stardew-wood-light;
+  border-color: $stardew-wood-dark;
+  color: $stardew-text-primary;
+  
+  &:not(:disabled):hover {
+    background-color: $stardew-wood-mid;
+    border-color: $stardew-wood-deep;
+  }
+  
+  &:active {
+    background-color: $stardew-wood-dark;
+  }
+}
+
+// 按钮大小
+.small {
+  padding: 6px 12px;
+  font-size: 12px;
+  border-radius: 8px;
+  border-width: 2px;
+}
+
+.medium {
+  padding: 10px 20px;
+  font-size: 14px;
+  border-radius: 12px;
+  border-width: 3px;
+}
+
+.large {
+  padding: 14px 28px;
+  font-size: 16px;
+  border-radius: 16px;
+  border-width: 4px;
+}
+
+// 按钮类型
+.primary {
+  font-weight: bold;
+}
+
+.dashed {
+  border-style: dashed;
+}
+
+.text {
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  
+  &:active {
+    transform: none;
+  }
+}
+
+.link {
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  text-decoration: underline;
+  
+  &:active {
+    transform: none;
+  }
+}
+
+// 块级按钮
+.block {
+  width: 100%;
+  display: flex;
+}
+
+// 禁用状态
+.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+// 图标样式
+.buttonIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2em;
+}
+
+.buttonText {
+  display: inline-block;
+}
