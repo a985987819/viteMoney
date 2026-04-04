@@ -142,8 +142,10 @@ export default defineConfig({
         enabled: true,
         type: 'module'
       },
-      // 确保在 production 模式下也注册 Service Worker
-      selfDestroying: true,
+      // 禁用 selfDestroying，确保生成 Service Worker
+      selfDestroying: false,
+      // 注入注册代码到 HTML
+      injectRegister: 'auto',
     })
   ],
   server: {

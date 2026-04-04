@@ -98,6 +98,37 @@ window.addEventListener('unhandledrejection', (event) => {
   }
 });
 
+// 注册 Service Worker（PWA 支持）
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    // 开发模式下使用 dev-sw.js，生产模式下使用 sw.js
+    const swPath = import.meta.env.DEV ? '/dev-sw.js?dev-sw' : '/sw.js';
+    
+    navigator.serviceWorker.register(swPath, { 
+      scope: '/', 
+      type: 'classic' 
+    })
+    .then((registration) => {
+      console.log('[PWA] Service Worker 注册成功:', registration);
+      
+      // 检查更新
+      registration.addEventListener('updatefound', () => {
+        const newWorker = registration.installing;
+        if (newWorker) {
+          newWorker.addEventListener('statechange', () => {
+            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+              console.log('[PWA] 发现新版本，请刷新页面');
+            }
+          });
+        }
+      });
+    })
+    .catch((error) => {
+      console.error('[PWA] Service Worker 注册失败:', error);
+    });
+  });
+}
+
 const rootElement = document.getElementById('root')
 if (rootElement) {
   createRoot(rootElement).render(<Root />)

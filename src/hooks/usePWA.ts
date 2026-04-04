@@ -131,14 +131,10 @@ export function usePWA() {
             console.log('[PWA] Service Worker registration:', registration ? 'active' : 'none');
             
             if (!registration) {
-              console.warn('[PWA] ⚠️ Service Worker 未注册，尝试注册...');
-              try {
-                const newReg = await navigator.serviceWorker.register('/sw.js');
-                console.log('[PWA] Service Worker 注册成功:', newReg);
-              } catch (regErr) {
-                console.error('[PWA] Service Worker 注册失败:', regErr);
-              }
-            }
+               console.warn('[PWA] ⚠️ Service Worker 未注册');
+               console.log('[PWA] 注意：开发模式下 SW 由 VitePWA 插件自动注册');
+               console.log('[PWA] 生产构建后会生成 sw.js 文件');
+             }
           } catch (err) {
             console.error('[PWA] Service Worker check failed:', err);
           }
