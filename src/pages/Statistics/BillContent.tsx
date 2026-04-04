@@ -7,13 +7,7 @@ import {
   SortAscendingOutlined,
   SortDescendingOutlined,
 } from '@ant-design/icons';
-import * as echarts from 'echarts/core';
-import { BarChart } from 'echarts/charts';
-import { TooltipComponent, GridComponent } from 'echarts/components';
-import { CanvasRenderer } from 'echarts/renderers';
-
-// 注册必要的组件
-echarts.use([BarChart, TooltipComponent, GridComponent, CanvasRenderer]);
+import * as echarts from 'echarts';
 import dayjs from 'dayjs';
 import { getPixelBarOption } from '../../utils/echartsPixelTheme';
 import type { RecordItem, BillFilterParams, BillListResponse } from '../../api/record';

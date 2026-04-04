@@ -173,6 +173,7 @@ export default defineConfig({
             if (id.includes('antd')) {
               return 'vendor-ui';
             }
+            // ECharts 相关模块统一打包
             if (id.includes('echarts')) {
               return 'vendor-charts';
             }
@@ -185,10 +186,12 @@ export default defineConfig({
             return 'vendor-others';
           }
         },
+        // 确保 ECharts 模块不会被过度分割
+        preserveModules: false,
         // 资源文件命名
         chunkFileNames: 'assets/js/[name]-[hash].js',
         entryFileNames: 'assets/js/[name]-[hash].js',
-        assetFileNames: (assetInfo) => {
+        assetFileNames: (assetInfo: any) => {
           const info = assetInfo.name || '';
           if (info.endsWith('.css')) {
             return 'assets/css/[name]-[hash][extname]';
@@ -210,7 +213,7 @@ export default defineConfig({
       compress: {
         drop_console: true,
         drop_debugger: true,
-      },
-    },
+      } as any,
+    } as any,
   }
 })

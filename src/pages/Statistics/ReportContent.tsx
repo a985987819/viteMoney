@@ -3,13 +3,7 @@ import { Radio, List, Drawer, Button, Checkbox, Empty } from 'antd';
 import {
   FilterOutlined,
 } from '@ant-design/icons';
-import * as echarts from 'echarts/core';
-import { PieChart } from 'echarts/charts';
-import { TooltipComponent, LegendComponent } from 'echarts/components';
-import { CanvasRenderer } from 'echarts/renderers';
-
-// 注册必要的组件
-echarts.use([PieChart, TooltipComponent, LegendComponent, CanvasRenderer]);
+import * as echarts from 'echarts';
 import dayjs from 'dayjs';
 import { getPixelPieOption } from '../../utils/echartsPixelTheme';
 import type { ReportData, CategoryStats, DailyStats } from '../../api/record';
