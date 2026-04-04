@@ -72,7 +72,7 @@ export const categoryIconMapping: Record<string, CategoryMapping> = {
         name: '零食',
         englishName: 'dining_snacks',
         synonyms: ['零食', '甜品', '蛋糕', '面包', '冰淇淋', '糖果'],
-        defaultIcon: '�',
+        defaultIcon: '🍪',
       },
       {
         name: '食材',
@@ -146,7 +146,7 @@ export const categoryIconMapping: Record<string, CategoryMapping> = {
         name: '私家车',
         englishName: 'transport_car',
         synonyms: ['油费', '加油', '保养', '修车', '洗车', '车险', '年检', '停车费', '过路费', '高速费'],
-        defaultIcon: '�',
+        defaultIcon: '🚗',
       },
       {
         name: '其他交通',
@@ -180,7 +180,7 @@ export const categoryIconMapping: Record<string, CategoryMapping> = {
         name: '配饰',
         englishName: 'shopping_accessories',
         synonyms: ['配饰', '首饰', '珠宝', '手表', '眼镜', '帽子', '围巾', '手套'],
-        defaultIcon: '�',
+        defaultIcon: '💎',
       },
       {
         name: '日用',
@@ -232,7 +232,7 @@ export const categoryIconMapping: Record<string, CategoryMapping> = {
         name: '休闲',
         englishName: 'entertainment_leisure',
         synonyms: ['KTV', '酒吧', '夜店', '聚会', '派对', '桌游', '棋牌', '麻将'],
-        defaultIcon: '�',
+        defaultIcon: '🎯',
       },
     ],
   },
@@ -526,7 +526,7 @@ export const categoryIconMapping: Record<string, CategoryMapping> = {
     standardName: '投资收入',
     englishName: 'investment_income',
     type: 'income',
-    defaultIcon: '�',
+    defaultIcon: '📈',
     subCategories: [
       {
         name: '理财收益',
@@ -550,7 +550,7 @@ export const categoryIconMapping: Record<string, CategoryMapping> = {
         name: '其他投资',
         englishName: 'investment_other',
         synonyms: ['基金收益', '债券收益', '外汇收益', '期货收益', '数字货币收益', '版税', '专利收入'],
-        defaultIcon: '�',
+        defaultIcon: '💰',
       },
     ],
   },

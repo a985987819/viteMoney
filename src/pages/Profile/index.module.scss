@@ -17,7 +17,7 @@ $border-color: #d4a574;
 }
 
 @mixin gradient-bg {
-  background: linear-gradient(135deg, $primary-light 0%, $primary-color 100%);
+  background: $primary-color;
 }
 
 // 主容器
@@ -33,7 +33,7 @@ $border-color: #d4a574;
 // 顶部背景
 .profileHeader {
   padding: 16px;
-  @include gradient-bg;
+  background: $primary-color;
   flex-shrink: 0;
 }
 

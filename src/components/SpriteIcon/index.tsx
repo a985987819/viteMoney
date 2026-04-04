@@ -1,5 +1,5 @@
 import React from 'react';
-import { getSpriteIconStyle } from '../../utils/spriteIcons';
+import { getCategoryEmoji } from '../../utils/spriteIcons';
 import styles from './index.module.scss';
 
 interface SpriteIconProps {
@@ -9,22 +9,32 @@ interface SpriteIconProps {
 }
 
 /**
- * 精灵图图标组件
- * 使用CSS background-position显示精灵图中的单个图标
+ * Emoji图标组件
+ * 统一使用Emoji显示分类图标
  */
-const SpriteIcon: React.FC<SpriteIconProps> = ({ 
-  iconId, 
+const SpriteIcon: React.FC<SpriteIconProps> = ({
+  iconId,
   size = 32,
-  className = '' 
+  className = ''
 }) => {
-  const iconStyle = getSpriteIconStyle(iconId, size);
+  const emoji = getCategoryEmoji(iconId);
 
   return (
-    <div 
+    <div
       className={`${styles.spriteIcon} ${className}`}
-      style={iconStyle}
+      style={{
+        width: `${size}px`,
+        height: `${size}px`,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontSize: `${size * 0.75}px`,
+        lineHeight: 1,
+      }}
       title={iconId}
-    />
+    >
+      {emoji}
+    </div>
   );
 };
 

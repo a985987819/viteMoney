@@ -8,7 +8,7 @@
 }
 
 .tabHeader {
-  background: linear-gradient(180deg, $stardew-panel-bg 0%, $stardew-parchment 100%);
+  background: $stardew-panel-bg;
   border-bottom: 3px solid $stardew-wood-dark;
   padding-top: env(safe-area-inset-top, 0);
 
@@ -53,4 +53,5 @@
   overflow: auto;
   display: flex;
   flex-direction: column;
+  padding-bottom: calc(16px + 70px + env(safe-area-inset-bottom, 0));
 }

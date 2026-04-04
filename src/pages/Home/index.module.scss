@@ -13,8 +13,9 @@ $content-bg-url: '#{$cdn-base-url}/homePageBg.png';
 .homeContainer {
   width: 100%;
   min-height: 100vh;
-  background: url($content-bg-url) no-repeat center center;
+  background: url($content-bg-url) no-repeat center top;
   background-size: cover;
+  background-position-y: 140px;
   display: flex;
   flex-direction: column;
   position: relative;

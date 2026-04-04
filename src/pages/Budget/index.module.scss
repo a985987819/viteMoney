@@ -4,7 +4,8 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
-  background: linear-gradient(180deg, $stardew-parchment 0%, $stardew-panel-bg 100%);
+  background: $stardew-panel-bg;
+  padding-bottom: calc(70px + env(safe-area-inset-bottom, 0));
 }
 
 .loadingContainer {
@@ -12,7 +13,7 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background: linear-gradient(180deg, $stardew-parchment 0%, $stardew-panel-bg 100%);
+  background: $stardew-panel-bg;
 }
 
 .addBtn {
@@ -29,6 +30,7 @@
 .content {
   flex: 1;
   padding: 16px;
+  padding-bottom: calc(16px + 70px + env(safe-area-inset-bottom, 0));
   overflow-y: auto;
 }
 

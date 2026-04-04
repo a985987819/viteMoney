@@ -15,6 +15,7 @@ import { getLocalRecords, saveLocalRecords } from '../../utils/storage';
 import { useAuth } from '../../hooks/useAuth';
 import { useTranslation } from 'react-i18next';
 import { expenseCategories, incomeCategories, type MainCategory, type SubCategory } from '../../constants/categories';
+import { getCategoryIcon } from '../../constants/categoryIconMapping';
 import SubCategoryModal from '../../components/SubCategoryModal';
 import SpriteIcon from '../../components/SpriteIcon';
 import KeyboardAvoidingView from '../../components/KeyboardAvoidingView';
@@ -227,7 +228,7 @@ const AddRecord = () => {
         type: activeType,
         category: selectedCategory.mainCategory.name,
         subCategory: selectedCategory.subCategory?.name,
-        categoryIcon: selectedCategory.mainCategory.icon || '',
+        categoryIcon: getCategoryIcon(selectedCategory.mainCategory.name) || '',
         amount: parseFloat(finalAmount),
         remark,
         date: selectedDate.valueOf(),
@@ -289,7 +290,7 @@ const AddRecord = () => {
         type: activeType,
         category: selectedCategory.mainCategory.name,
         subCategory: selectedCategory.subCategory?.name,
-        categoryIcon: selectedCategory.mainCategory.icon || '',
+        categoryIcon: getCategoryIcon(selectedCategory.mainCategory.name) || '',
         amount: parseFloat(finalAmount),
         remark,
         date: selectedDate.valueOf(),

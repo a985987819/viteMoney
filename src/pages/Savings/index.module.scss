@@ -4,9 +4,10 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
-  background: linear-gradient(180deg, #87CEEB 0%, #E0F6FF 50%, #90EE90 100%);
+  background: $stardew-panel-bg;
   position: relative;
   overflow: hidden;
+  padding-bottom: calc(70px + env(safe-area-inset-bottom, 0));
 }
 
 // 背景装饰
@@ -80,6 +81,7 @@
   align-items: center;
   padding: 24px 16px;
   padding-top: calc(24px + env(safe-area-inset-top, 0));
+  padding-bottom: calc(24px + 70px + env(safe-area-inset-bottom, 0));
   overflow-y: auto;
   position: relative;
   z-index: 1;
@@ -215,7 +217,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, $stardew-grass-light 0%, $stardew-grass 100%);
+  background: $stardew-grass-light;
   border-radius: 12px;
   border: 2px solid $stardew-grass-deep;
 }
