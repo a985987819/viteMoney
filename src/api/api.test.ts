@@ -66,9 +66,9 @@ describe('API functions', () => {
       it('should call logout endpoint', async () => {
         vi.mocked(http.post).mockResolvedValue(undefined);
 
-        await logout();
+        await logout({ refreshToken: 'test_token' });
 
-        expect(http.post).toHaveBeenCalledWith('/auth/logout', undefined);
+        expect(http.post).toHaveBeenCalledWith('/auth/logout', { refreshToken: 'test_token' });
       });
     });
 
@@ -111,7 +111,7 @@ describe('API functions', () => {
 
         vi.mocked(http.get).mockResolvedValue(mockStats);
 
-        await getMonthlyStats();
+        await getMonthlyStats(undefined);
 
         expect(http.get).toHaveBeenCalledWith('/records/stats', { params: { month: undefined } });
       });
