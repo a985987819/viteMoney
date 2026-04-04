@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { List, Empty, Spin, Radio, Modal, message, Input, Button, Checkbox } from 'antd';
+import { List, Spin, Radio, Modal, message, Input, Button, Checkbox } from 'antd';
 import {
   FilterOutlined,
   CloseOutlined,
@@ -25,6 +25,8 @@ import { useAuth } from '../../hooks/useAuth';
 import { compareDate } from '../../utils/importExport';
 import BottomNav from '../../components/BottomNav';
 import PageHeader from '../../components/PageHeader';
+import EmptyState from '../../components/EmptyState';
+import ScrollContainer from '../../components/ScrollContainer';
 import type { Category } from '../../api/category';
 import SwipeableRecordItem from '../../components/SwipeableRecordItem';
 import DatePicker, { type DateMode } from '../../components/DatePicker';
@@ -90,7 +92,7 @@ const Bill = () => {
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
 
   // 自定义滚动条状态
-  const [, setShowCustomScrollbar] = useState(false);
+  const [showCustomScrollbar, setShowCustomScrollbar] = useState(false);
   const [scrollbarTop, setScrollbarTop] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -619,13 +621,18 @@ const Bill = () => {
       </div>
 
       {/* 可滚动的账单列表 */}
-      <div className={styles.billListScroll} ref={listRef}>
-        {records.length === 0 && !loading ? (
-          <Empty description="暂无账单记录" />
-        ) : (
-          <>
-            {/* 按时间排序时按日期分组显示 */}
-            {sortType === 'time' && Object.entries(groupedRecords).map(([date, dayRecords]) => {
+      <ScrollContainer className={styles.billListScroll} onScroll={handleScroll}>
+        <Spin spinning={loading && records.length === 0}>
+          {records.length === 0 && !loading ? (
+            <EmptyState
+              title="暂无账单记录"
+              description="试试调整筛选条件或选择其他日期范围"
+              showAction={false}
+            />
+          ) : (
+            <>
+              {/* 按时间排序时按日期分组显示 */}
+              {sortType === 'time' && Object.entries(groupedRecords).map(([date, dayRecords]) => {
               const { expense, income } = getDayTotal(dayRecords);
               const dayjsDate = dayjs(date);
               const weekDay = ['日', '一', '二', '三', '四', '五', '六'][dayjsDate.day()];
@@ -699,12 +706,13 @@ const Bill = () => {
               <div className={styles.noMore}>没有更多了</div>
             )}
           </>
-        )
-        }
+        )}
+        </Spin>
+      </ScrollContainer>
 
-        {/* 自定义滚动条 - 放在列表内部 */}
-        {/* {showCustomScrollbar && ( */}
-        < div className={styles.customScrollbarContainer} >
+      {/* 自定义滚动条 */}
+      {showCustomScrollbar && (
+        <div className={styles.customScrollbarContainer}>
           <div
             ref={scrollbarRef}
             className={styles.customScrollbar}
@@ -718,9 +726,7 @@ const Bill = () => {
             <DownOutlined className={styles.scrollbarIcon} />
           </div>
         </div>
-
-        {/* } */}
-      </div>
+      )}
 
       {/* 回到顶部按钮 */}
       {showBackTop && (

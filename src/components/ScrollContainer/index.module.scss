@@ -1,0 +1,30 @@
+@use '../../styles/stardew-theme.scss' as *;
+
+.scrollContainer {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  min-height: 100%;
+  
+  // 隐藏滚动条但保持滚动功能
+  scrollbar-width: thin;
+  scrollbar-color: rgba($stardew-wood-mid, 0.3) transparent;
+
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba($stardew-wood-mid, 0.3);
+    border-radius: 2px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: rgba($stardew-wood-mid, 0.5);
+  }
+}

@@ -12,16 +12,12 @@ $content-bg-url: '#{$cdn-base-url}/homePageBg.png';
 // 主容器
 .homeContainer {
   width: 100%;
-  min-height: 100vh;
-  // background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), url($content-bg-url) no-repeat center center);
+  height: 100%;
   background: url($content-bg-url) no-repeat center center;
   background-size: cover;
   display: flex;
   flex-direction: column;
-  overflow: auto;
   position: relative;
-  /* 手机底部导航栏高度避让 - 70px是BottomNav高度 */
-  padding-bottom: calc(70px + env(safe-area-inset-bottom, 0));
 }
 
 .homeBottom{
@@ -155,33 +151,24 @@ width: 100%;
 
 // 账单列表
 .recordsSection {
-  padding: 0 16px 80px;
   flex: 1;
   display: flex;
   flex-direction: column;
   min-height: 0;
-  overflow: hidden;
-  // background: linear-gradient(180deg, $stardew-grass 0%, $stardew-earth 100%);
+  padding: 0 16px 20px;
 }
 
-.recordsListContainer {
-  flex: 1;
-  overflow-y: auto;
-  min-height: 0;
+.recordsList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
-.loadingMore {
-  @include flex-center;
-  padding: 16px;
-  color: $stardew-text-secondary;
-  font-size: 12px;
-  font-family: 'PixelFont', monospace;
-}
-
+.loadingMore,
 .noMore {
   @include flex-center;
   padding: 16px;
-  color: $stardew-wood-mid;
+  color: $stardew-text-secondary;
   font-size: 12px;
   font-family: 'PixelFont', monospace;
 }

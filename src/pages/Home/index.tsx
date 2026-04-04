@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Button, List, Tag, Empty, Spin, message, Modal } from 'antd';
+import { Button, List, Tag, Spin, message, Modal } from 'antd';
 import {
   PlusOutlined,
   EyeOutlined,
@@ -15,12 +15,14 @@ import { useAuth } from '../../hooks/useAuth';
 import { compareDate, getTimestamp } from '../../utils/importExport';
 import BottomNav from '../../components/BottomNav';
 import SwipeableRecordItem from '../../components/SwipeableRecordItem';
+import EmptyState from '../../components/EmptyState';
+import ScrollContainer from '../../components/ScrollContainer';
+import AnimatedWrapper from '../../components/AnimatedWrapper';
+import PageContainer from '../../components/PageContainer';
 import styles from './index.module.scss';
 import StardewPanel from '../../components/StardewPanel';
 
 const DATE_COUNT = 10;
-
-// CDN 基础地址
 const CDN_BASE_URL = 'https://vercel-icons.vercel.app';
 const homeBottomImg = `${CDN_BASE_URL}/homeBottom.png`;
 
@@ -38,9 +40,14 @@ const Home = () => {
   const [showAmount, setShowAmount] = useState(true);
   const [hasMore, setHasMore] = useState(true);
   const [cursor, setCursor] = useState<string | undefined>(undefined);
-  const listRef = useRef<HTMLDivElement>(null);
+  const loadingRef = useRef(loading);
+
+  useEffect(() => {
+    loadingRef.current = loading;
+  }, [loading]);
 
   const loadRecords = useCallback(async (isRefresh = false) => {
+    if (loadingRef.current) return;
     setLoading(true);
 
     try {
@@ -86,15 +93,10 @@ const Home = () => {
           .filter(r => r.type === 'income')
           .reduce((sum, r) => sum + Number(r.amount), 0);
 
-        // 获取本地预算，如果没有设置则使用默认值 1000
         const localBudget = getLocalBudget(currentYear, currentMonthNum);
         const budgetAmount = localBudget?.amount || 1000;
 
-        setStats({
-          totalExpense,
-          totalIncome,
-          budget: budgetAmount,
-        });
+        setStats({ totalExpense, totalIncome, budget: budgetAmount });
 
         const grouped = localRecords.reduce((acc, record) => {
           const dateStr = dayjs(getTimestamp(record.date)).format('YYYY-MM-DD');
@@ -106,7 +108,6 @@ const Home = () => {
         }, {} as Record<string, RecordItem[]>);
 
         const today = dayjs().format('YYYY-MM-DD');
-
         const groups: DateGroup[] = Object.entries(grouped)
           .map(([date, records]) => ({
             date,
@@ -129,8 +130,7 @@ const Home = () => {
         } else {
           setDateGroups(prev => [...prev, ...pageData]);
         }
-        const hasMoreLocal = endIndex < groups.length;
-        setHasMore(hasMoreLocal);
+        setHasMore(endIndex < groups.length);
         if (pageData.length > 0) {
           setCursor(pageData[pageData.length - 1].date);
         }
@@ -145,33 +145,15 @@ const Home = () => {
 
   useEffect(() => {
     loadRecords(true);
-  }, [isLoggedIn]);
+  }, [isLoggedIn, loadRecords]);
 
-  const handleScroll = useCallback(() => {
-    if (!listRef.current) return;
-    const { scrollTop, scrollHeight, clientHeight } = listRef.current;
-    if (scrollTop + clientHeight >= scrollHeight - 50 && hasMore && !loadingRef.current) {
+  const handleScrollEnd = useCallback(() => {
+    if (hasMore && !loadingRef.current) {
       loadRecords();
     }
   }, [hasMore, loadRecords]);
 
-  // 使用 ref 来存储 loading 状态，避免闭包问题
-  const loadingRef = useRef(loading);
-  useEffect(() => {
-    loadingRef.current = loading;
-  }, [loading]);
-
-  useEffect(() => {
-    const listEl = listRef.current;
-    if (listEl) {
-      listEl.addEventListener('scroll', handleScroll);
-      return () => listEl.removeEventListener('scroll', handleScroll);
-    }
-  }, [handleScroll]);
-
-  const handleAddRecord = () => {
-    navigate('/add');
-  };
+  const handleAddRecord = () => navigate('/add');
 
   const handleEditRecord = (record: RecordItem) => {
     navigate('/add', { state: { record } });
@@ -188,156 +170,139 @@ const Home = () => {
             await deleteRecord(record.id);
           } else {
             const localRecords = getLocalRecords();
-            const updatedRecords = localRecords.filter(r => r.id !== record.id);
-            saveLocalRecords(updatedRecords);
+            saveLocalRecords(localRecords.filter(r => r.id !== record.id));
           }
           message.success(t('bill.deleteSuccess'));
           loadRecords(true);
         } catch (error) {
           message.error(t('bill.deleteFailed'));
-          console.error('Delete error:', error);
         }
       },
     });
   };
 
-  const formatAmount = (amount: number) => {
-    if (!showAmount) return '****';
-    return `¥${amount.toFixed(2)}`;
-  };
-
-  // 预算金额格式化（不带小数）
-  const formatBudgetAmount = (amount: number) => {
-    if (!showAmount) return '****';
-    return Math.round(amount).toString();
-  };
+  const formatAmount = (amount: number) => showAmount ? `¥${amount.toFixed(2)}` : '****';
+  const formatBudgetAmount = (amount: number) => showAmount ? Math.round(amount).toString() : '****';
 
   const getDateLabel = (dateStr: string) => {
-    const nowYear = dayjs().format('YYYY');
     const today = dayjs().format('YYYY-MM-DD');
     const yesterday = dayjs().subtract(1, 'day').format('YYYY-MM-DD');
-
     if (dateStr === today) return t('home.today') || '今天';
     if (dateStr === yesterday) return t('home.yesterday') || '昨天';
-    return dayjs(dateStr).format(t('home.dateFormat') || `${nowYear === dayjs(dateStr).format('YYYY') ? '' : dayjs(dateStr).format('YYYY')}年M月D日`);
-  };
-
-  const getCurrentMonth = () => {
-    return dayjs().format(t('home.monthFormat') || 'M月');
+    return dayjs(dateStr).format('M 月 D 日');
   };
 
   const getDayTotal = (dayRecords: RecordItem[]) => {
-    const expense = dayRecords
-      .filter(r => r.type === 'expense')
-      .reduce((sum, r) => sum + Number(r.amount), 0);
-    const income = dayRecords
-      .filter(r => r.type === 'income')
-      .reduce((sum, r) => sum + Number(r.amount), 0);
+    const expense = dayRecords.filter(r => r.type === 'expense').reduce((sum, r) => sum + Number(r.amount), 0);
+    const income = dayRecords.filter(r => r.type === 'income').reduce((sum, r) => sum + Number(r.amount), 0);
     return { expense, income };
   };
 
   return (
-    <div className={styles.homeContainer}>
-      <div className={styles.headerSection}>
-        <div className={styles.statsSection}>
-          <div className={styles.statsLabel}>{t('home.monthlyExpense')}({t('common.yuan')})</div>
-          <div className={styles.statsAmount}>
-            <span className={styles.amountValue}>{formatAmount(stats.totalExpense)}</span>
-            <span className={styles.amountEye} onClick={() => setShowAmount(!showAmount)}>
-              {showAmount ? <EyeOutlined /> : <EyeInvisibleOutlined />}
-            </span>
-          </div>
-
-          <div className={styles.statsSub}>
-            <div></div>
-            {/* <span>{t('home.monthlyIncome')} {formatAmount(stats.totalIncome)}</span> */}
-            {/* <span className={styles.budgetLabel}>{t('home.budgetRemaining')}</span> */}
-            <div
-              className={styles.statsBudget}
-              id='budgetRemaining'
-              style={{ backgroundImage: `url(${CDN_BASE_URL}/budgetBg.png)` }}
-              onClick={() => navigate('/budget')}
-            >
-              <span className={styles.budgetValue}>
-                {formatBudgetAmount(stats.budget - stats.totalExpense)}
+    <PageContainer withSafeArea withBottomNav>
+      <div className={styles.homeContainer}>
+        <AnimatedWrapper animation="fadeInDown" className={styles.headerSection}>
+          <div className={styles.statsSection}>
+            <div className={styles.statsLabel}>{t('home.monthlyExpense')}({t('common.yuan')})</div>
+            <div className={styles.statsAmount}>
+              <span className={styles.amountValue}>{formatAmount(stats.totalExpense)}</span>
+              <span className={styles.amountEye} onClick={() => setShowAmount(!showAmount)}>
+                {showAmount ? <EyeOutlined /> : <EyeInvisibleOutlined />}
               </span>
             </div>
-          </div>
-        </div>
-      </div>
-
-      <div className={styles.addButtonSection}>
-        <Button
-          id="findmeHere"
-          type="primary"
-          size="large"
-          block
-          className={styles.addRecordBtn}
-          onClick={handleAddRecord}
-        >
-          <PlusOutlined />
-          {t('home.addRecord')}
-        </Button>
-      </div>
-
-      <div className={styles.recordsSection}>
-        <div className={styles.recordsHeader}>
-          <span className={styles.recordsTitle}>{t('home.recentRecords')}</span>
-          <Tag color="success" className={styles.recordsTag}>{getCurrentMonth()}</Tag>
-        </div>
-
-        {/* <div className={styles.recordsListContainer} ref={listRef}> */}
-        <div className={styles.recordsListContainer}>
-          <Spin spinning={loading && dateGroups.length === 0}>
-            {dateGroups.length === 0 && !loading ? (
-              <Empty description={t('home.noRecords')} />
-            ) : (
-              <div className={styles.recordsList}>
-                {dateGroups.map((group) => {
-                  const { expense, income } = getDayTotal(group.records);
-
-                  return (
-                    <StardewPanel>
-                      <div key={group.date} className={styles.recordDayGroup}>
-                        <div className={styles.recordDayHeader}>
-                          <span>{getDateLabel(group.date)}</span>
-                          <span className={styles.dayTotal}>
-                            {expense > 0 && `${t('home.expenseShort')}:${expense.toFixed(2)}`}
-                            {income > 0 && ` ${t('home.incomeShort')}:${income.toFixed(2)}`}
-                          </span>
-                        </div>
-                        <List
-                          dataSource={group.records}
-                          renderItem={(record) => (
-                            <SwipeableRecordItem
-                              record={record}
-                              onEdit={handleEditRecord}
-                              onDelete={handleDeleteRecord}
-                            />
-                          )}
-                        />
-                      </div></StardewPanel>
-                  );
-                })}
-                {loading && dateGroups.length > 0 && (
-                  <div className={styles.loadingMore}>
-                    <Spin size="small" />
-                    <span>{t('common.loading')}</span>
-                  </div>
-                )}
-                {!hasMore && dateGroups.length > 0 && (
-                  <div className={styles.noMore}>{t('common.empty')}</div>
-                )}
+            <div className={styles.statsSub}>
+              <div
+                className={styles.statsBudget}
+                id="budgetRemaining"
+                style={{ backgroundImage: `url(${CDN_BASE_URL}/budgetBg.png)` }}
+                onClick={() => navigate('/budget')}
+              >
+                <span className={styles.budgetValue}>
+                  {formatBudgetAmount(stats.budget - stats.totalExpense)}
+                </span>
               </div>
-            )}
-          </Spin>
-        </div>
-        {/* </div> */}
-      </div>
+            </div>
+          </div>
+        </AnimatedWrapper>
 
-      <img src={homeBottomImg} alt={t('homeBottomImg')} className={styles.homeBottom}></img>
-      <BottomNav />
-    </div>
+        <AnimatedWrapper animation="scaleIn" delay={0.2} className={styles.addButtonSection}>
+          <Button
+            id="findmeHere"
+            type="primary"
+            size="large"
+            block
+            className={styles.addRecordBtn}
+            onClick={handleAddRecord}
+          >
+            <PlusOutlined />
+            {t('home.addRecord')}
+          </Button>
+        </AnimatedWrapper>
+
+        <div className={styles.recordsSection}>
+          <div className={styles.recordsHeader}>
+            <span className={styles.recordsTitle}>{t('home.recentRecords')}</span>
+            <Tag color="success" className={styles.recordsTag}>{dayjs().format('M 月')}</Tag>
+          </div>
+
+          <ScrollContainer onScrollEnd={handleScrollEnd}>
+            <Spin spinning={loading && dateGroups.length === 0}>
+              {dateGroups.length === 0 && !loading ? (
+                <EmptyState
+                  title={t('home.noRecords') || '暂无记录'}
+                  description="开始记录您的第一笔账目吧"
+                  actionText={t('home.addRecord') || '添加记录'}
+                  onAction={handleAddRecord}
+                />
+              ) : (
+                <div className={styles.recordsList}>
+                  {dateGroups.map((group) => {
+                    const { expense, income } = getDayTotal(group.records);
+                    return (
+                      <AnimatedWrapper key={group.date} animation="fadeInUp" triggerOnMount>
+                        <StardewPanel>
+                          <div className={styles.recordDayGroup}>
+                            <div className={styles.recordDayHeader}>
+                              <span>{getDateLabel(group.date)}</span>
+                              <span className={styles.dayTotal}>
+                                {expense > 0 && `${t('home.expenseShort')}:${expense.toFixed(2)}`}
+                                {income > 0 && ` ${t('home.incomeShort')}:${income.toFixed(2)}`}
+                              </span>
+                            </div>
+                            <List
+                              dataSource={group.records}
+                              renderItem={(record) => (
+                                <SwipeableRecordItem
+                                  record={record}
+                                  onEdit={handleEditRecord}
+                                  onDelete={handleDeleteRecord}
+                                />
+                              )}
+                            />
+                          </div>
+                        </StardewPanel>
+                      </AnimatedWrapper>
+                    );
+                  })}
+                  {loading && dateGroups.length > 0 && (
+                    <div className={styles.loadingMore}>
+                      <Spin size="small" />
+                      <span>{t('common.loading')}</span>
+                    </div>
+                  )}
+                  {!hasMore && dateGroups.length > 0 && (
+                    <div className={styles.noMore}>{t('common.empty')}</div>
+                  )}
+                </div>
+              )}
+            </Spin>
+          </ScrollContainer>
+        </div>
+
+        <img src={homeBottomImg} alt={t('homeBottomImg')} className={styles.homeBottom} />
+        <BottomNav />
+      </div>
+    </PageContainer>
   );
 };
 
