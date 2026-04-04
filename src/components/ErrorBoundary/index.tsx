@@ -33,9 +33,36 @@ class ErrorBoundary extends Component<Props, State> {
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error('Uncaught error:', error, errorInfo);
     this.setState({ error, errorInfo });
+    
+    // 如果是 ECharts 相关错误，尝试清理 ECharts 实例
+    if (error.message?.includes('Activity') || error.message?.includes('echarts')) {
+      console.error('ECharts error detected, attempting cleanup...');
+      try {
+        // 尝试清理所有 ECharts 实例
+        const echarts = (window as any).echarts;
+        if (echarts && typeof echarts.dispose === 'function') {
+          document.querySelectorAll('[data-echarts-instance]').forEach(el => {
+            echarts.dispose(el);
+          });
+        }
+      } catch (cleanupError) {
+        console.error('Cleanup failed:', cleanupError);
+      }
+    }
   }
 
   private handleRefresh = () => {
+    // 清理所有 ECharts 实例后再刷新
+    try {
+      const echarts = (window as any).echarts;
+      if (echarts && typeof echarts.dispose === 'function') {
+        document.querySelectorAll('[data-echarts-instance]').forEach(el => {
+          echarts.dispose(el);
+        });
+      }
+    } catch (e) {
+      console.error('Cleanup before refresh failed:', e);
+    }
     window.location.reload();
   };
 
@@ -56,7 +83,12 @@ class ErrorBoundary extends Component<Props, State> {
       }
 
       // 构建错误提示内容
-      const errorContent = `${t('error.description')}\n${t('error.tryRefresh')}`;
+      const isEChartsError = this.state.error?.message?.includes('Activity') || 
+                             this.state.error?.message?.includes('echarts');
+      
+      const errorContent = isEChartsError
+        ? `${t('error.chartErrorTitle')}\n${t('error.chartErrorDescription')}\n\n${t('error.tryRefresh')}`
+        : `${t('error.title')}\n${t('error.description')}\n${t('error.tryRefresh')}`;
 
       return (
         <div className={styles.errorBoundary}>

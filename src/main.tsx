@@ -61,6 +61,20 @@ const Root: React.FC = () => {
   )
 }
 
+// 全局错误处理器 - 捕获所有未捕获的错误
+window.addEventListener('error', (event) => {
+  console.error('Global error caught:', event.error);
+  // 如果是 ECharts 相关的错误，记录但不阻止默认行为
+  if (event.message?.includes('echarts') || event.message?.includes('Activity')) {
+    console.error('ECharts error detected, error boundary will handle it');
+  }
+});
+
+// 捕获 Promise  rejection 错误
+window.addEventListener('unhandledrejection', (event) => {
+  console.error('Unhandled promise rejection:', event.reason);
+});
+
 const rootElement = document.getElementById('root')
 if (rootElement) {
   createRoot(rootElement).render(<Root />)

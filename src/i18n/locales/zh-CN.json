@@ -237,7 +237,9 @@
     "notYourFault": "别担心，这不是你的错！",
     "tryRefresh": "试试刷新页面或返回首页",
     "refresh": "刷新页面",
-    "goHome": "返回首页"
+    "goHome": "返回首页",
+    "chartErrorTitle": "图表加载失败",
+    "chartErrorDescription": "统计图表暂时无法显示，可能是数据加载出现了问题。"
   },
   "loading": {
     "title": "星露账本",

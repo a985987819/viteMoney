@@ -237,7 +237,9 @@
     "notYourFault": "Don't worry, it's not your fault!",
     "tryRefresh": "Try refreshing the page or go back home",
     "refresh": "Refresh Page",
-    "goHome": "Go Home"
+    "goHome": "Go Home",
+    "chartErrorTitle": "Chart Loading Failed",
+    "chartErrorDescription": "The statistics chart cannot be displayed temporarily, possibly due to a data loading issue."
   },
   "loading": {
     "title": "Stardew Ledger",
