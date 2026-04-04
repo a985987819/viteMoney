@@ -145,6 +145,7 @@ export default defineConfig({
     })
   ],
   server: {
+    host: '0.0.0.0',
     proxy: {
       '/api': {
         target: 'http://192.168.10.83:9876',

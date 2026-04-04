@@ -20,9 +20,12 @@ interface PWAState {
   hasShownFirstTime: boolean;
 }
 
-const FIRST_TIME_KEY = 'pwa_first_time_shown';
+const FIRST_TIME_KEY = 'pwa_first_time_shown_v2';
 
 export function usePWA() {
+  // 检查是否是首次访问（从未显示过安装提示）
+  const isFirstVisit = !localStorage.getItem(FIRST_TIME_KEY);
+  
   const [state, setState] = useState<PWAState>({
     isInstallable: false,
     isInstalled: false,
@@ -31,7 +34,7 @@ export function usePWA() {
     installPrompt: null,
     updateAvailable: false,
     needRefresh: false,
-    hasShownFirstTime: false,
+    hasShownFirstTime: isFirstVisit,
   });
 
   // 检查是否已安装
@@ -71,21 +74,11 @@ export function usePWA() {
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
       
-      // 检查是否是首次访问
-      const hasShownBefore = localStorage.getItem(FIRST_TIME_KEY);
-      const isFirstTime = !hasShownBefore;
-      
       setState((prev) => ({
         ...prev,
         installPrompt: e as BeforeInstallPromptEvent,
         isInstallable: true,
-        hasShownFirstTime: isFirstTime,
       }));
-      
-      // 如果是首次，标记为已显示
-      if (isFirstTime) {
-        localStorage.setItem(FIRST_TIME_KEY, 'true');
-      }
     };
 
     const handleAppInstalled = () => {

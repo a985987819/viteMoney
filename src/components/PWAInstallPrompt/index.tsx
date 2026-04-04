@@ -24,10 +24,17 @@ export const PWAInstallPrompt: React.FC = () => {
       // 延迟一点显示，让页面先加载完成
       const timer = setTimeout(() => {
         setShowPrompt(true);
-      }, 1500);
+      }, 2000);
       return () => clearTimeout(timer);
     }
   }, [isInstallable, hasShownFirstTime]);
+
+  // 标记已显示过首次提示
+  useEffect(() => {
+    if (showPrompt) {
+      localStorage.setItem('pwa_first_time_shown_v2', 'true');
+    }
+  }, [showPrompt]);
 
   // 当 isInstallable 变为 false 时，关闭弹窗
   useEffect(() => {

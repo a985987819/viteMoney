@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Input, message, Tag, Modal, Calendar, Radio, DatePicker } from 'antd';
 import type { Dayjs } from 'dayjs';
@@ -17,6 +17,7 @@ import { useTranslation } from 'react-i18next';
 import { expenseCategories, incomeCategories, type MainCategory, type SubCategory } from '../../constants/categories';
 import SubCategoryModal from '../../components/SubCategoryModal';
 import SpriteIcon from '../../components/SpriteIcon';
+import KeyboardAvoidingView from '../../components/KeyboardAvoidingView';
 import styles from './index.module.scss';
 
 type RecordType = 'expense' | 'income';
@@ -330,8 +331,36 @@ const AddRecord = () => {
     { key: 'income', label: t('addRecord.income') },
   ];
 
+  const remarkInputRef = useRef<any>(null);
+
+  // 处理备注输入框聚焦时的键盘避让
+  const handleRemarkFocus = () => {
+    // 延迟滚动，等待键盘弹出
+    setTimeout(() => {
+      // 获取 Ant Design Input 组件的实际 input 元素
+      const inputElement = remarkInputRef.current?.input || remarkInputRef.current;
+      if (inputElement) {
+        const rect = inputElement.getBoundingClientRect();
+        const scrollContainer = inputElement.closest('.page-container');
+        if (scrollContainer) {
+          const containerRect = scrollContainer.getBoundingClientRect();
+          const relativeTop = rect.top - containerRect.top;
+          
+          // 如果输入框被键盘遮挡，滚动到可见位置
+          const visibleHeight = window.innerHeight - (window.innerHeight - containerRect.height > 150 ? window.innerHeight - containerRect.height : 0);
+          if (relativeTop > visibleHeight - 150) {
+            scrollContainer.scrollTo({
+              top: scrollContainer.scrollTop + relativeTop - 100,
+              behavior: 'smooth',
+            });
+          }
+        }
+      }
+    }, 350);
+  };
+
   return (
-    <div className={`page-container ${styles.addRecordContainer}`}>
+    <KeyboardAvoidingView className={`page-container ${styles.addRecordContainer}`}>
       {/* 顶部导航 */}
       <div className={styles.addHeader}>
         <LeftOutlined className={styles.backIcon} onClick={() => navigate('/')} />
@@ -401,9 +430,11 @@ const AddRecord = () => {
           <div className={styles.remarkInputWrapper}>
             <CheckCircleOutlined className={styles.remarkIcon} />
             <Input
+              ref={remarkInputRef}
               placeholder={t('addRecord.remarkPlaceholder')}
               value={remark}
               onChange={(e) => setRemark(e.target.value)}
+              onFocus={handleRemarkFocus}
               className={styles.remarkInput}
               variant="borderless"
               maxLength={50}
@@ -532,7 +563,7 @@ const AddRecord = () => {
           )}
         </div>
       </Modal>
-    </div>
+    </KeyboardAvoidingView>
   );
 };
 

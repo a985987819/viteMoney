@@ -12,11 +12,17 @@
 // 安装提示容器
 .installPrompt {
   position: fixed;
-  bottom: 90px;
+  bottom: calc(90px + env(safe-area-inset-bottom, 0));
   left: 16px;
   right: 16px;
   z-index: 1000;
   animation: slideUp 0.4s ease-out;
+  
+  /* 适配横屏时的安全区域 */
+  @media (orientation: landscape) {
+    left: calc(16px + env(safe-area-inset-left, 0));
+    right: calc(16px + env(safe-area-inset-right, 0));
+  }
 }
 
 // 提示内容
@@ -144,7 +150,7 @@
 // 离线提示
 .offlineIndicator {
   position: fixed;
-  top: 0;
+  top: env(safe-area-inset-top, 0);
   left: 0;
   right: 0;
   z-index: 9999;
@@ -161,11 +167,17 @@
 // 更新提示
 .updatePrompt {
   position: fixed;
-  top: 16px;
+  top: calc(16px + env(safe-area-inset-top, 0));
   left: 16px;
   right: 16px;
   z-index: 1000;
   animation: slideDown 0.4s ease-out;
+  
+  /* 适配横屏时的安全区域 */
+  @media (orientation: landscape) {
+    left: calc(16px + env(safe-area-inset-left, 0));
+    right: calc(16px + env(safe-area-inset-right, 0));
+  }
 }
 
 .updateContent {
