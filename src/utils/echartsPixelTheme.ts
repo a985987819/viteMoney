@@ -284,9 +284,6 @@ export const getPixelPieOption = (data: any[]): any => {
       '#3498db', '#9b59b6', '#e91e63', '#00bcd4',
       '#ff5722', '#795548', '#607d8b', '#3f51b5'
     ],
-    animation: true,
-    animationDuration: 500,
-    animationEasing: 'linear',
   };
 };
 

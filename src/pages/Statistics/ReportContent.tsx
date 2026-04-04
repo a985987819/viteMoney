@@ -147,7 +147,13 @@ const ReportContent = () => {
 
   // 初始化饼图
   useEffect(() => {
-    if (chartRef.current && reportData && viewType === 'chart') {
+    if (!chartRef.current || !reportData || viewType !== 'chart') {
+      chartInstance.current?.dispose();
+      chartInstance.current = null;
+      return;
+    }
+
+    try {
       if (!chartInstance.current) {
         chartInstance.current = echarts.init(chartRef.current);
       }
@@ -174,6 +180,8 @@ const ReportContent = () => {
 
       const option = getPixelPieOption(pieData);
       chartInstance.current.setOption(option, true);
+    } catch (error) {
+      console.error('ECharts initialization error:', error);
     }
 
     return () => {

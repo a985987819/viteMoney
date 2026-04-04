@@ -239,13 +239,21 @@ const Bill = () => {
 
   // 初始化柱状图 - 像素风格
   useEffect(() => {
-    if (chartRef.current && !chartCollapsed && stats.dailyStats.length > 0) {
+    if (!chartRef.current || chartCollapsed || stats.dailyStats.length === 0) {
+      chartInstance.current?.dispose();
+      chartInstance.current = null;
+      return;
+    }
+
+    try {
       if (!chartInstance.current) {
         chartInstance.current = echarts.init(chartRef.current);
       }
 
       const option = getPixelBarOption(stats.dailyStats, showExpense, showIncome);
       chartInstance.current.setOption(option, true);
+    } catch (error) {
+      console.error('ECharts initialization error:', error);
     }
 
     return () => {
