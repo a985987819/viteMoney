@@ -1,17 +1,6 @@
 // 导入星露谷物语主题
 @use '../../styles/stardew-theme.scss' as *;
 
-// Mixins
-@mixin flex-center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-@mixin transition($property: all, $duration: 0.3s) {
-  transition: $property $duration cubic-bezier(0.4, 0, 0.2, 1);
-}
-
 // 动画
 @keyframes slideUp {
   from {

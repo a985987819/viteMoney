@@ -55,7 +55,24 @@ $stardew-shadow-wood: inset 0 0 0 3px $stardew-wood-light;
 $stardew-shadow-soft: 0 4px 8px rgba(60, 47, 31, 0.2);
 $stardew-shadow-pixel: 4px 4px 0 $stardew-wood-darkest;
 
-// ==================== Mixins ====================
+// ==================== 基础 Mixins ====================
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin transition($property: all, $duration: 0.3s) {
+  transition: $property $duration cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+// ==================== 组件 Mixins ====================
 @mixin stardew-wood-panel {
   background-color: $stardew-panel-bg;
   border: $stardew-border-wood;

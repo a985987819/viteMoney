@@ -1,38 +1,22 @@
 @use 'sass:color';
+@use '../../styles/stardew-theme.scss' as *;
 
 // 星露谷主题配色
-$primary-color: #d4a574; // 木质暖棕色
-$primary-light: #e8c9a0; // 浅木色
-$primary-dark: #8b5a2b; // 深木色
-$secondary-color: #6e3b0b; // 深棕色
-$success-color: #51cf66; // 草绿色（收入）
-$warning-color: #e74c3c; // 暖红色（支出）
+$primary-color: #d4a574;
+$primary-light: #e8c9a0;
+$primary-dark: #8b5a2b;
+$secondary-color: #6e3b0b;
+$success-color: #51cf66;
+$warning-color: #e74c3c;
 $warning-light: #ff6b6b;
 $warning-dark: #c0392b;
-$text-primary: #5d4037; // 深棕色文字
-$text-secondary: #8d6e63; // 中棕色文字
-$text-tertiary: #a1887f; // 浅棕色文字
-$bg-color: #f4d03f; // 暖黄色背景
-$bg-light: #f7dc6f; // 浅暖黄
+$text-primary: #5d4037;
+$text-secondary: #8d6e63;
+$text-tertiary: #a1887f;
+$bg-color: #f4d03f;
+$bg-light: #f7dc6f;
 $white: #fff;
-$border-color: #d4a574; // 木质边框色
-
-// Mixins
-@mixin flex-center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-@mixin flex-between {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-@mixin transition($property: all, $duration: 0.3s) {
-  transition: $property $duration ease;
-}
+$border-color: #d4a574;
 
 @mixin gradient-bg {
   background: linear-gradient(135deg, $primary-light 0%, $primary-color 100%);
@@ -61,8 +45,7 @@ $border-color: #d4a574; // 木质边框色
   flex-shrink: 0;
 }
 
-.backIcon,
-.settingIcon {
+.backIcon {
   font-size: 20px;
   color: $text-primary;
   cursor: pointer;
@@ -480,16 +463,6 @@ $border-color: #d4a574; // 木质边框色
   &:last-child {
     border-bottom: none;
   }
-}
-
-// 设置图标
-.settingIcon {
-  font-size: 20px;
-  color: $text-primary;
-  cursor: pointer;
-  width: 32px;
-  height: 32px;
-  @include flex-center;
 }
 
 // 标题

@@ -1,22 +1,21 @@
 @use 'sass:color';
+@use '../../styles/stardew-theme.scss' as *;
 
-// 星露谷主题配色
-$primary-color: #d4a574; // 木质暖棕色
-$primary-light: #e8c9a0; // 浅木色
-$primary-bg: #f7dc6f; // 暖黄背景
-$primary-bg-light: #fae8b0; // 浅暖黄
-$expense-color: #e74c3c; // 暖红色（支出）
-$income-color: #51cf66; // 草绿色（收入）
-$danger-color: #e74c3c; // 暖红色
-$text-primary: #5d4037; // 深棕色文字
-$text-secondary: #8d6e63; // 中棕色文字
-$text-tertiary: #a1887f; // 浅棕色文字
-$bg-color: #f4d03f; // 暖黄色背景
-$bg-light: #f7dc6f; // 浅暖黄
+$primary-color: #d4a574;
+$primary-light: #e8c9a0;
+$primary-bg: #f7dc6f;
+$primary-bg-light: #fae8b0;
+$expense-color: #e74c3c;
+$income-color: #51cf66;
+$danger-color: #e74c3c;
+$text-primary: #5d4037;
+$text-secondary: #8d6e63;
+$text-tertiary: #a1887f;
+$bg-color: #f4d03f;
+$bg-light: #f7dc6f;
 $white: #fff;
-$border-color: #d4a574; // 木质边框色
+$border-color: #d4a574;
 
-// 动画
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -58,23 +57,6 @@ $border-color: #d4a574; // 木质边框色
 @keyframes bounceUp {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-4px); }
-}
-
-// Mixins
-@mixin flex-center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-@mixin flex-between {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-@mixin transition($property: all, $duration: 0.3s) {
-  transition: $property $duration cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @mixin card-shadow {

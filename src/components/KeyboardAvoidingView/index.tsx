@@ -71,7 +71,7 @@ export const KeyboardAvoidingView: React.FC<KeyboardAvoidingViewProps> = ({
           !activeElement ||
           (activeElement.tagName !== 'INPUT' &&
             activeElement.tagName !== 'TEXTAREA' &&
-            activeElement.contentEditable !== 'true')
+            (activeElement as HTMLElement).contentEditable !== 'true')
         ) {
           setKeyboardHeight(0);
           setFocusedElement(null);

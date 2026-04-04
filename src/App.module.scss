@@ -118,45 +118,35 @@ $cdn-base-url: 'https://vercel-icons.vercel.app';
     font-weight: 2000;
 
     &-primary {
-      // background: linear-gradient(180deg, $stardew-wood-deep 0%, $stardew-wood-deep 100%);
-      // border-color: $stardew-wood-dark;
       color: white;
       font-weight: bold;
-
     }
 
     &-danger {
-      // background: linear-gradient(180deg, #d4756a 0%, $stardew-danger 100%);
       border-color: color.adjust($stardew-danger, $lightness: -10%);
       color: white;
     }
   }
-  .ant-modal-close{
+
+  .ant-modal-close {
     background: url('#{$cdn-base-url}/closeBtn.png') no-repeat center 2px !important;
     background-size: 100% 99% !important;
-    border-radius: 0 !important
-  } 
-  .ant-modal-wrap{
-    // display: flex !important;
-    // align-items: center !important;
-    // justify-content: center !important;
+    border-radius: 0 !important;
+  }
+
+  .ant-modal-wrap {
     position: relative;
   }
-  .ant-modal{
-    // position: absolute;
-    // top: 50%;
-    // left: 50%;
-    // transform: translate(-50%, -50%);
-  }  
+
   .ant-modal-content {
     max-height: 50vh !important;
     overflow-y: auto !important;
   }
-  .backTopBtn{
+
+  .backTopBtn {
     background: url('#{$cdn-base-url}/backTop.png') no-repeat center !important;
     height: 40px !important;
     width: 40px !important;
-    border: 1px solid red;
     z-index: 1000;
     position: fixed;
   }

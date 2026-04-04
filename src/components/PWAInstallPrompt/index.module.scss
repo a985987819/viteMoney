@@ -2,13 +2,6 @@
 @use '../../styles/stardew-theme.scss' as *;
 @use 'sass:color';
 
-// Mixins
-@mixin flex-center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 // 安装提示容器
 .installPrompt {
   position: fixed;

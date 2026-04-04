@@ -3,26 +3,10 @@
 
 $header-bg-url: '#{$cdn-base-url}/homePageHead.png';
 $content-bg-url: '#{$cdn-base-url}/homePageBg.png';
-// Mixins
-@mixin flex-center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-@mixin flex-between {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
 
 @mixin flex-column {
   display: flex;
   flex-direction: column;
-}
-
-@mixin transition($property: all, $duration: 0.3s) {
-  transition: $property $duration ease;
 }
 
 // 主容器

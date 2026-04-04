@@ -1,10 +1,5 @@
 @use '../../styles/stardew-theme.scss' as *;
 
-// 过渡动画 mixin
-@mixin transition($property: all, $duration: 0.3s) {
-  transition: $property $duration ease;
-}
-
 .changelogPage {
   min-height: 100vh;
   background: linear-gradient(180deg, $stardew-sky-light 0%, $stardew-sky-deep 50%, $stardew-grass-light 100%);

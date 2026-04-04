@@ -1,28 +1,12 @@
-// 星露谷主题配色
-$primary-color: #d4a574; // 木质暖棕色
-$primary-light: #e8c9a0; // 浅木色
-$text-primary: #5d4037; // 深棕色文字
-$text-secondary: #8d6e63; // 中棕色文字
+@use '../../styles/stardew-theme.scss' as *;
+
+$primary-color: #d4a574;
+$primary-light: #e8c9a0;
+$text-primary: #5d4037;
+$text-secondary: #8d6e63;
 $white: #fff;
-$bg-color: #f4d03f; // 暖黄色背景
-$border-color: #d4a574; // 木质边框色
-
-// Mixins
-@mixin flex-center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-@mixin flex-between {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-@mixin transition($property: all, $duration: 0.3s) {
-  transition: $property $duration ease;
-}
+$bg-color: #f4d03f;
+$border-color: #d4a574;
 
 // 弹窗
 .datePickerModal {

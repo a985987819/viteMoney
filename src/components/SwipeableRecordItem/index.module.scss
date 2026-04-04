@@ -1,33 +1,17 @@
 
-// 星露谷主题配色
-$primary-color: #d4a574; // 木质暖棕色
-$danger-color: #e74c3c; // 暖红色
-$success-color: #51cf66; // 草绿色
-$text-primary: #5d4037; // 深棕色文字
-$text-secondary: #8d6e63; // 中棕色文字
-$text-tertiary: #a1887f; // 浅棕色文字
-$bg-color: #f4d03f; // 暖黄色背景
+@use '../../styles/stardew-theme.scss' as *;
+
+$primary-color: #d4a574;
+$danger-color: #e74c3c;
+$success-color: #51cf66;
+$text-primary: #5d4037;
+$text-secondary: #8d6e63;
+$text-tertiary: #a1887f;
+$bg-color: #f4d03f;
 $white: #fff;
-$border-color: #d4a574; // 木质边框色
-$panel-bg: #ffc675; // 暖橙色背景
+$border-color: #d4a574;
+$panel-bg: #ffc675;
 $content-bg: #fed284;
-
-// Mixins
-@mixin flex-center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-@mixin flex-between {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-@mixin transition($property: all, $duration: 0.3s) {
-  transition: $property $duration ease;
-}
 
 // 主容器
 .swipeableItemWrapper {
