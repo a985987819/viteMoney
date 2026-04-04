@@ -25,7 +25,7 @@
 // 底部导航 - 木质风格
 .bottomNav {
   height: 70px;
-  background: linear-gradient(180deg, $stardew-wood-light 0%, $stardew-wood-mid 50%, $stardew-wood-dark 100%);
+  background: $stardew-wood-mid;
   display: flex;
   justify-content: space-around;
   align-items: center;
