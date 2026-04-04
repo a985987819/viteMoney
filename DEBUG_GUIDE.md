@@ -1,24 +1,28 @@
 # 线上调试指南
 
+## 问题已修复！
+
+**根本原因**：React 19 与 ECharts 及某些库存在兼容性问题，导致打包后出现 `Cannot set properties of undefined (setting 'Activity')` 错误。
+
+**解决方案**：已将 React 降级到稳定的 18.3.1 版本。
+
 ## 当前配置说明
 
-为了便于调试线上问题，已进行以下配置：
+### 已修复的问题
+1. ✅ **React 版本兼容性**：从 React 19.2.4 降级到 React 18.3.1
+2. ✅ **取消代码混淆**：保留原始代码格式，方便调试
+3. ✅ **启用完整 Source Map**：生成完整的 source map 文件
+4. ✅ **详细的错误日志**：所有 ECharts 图表初始化都有详细日志
+5. ✅ **增强的错误边界**：ErrorBoundary 可以捕获并显示所有错误
 
-### 1. 取消代码混淆
-- `minify: false` - 保留原始代码格式
-- `drop_console: false` - 保留所有 console.log
-- `drop_debugger: false` - 保留 debugger 语句
-
-### 2. 启用完整 Source Map
-- `sourcemap: true` - 生成完整的 source map 文件
-- 可以在浏览器开发者工具中看到原始源代码
-
-### 3. 详细的错误日志
-所有 ECharts 图表初始化都添加了详细的日志输出：
-- `[Bill Chart]` - 账单页面图表日志
-- `[BillContent Chart]` - 统计账单内容图表日志
-- `[ReportContent Chart]` - 报表内容图表日志
-- `[ErrorBoundary]` - 错误边界捕获日志
+### 依赖版本
+```json
+{
+  "react": "^18.3.1",
+  "react-dom": "^18.3.1",
+  "echarts": "^5.6.0"
+}
+```
 
 ## 调试步骤
 
