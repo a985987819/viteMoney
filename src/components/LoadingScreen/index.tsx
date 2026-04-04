@@ -4,7 +4,7 @@ import { resourceLoader, type LoadProgress } from '../../utils/resourceLoader';
 import styles from './index.module.scss';
 
 interface LoadingScreenProps {
-  onComplete: () => void;
+  onComplete?: () => void;
 }
 
 // CDN 基础地址
@@ -35,7 +35,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
       setIsReady(true);
       // 延迟一点让用户看到100%完成状态
       setTimeout(() => {
-        onComplete();
+        onComplete?.();
       }, 800);
     });
 

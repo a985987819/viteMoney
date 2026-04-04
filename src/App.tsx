@@ -1,10 +1,12 @@
-import { useEffect } from 'react';
+import { useEffect, Suspense } from 'react';
 import { RouterProvider } from 'react-router-dom';
-import { ConfigProvider } from 'antd';
+import { ConfigProvider, App as AntdApp } from 'antd';
 import zhCN from 'antd/locale/zh_CN';
 import { AuthProvider } from './hooks/useAuth';
 import { PWAInstallPrompt } from './components/PWAInstallPrompt';
 import { themeManager } from './utils/theme';
+import ErrorBoundary from './components/ErrorBoundary';
+import LoadingScreen from './components/LoadingScreen';
 import router from './router';
 import './App.module.scss';
 
@@ -43,18 +45,25 @@ const theme = {
 function App() {
   // 初始化主题
   useEffect(() => {
-    themeManager.subscribe(() => {
+    const unsubscribe = themeManager.subscribe(() => {
       // 主题变化时会自动更新 CSS 变量
     });
+    return () => unsubscribe();
   }, []);
 
   return (
-    <ConfigProvider locale={zhCN} theme={theme}>
-      <AuthProvider>
-        <RouterProvider router={router} />
-        <PWAInstallPrompt />
-      </AuthProvider>
-    </ConfigProvider>
+    <ErrorBoundary>
+      <ConfigProvider locale={zhCN} theme={theme}>
+        <AntdApp>
+          <AuthProvider>
+            <Suspense fallback={<LoadingScreen />}>
+              <RouterProvider router={router} />
+            </Suspense>
+            <PWAInstallPrompt />
+          </AuthProvider>
+        </AntdApp>
+      </ConfigProvider>
+    </ErrorBoundary>
   );
 }
 
