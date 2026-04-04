@@ -6,8 +6,10 @@
   height: 100vh;
   background: $stardew-panel-bg;
   position: relative;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
   padding-bottom: calc(70px + env(safe-area-inset-bottom, 0));
+  -webkit-overflow-scrolling: touch;
 }
 
 // 背景装饰

@@ -141,7 +141,9 @@ export default defineConfig({
       devOptions: {
         enabled: true,
         type: 'module'
-      }
+      },
+      // 确保在 production 模式下也注册 Service Worker
+      selfDestroying: true,
     })
   ],
   server: {

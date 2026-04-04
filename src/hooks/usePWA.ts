@@ -43,7 +43,7 @@ export function usePWA() {
       const isStandalone =
         window.matchMedia('(display-mode: standalone)').matches ||
         (window.navigator as any).standalone === true;
-      setState((prev) => ({ ...prev, isStandalone }));
+      setState((prev) => ({ ...prev, isStandalone, isInstalled: isStandalone }));
     };
 
     checkStandalone();
@@ -51,7 +51,7 @@ export function usePWA() {
     // 监听显示模式变化
     const mediaQuery = window.matchMedia('(display-mode: standalone)');
     const handleChange = (e: MediaQueryListEvent) => {
-      setState((prev) => ({ ...prev, isStandalone: e.matches }));
+      setState((prev) => ({ ...prev, isStandalone: e.matches, isInstalled: e.matches }));
     };
 
     if (mediaQuery.addEventListener) {
@@ -69,35 +69,95 @@ export function usePWA() {
     };
   }, []);
 
-  // 监听安装提示
+  // 监听安装提示 - 关键：需要在页面加载时就监听
   useEffect(() => {
-    const handleBeforeInstallPrompt = (e: Event) => {
-      e.preventDefault();
+    console.log('[PWA Hook] Initializing, isFirstVisit:', isFirstVisit);
+    
+    // 延迟一点注册监听器，确保页面完全加载
+    const timer = setTimeout(() => {
+      const handleBeforeInstallPrompt = (e: Event) => {
+        e.preventDefault();
+        console.log('[PWA] beforeinstallprompt event fired');
+        console.log('[PWA] Event details:', e);
+        
+        setState((prev) => ({
+          ...prev,
+          installPrompt: e as BeforeInstallPromptEvent,
+          isInstallable: true,
+        }));
+      };
+
+      const handleAppInstalled = () => {
+        console.log('[PWA] appinstalled event fired');
+        setState((prev) => ({
+          ...prev,
+          isInstallable: false,
+          isInstalled: true,
+          installPrompt: null,
+        }));
+      };
+
+      window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+      window.addEventListener('appinstalled', handleAppInstalled);
+
+      console.log('[PWA] Event listeners registered');
       
-      setState((prev) => ({
-        ...prev,
-        installPrompt: e as BeforeInstallPromptEvent,
-        isInstallable: true,
-      }));
-    };
+      // 检查 PWA 安装条件
+      const checkPWAConditions = async () => {
+        console.log('[PWA] Checking PWA conditions...');
+        
+        const isSecureContext = window.isSecureContext;
+        const isHTTPS = window.location.protocol === 'https:';
+        const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        const isSecureEnvironment = isSecureContext || isHTTPS || isLocalhost;
+        
+        console.log('[PWA] isSecureContext:', isSecureContext);
+        console.log('[PWA] isHTTPS:', isHTTPS);
+        console.log('[PWA] isLocalhost:', isLocalhost);
+        console.log('[PWA] isSecureEnvironment:', isSecureEnvironment);
+        console.log('[PWA] Service Worker support:', 'serviceWorker' in navigator);
+        
+        // 如果不是安全环境，显示警告
+        if (!isSecureEnvironment) {
+          console.warn('[PWA] ⚠️ 警告：当前不是安全环境（HTTPS 或 localhost）');
+          console.warn('[PWA] PWA 功能（Service Worker、安装提示）将被禁用');
+          console.warn('[PWA] 当前 URL:', window.location.href);
+          return;
+        }
+        
+        if ('serviceWorker' in navigator) {
+          try {
+            const registration = await navigator.serviceWorker.getRegistration();
+            console.log('[PWA] Service Worker registration:', registration ? 'active' : 'none');
+            
+            if (!registration) {
+              console.warn('[PWA] ⚠️ Service Worker 未注册，尝试注册...');
+              try {
+                const newReg = await navigator.serviceWorker.register('/sw.js');
+                console.log('[PWA] Service Worker 注册成功:', newReg);
+              } catch (regErr) {
+                console.error('[PWA] Service Worker 注册失败:', regErr);
+              }
+            }
+          } catch (err) {
+            console.error('[PWA] Service Worker check failed:', err);
+          }
+        } else {
+          console.warn('[PWA] ⚠️ 浏览器不支持 Service Worker');
+        }
+      };
+      
+      checkPWAConditions();
 
-    const handleAppInstalled = () => {
-      setState((prev) => ({
-        ...prev,
-        isInstallable: false,
-        isInstalled: true,
-        installPrompt: null,
-      }));
-    };
+      return () => {
+        window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+        window.removeEventListener('appinstalled', handleAppInstalled);
+        console.log('[PWA] Event listeners cleaned up');
+      };
+    }, 500);
 
-    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-    window.addEventListener('appinstalled', handleAppInstalled);
-
-    return () => {
-      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-      window.removeEventListener('appinstalled', handleAppInstalled);
-    };
-  }, []);
+    return () => clearTimeout(timer);
+  }, [isFirstVisit]);
 
   // 监听网络状态
   useEffect(() => {

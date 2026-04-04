@@ -27,7 +27,9 @@ $border-color: #d4a574;
   background-color: $bg-color;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
 }
 
 // 顶部背景
