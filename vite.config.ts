@@ -160,8 +160,9 @@ export default defineConfig({
   },
   build: {
     target: 'esnext',
-    minify: 'terser',
+    minify: false, // 取消代码混淆，方便调试
     cssMinify: true,
+    sourcemap: true, // 启用完整的 source map
     rollupOptions: {
       output: {
         // 代码分割策略 - 使用函数形式
@@ -206,13 +207,11 @@ export default defineConfig({
         },
       },
     },
-    // 启用源码映射（生产环境可关闭）
-    sourcemap: false,
     // 压缩选项
     terserOptions: {
       compress: {
-        drop_console: true,
-        drop_debugger: true,
+        drop_console: false, // 保留 console.log，方便调试
+        drop_debugger: false, // 保留 debugger
       } as any,
     } as any,
   }

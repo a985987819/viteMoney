@@ -228,24 +228,43 @@ const BillContent = () => {
 
   // 初始化柱状图
   useEffect(() => {
+    console.log('[BillContent Chart] Initializing chart...');
+    console.log('[BillContent Chart] chartRef.current:', !!chartRef.current);
+    console.log('[BillContent Chart] chartCollapsed:', chartCollapsed);
+    console.log('[BillContent Chart] stats.dailyStats.length:', stats.dailyStats.length);
+    
     if (!chartRef.current || chartCollapsed || stats.dailyStats.length === 0) {
+      console.log('[BillContent Chart] Cleanup - conditions not met');
       chartInstance.current?.dispose();
       chartInstance.current = null;
       return;
     }
 
     try {
+      console.log('[BillContent Chart] Creating ECharts instance...');
       if (!chartInstance.current) {
         chartInstance.current = echarts.init(chartRef.current);
+        console.log('[BillContent Chart] ECharts instance created');
       }
 
+      console.log('[BillContent Chart] Getting chart option...');
       const option = getPixelBarOption(stats.dailyStats, showExpense, showIncome);
+      console.log('[BillContent Chart] Setting option...');
       chartInstance.current.setOption(option, true);
+      console.log('[BillContent Chart] Chart initialized successfully');
     } catch (error) {
-      console.error('ECharts initialization error:', error);
+      console.error('[BillContent Chart] ECharts initialization error:', error);
+      console.error('[BillContent Chart] Error details:', {
+        message: (error as Error).message,
+        stack: (error as Error).stack,
+        name: (error as Error).name,
+      });
+      // 重新抛出错误，让 ErrorBoundary 捕获
+      throw error;
     }
 
     return () => {
+      console.log('[BillContent Chart] Cleanup - unmounting');
       chartInstance.current?.dispose();
       chartInstance.current = null;
     };

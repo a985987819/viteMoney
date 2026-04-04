@@ -63,16 +63,39 @@ const Root: React.FC = () => {
 
 // 全局错误处理器 - 捕获所有未捕获的错误
 window.addEventListener('error', (event) => {
-  console.error('Global error caught:', event.error);
+  console.error('=== Global Error Event ===');
+  console.error('Message:', event.message);
+  console.error('Error:', event.error);
+  console.error('Filename:', event.filename);
+  console.error('Line:', event.lineno, 'Column:', event.colno);
+  console.error('========================');
+  
   // 如果是 ECharts 相关的错误，记录但不阻止默认行为
   if (event.message?.includes('echarts') || event.message?.includes('Activity')) {
-    console.error('ECharts error detected, error boundary will handle it');
+    console.error('ECharts error detected!');
+    console.error('This error should be caught by ErrorBoundary');
   }
+  
+  // 不阻止默认行为，让 ErrorBoundary 处理
 });
 
-// 捕获 Promise  rejection 错误
+// 捕获 Promise rejection 错误
 window.addEventListener('unhandledrejection', (event) => {
-  console.error('Unhandled promise rejection:', event.reason);
+  console.error('=== Unhandled Promise Rejection ===');
+  console.error('Reason:', event.reason);
+  console.error('Promise:', event.promise);
+  console.error('====================================');
+  
+  // 将 Promise rejection 转换为 Error 并抛出，让 ErrorBoundary 能捕获
+  if (event.reason instanceof Error) {
+    setTimeout(() => {
+      throw event.reason;
+    }, 0);
+  } else {
+    setTimeout(() => {
+      throw new Error(String(event.reason));
+    }, 0);
+  }
 });
 
 const rootElement = document.getElementById('root')

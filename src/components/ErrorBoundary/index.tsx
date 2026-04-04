@@ -31,7 +31,12 @@ class ErrorBoundary extends Component<Props, State> {
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('Uncaught error:', error, errorInfo);
+    console.error('=== ErrorBoundary Caught Error ===');
+    console.error('Error:', error);
+    console.error('ErrorInfo:', errorInfo);
+    console.error('Component Stack:', errorInfo.componentStack);
+    console.error('===================================');
+    
     this.setState({ error, errorInfo });
     
     // 如果是 ECharts 相关错误，尝试清理 ECharts 实例

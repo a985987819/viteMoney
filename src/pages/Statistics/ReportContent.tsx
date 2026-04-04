@@ -141,17 +141,26 @@ const ReportContent = () => {
 
   // 初始化饼图
   useEffect(() => {
+    console.log('[ReportContent Chart] Initializing pie chart...');
+    console.log('[ReportContent Chart] chartRef.current:', !!chartRef.current);
+    console.log('[ReportContent Chart] reportData:', !!reportData);
+    console.log('[ReportContent Chart] viewType:', viewType);
+    
     if (!chartRef.current || !reportData || viewType !== 'chart') {
+      console.log('[ReportContent Chart] Cleanup - conditions not met');
       chartInstance.current?.dispose();
       chartInstance.current = null;
       return;
     }
 
     try {
+      console.log('[ReportContent Chart] Creating ECharts instance...');
       if (!chartInstance.current) {
         chartInstance.current = echarts.init(chartRef.current);
+        console.log('[ReportContent Chart] ECharts instance created');
       }
 
+      console.log('[ReportContent Chart] Preparing pie data...');
       const pieData: { name: string; value: number; itemStyle: { color: string } }[] = [];
       if (showExpense) {
         reportData.categoryStats.expense.forEach(item => {
@@ -172,13 +181,24 @@ const ReportContent = () => {
         });
       }
 
+      console.log('[ReportContent Chart] Getting chart option...');
       const option = getPixelPieOption(pieData);
+      console.log('[ReportContent Chart] Setting option...');
       chartInstance.current.setOption(option, true);
+      console.log('[ReportContent Chart] Chart initialized successfully');
     } catch (error) {
-      console.error('ECharts initialization error:', error);
+      console.error('[ReportContent Chart] ECharts initialization error:', error);
+      console.error('[ReportContent Chart] Error details:', {
+        message: (error as Error).message,
+        stack: (error as Error).stack,
+        name: (error as Error).name,
+      });
+      // 重新抛出错误，让 ErrorBoundary 捕获
+      throw error;
     }
 
     return () => {
+      console.log('[ReportContent Chart] Cleanup - unmounting');
       chartInstance.current?.dispose();
       chartInstance.current = null;
     };
