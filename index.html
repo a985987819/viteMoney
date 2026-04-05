@@ -10,21 +10,35 @@
   <meta name="description" content="一款像素风格的记账应用，灵感来自星露谷物语" />
   <meta name="keywords" content="记账,星露谷物语,像素风,PWA" />
   <meta name="author" content="星露账本" />
+
+  <!-- PWA 必需配置 -->
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="application-name" content="星露账本" />
+
+  <!-- iOS Safari PWA 配置 -->
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="星露账本" />
-  <meta name="mobile-web-app-capable" content="yes" />
-  <meta name="application-name" content="星露账本" />
+
+  <!-- Windows PWA 配置 -->
   <meta name="msapplication-TileColor" content="#8B5A2B" />
   <meta name="msapplication-tap-highlight" content="no" />
 
-  <!-- PWA Manifest -->
+  <!-- PWA Manifest - 必须在头部早期加载 -->
   <link rel="manifest" href="/manifest.json" />
 
   <!-- Icons -->
-  <link rel="icon" type="image/svg+xml" href="/icons/icon-192x192.png" />
-  <link rel="alternate icon" type="image/png" href="/icons/icon-192x192.png" />
-  <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/icons/icon-16x16.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192x192.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-192x192.png" />
+  <link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152x152.png" />
+  <link rel="apple-touch-icon" sizes="144x144" href="/icons/icon-144x144.png" />
+  <link rel="apple-touch-icon" sizes="120x120" href="/icons/icon-128x128.png" />
+  <link rel="apple-touch-icon" sizes="114x114" href="/icons/icon-96x96.png" />
+  <link rel="apple-touch-icon" sizes="76x76" href="/icons/icon-72x72.png" />
+  <link rel="apple-touch-icon" sizes="72x72" href="/icons/icon-72x72.png" />
+  <link rel="apple-touch-icon" sizes="57x57" href="/icons/icon-48x48.png" />
   <link rel="mask-icon" href="/favicon.svg" color="#8B5A2B" />
 
   <!-- Preconnect -->

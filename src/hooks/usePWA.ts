@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 
 interface BeforeInstallPromptEvent extends Event {
   readonly platforms: string[];
@@ -17,15 +17,12 @@ interface PWAState {
   installPrompt: BeforeInstallPromptEvent | null;
   updateAvailable: boolean;
   needRefresh: boolean;
-  hasShownFirstTime: boolean;
 }
 
-const FIRST_TIME_KEY = 'pwa_first_time_shown_v2';
+// 全局存储 beforeinstallprompt 事件，确保不会丢失
+let globalInstallPrompt: BeforeInstallPromptEvent | null = null;
 
 export function usePWA() {
-  // 检查是否是首次访问（从未显示过安装提示）
-  const isFirstVisit = !localStorage.getItem(FIRST_TIME_KEY);
-  
   const [state, setState] = useState<PWAState>({
     isInstallable: false,
     isInstalled: false,
@@ -34,15 +31,19 @@ export function usePWA() {
     installPrompt: null,
     updateAvailable: false,
     needRefresh: false,
-    hasShownFirstTime: isFirstVisit,
   });
 
-  // 检查是否已安装
+  const isInitialized = useRef(false);
+
+  // 检查是否已安装（独立运行模式）
   useEffect(() => {
     const checkStandalone = () => {
       const isStandalone =
         window.matchMedia('(display-mode: standalone)').matches ||
+        window.matchMedia('(display-mode: fullscreen)').matches ||
+        window.matchMedia('(display-mode: minimal-ui)').matches ||
         (window.navigator as any).standalone === true;
+
       setState((prev) => ({ ...prev, isStandalone, isInstalled: isStandalone }));
     };
 
@@ -69,91 +70,84 @@ export function usePWA() {
     };
   }, []);
 
-  // 监听安装提示 - 关键：需要在页面加载时就监听
+  // 监听安装提示 - 关键：立即注册监听器，不能延迟
   useEffect(() => {
-    console.log('[PWA Hook] Initializing, isFirstVisit:', isFirstVisit);
-    
-    // 延迟一点注册监听器，确保页面完全加载
-    const timer = setTimeout(() => {
-      const handleBeforeInstallPrompt = (e: Event) => {
-        e.preventDefault();
-        console.log('[PWA] beforeinstallprompt event fired');
-        console.log('[PWA] Event details:', e);
-        
-        setState((prev) => ({
-          ...prev,
-          installPrompt: e as BeforeInstallPromptEvent,
-          isInstallable: true,
-        }));
-      };
+    if (isInitialized.current) return;
+    isInitialized.current = true;
 
-      const handleAppInstalled = () => {
-        console.log('[PWA] appinstalled event fired');
-        setState((prev) => ({
-          ...prev,
-          isInstallable: false,
-          isInstalled: true,
-          installPrompt: null,
-        }));
-      };
+    console.log('[PWA Hook] Initializing...');
 
-      window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-      window.addEventListener('appinstalled', handleAppInstalled);
+    // 处理 beforeinstallprompt 事件
+    const handleBeforeInstallPrompt = (e: Event) => {
+      console.log('[PWA] beforeinstallprompt event fired');
 
-      console.log('[PWA] Event listeners registered');
-      
-      // 检查 PWA 安装条件
-      const checkPWAConditions = async () => {
-        console.log('[PWA] Checking PWA conditions...');
-        
-        const isSecureContext = window.isSecureContext;
-        const isHTTPS = window.location.protocol === 'https:';
-        const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-        const isSecureEnvironment = isSecureContext || isHTTPS || isLocalhost;
-        
-        console.log('[PWA] isSecureContext:', isSecureContext);
-        console.log('[PWA] isHTTPS:', isHTTPS);
-        console.log('[PWA] isLocalhost:', isLocalhost);
-        console.log('[PWA] isSecureEnvironment:', isSecureEnvironment);
-        console.log('[PWA] Service Worker support:', 'serviceWorker' in navigator);
-        
-        // 如果不是安全环境，显示警告
-        if (!isSecureEnvironment) {
-          console.warn('[PWA] ⚠️ 警告：当前不是安全环境（HTTPS 或 localhost）');
-          console.warn('[PWA] PWA 功能（Service Worker、安装提示）将被禁用');
-          console.warn('[PWA] 当前 URL:', window.location.href);
-          return;
-        }
-        
-        if ('serviceWorker' in navigator) {
-          try {
-            const registration = await navigator.serviceWorker.getRegistration();
-            console.log('[PWA] Service Worker registration:', registration ? 'active' : 'none');
-            
-            if (!registration) {
-               console.warn('[PWA] ⚠️ Service Worker 未注册');
-               console.log('[PWA] 注意：开发模式下 SW 由 VitePWA 插件自动注册');
-               console.log('[PWA] 生产构建后会生成 sw.js 文件');
-             }
-          } catch (err) {
-            console.error('[PWA] Service Worker check failed:', err);
-          }
-        } else {
-          console.warn('[PWA] ⚠️ 浏览器不支持 Service Worker');
-        }
-      };
-      
-      checkPWAConditions();
+      // 阻止默认行为（防止自动显示迷你信息栏）
+      e.preventDefault();
 
-      return () => {
-        window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-        window.removeEventListener('appinstalled', handleAppInstalled);
-        console.log('[PWA] Event listeners cleaned up');
-      };
-    }, 500);
+      // 存储事件供后续使用
+      globalInstallPrompt = e as BeforeInstallPromptEvent;
 
-    return () => clearTimeout(timer);
-  }, [isFirstVisit]);
+      setState((prev) => ({
+        ...prev,
+        installPrompt: e as BeforeInstallPromptEvent,
+        isInstallable: true,
+      }));
+    };
+
+    // 处理应用已安装事件
+    const handleAppInstalled = () => {
+      console.log('[PWA] appinstalled event fired');
+      globalInstallPrompt = null;
+      setState((prev) => ({
+        ...prev,
+        isInstallable: false,
+        isInstalled: true,
+        installPrompt: null,
+      }));
+    };
+
+    // 立即注册事件监听器
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    window.addEventListener('appinstalled', handleAppInstalled);
+
+    // 检查是否已经捕获了全局事件
+    if (globalInstallPrompt) {
+      setState((prev) => ({
+        ...prev,
+        installPrompt: globalInstallPrompt,
+        isInstallable: true,
+      }));
+    }
+
+    // 检查 PWA 安装条件
+    const checkPWAConditions = () => {
+      console.log('[PWA] Checking PWA conditions...');
+
+      const isSecureContext = window.isSecureContext;
+      const isHTTPS = window.location.protocol === 'https:';
+      const isLocalhost = window.location.hostname === 'localhost' ||
+                          window.location.hostname === '127.0.0.1';
+      const isSecureEnvironment = isSecureContext || isHTTPS || isLocalhost;
+
+      console.log('[PWA] isSecureContext:', isSecureContext);
+      console.log('[PWA] isHTTPS:', isHTTPS);
+      console.log('[PWA] isLocalhost:', isLocalhost);
+      console.log('[PWA] Service Worker support:', 'serviceWorker' in navigator);
+      console.log('[PWA] Current URL:', window.location.href);
+
+      if (!isSecureEnvironment) {
+        console.warn('[PWA] ⚠️ 警告：当前不是安全环境（HTTPS 或 localhost）');
+        console.warn('[PWA] PWA 功能将被禁用');
+      }
+    };
+
+    checkPWAConditions();
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+      window.removeEventListener('appinstalled', handleAppInstalled);
+    };
+  }, []);
 
   // 监听网络状态
   useEffect(() => {
@@ -176,24 +170,30 @@ export function usePWA() {
 
   // 安装应用
   const installApp = useCallback(async () => {
-    if (!state.installPrompt) return;
+    const promptEvent = state.installPrompt || globalInstallPrompt;
+
+    if (!promptEvent) {
+      console.warn('[PWA] No install prompt available');
+      return;
+    }
 
     try {
-      await state.installPrompt.prompt();
-      const choiceResult = await state.installPrompt.userChoice;
+      await promptEvent.prompt();
+      const choiceResult = await promptEvent.userChoice;
 
       if (choiceResult.outcome === 'accepted') {
-        console.log('用户接受了安装');
+        console.log('[PWA] 用户接受了安装');
+        globalInstallPrompt = null;
         setState((prev) => ({
           ...prev,
           isInstallable: false,
           installPrompt: null,
         }));
       } else {
-        console.log('用户拒绝了安装');
+        console.log('[PWA] 用户拒绝了安装');
       }
     } catch (error) {
-      console.error('安装失败:', error);
+      console.error('[PWA] 安装失败:', error);
     }
   }, [state.installPrompt]);
 

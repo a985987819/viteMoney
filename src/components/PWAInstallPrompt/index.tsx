@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { usePWA } from '../../hooks/usePWA';
 import styles from './index.module.scss';
 
+const FIRST_TIME_KEY = 'pwa_first_time_shown_v2';
+
 export const PWAInstallPrompt: React.FC = () => {
   const { t } = useTranslation();
   const {
@@ -13,53 +15,63 @@ export const PWAInstallPrompt: React.FC = () => {
     dismissInstall,
     updateAvailable,
     needRefresh,
-    hasShownFirstTime,
   } = usePWA();
 
   // 控制弹窗显示状态
   const [showPrompt, setShowPrompt] = useState(false);
   // 添加一个手动按钮状态
   const [showManualButton, setShowManualButton] = useState(false);
+  // 检查是否是首次访问
+  const [isFirstVisit, setIsFirstVisit] = useState(false);
 
-  // 首次进入时自动显示弹窗 - 修改逻辑：只要是首次访问且可以安装就显示
+  // 初始化：检查是否是首次访问
+  useEffect(() => {
+    const hasShown = localStorage.getItem(FIRST_TIME_KEY);
+    setIsFirstVisit(!hasShown);
+  }, []);
+
+  // 首次进入时自动显示弹窗
   useEffect(() => {
     console.log('[PWA InstallPrompt] State changed:', {
       isInstallable,
       isInstalled,
-      hasShownFirstTime,
+      isFirstVisit,
       showPrompt
     });
 
     // 如果已安装，不显示
     if (isInstalled) {
       console.log('[PWA InstallPrompt] App is already installed');
+      setShowPrompt(false);
+      setShowManualButton(false);
       return;
     }
 
-    // 首次访问且可以安装时显示
-    if (isInstallable && hasShownFirstTime && !isInstalled) {
-      console.log('[PWA InstallPrompt] Showing install prompt');
-      // 延迟一点显示，让页面先加载完成
-      const timer = setTimeout(() => {
-        setShowPrompt(true);
-      }, 1500);
-      return () => clearTimeout(timer);
+    // 可以安装时显示提示
+    if (isInstallable && !isInstalled) {
+      if (isFirstVisit) {
+        // 首次访问：延迟显示弹窗
+        console.log('[PWA InstallPrompt] Showing install prompt for first visit');
+        const timer = setTimeout(() => {
+          setShowPrompt(true);
+        }, 1500);
+        return () => clearTimeout(timer);
+      } else {
+        // 非首次访问：显示手动安装按钮
+        console.log('[PWA InstallPrompt] Showing manual install button');
+        setShowManualButton(true);
+      }
     }
-    
-    // 如果不是首次访问但仍然可以安装（比如用户清除了标记），显示手动按钮
-    if (isInstallable && !hasShownFirstTime && !isInstalled) {
-      console.log('[PWA InstallPrompt] Showing manual install button');
-      setShowManualButton(true);
-    }
-  }, [isInstallable, isInstalled, hasShownFirstTime, showPrompt]);
+  }, [isInstallable, isInstalled, isFirstVisit, showPrompt]);
 
   // 标记已显示过首次提示
   useEffect(() => {
-    if (showPrompt) {
-      localStorage.setItem('pwa_first_time_shown_v2', 'true');
+    if (showPrompt && isFirstVisit) {
+      localStorage.setItem(FIRST_TIME_KEY, 'true');
+      setIsFirstVisit(false);
       console.log('[PWA InstallPrompt] Marked first time as shown');
     }
-  }, [showPrompt]);
+  }, [showPrompt, isFirstVisit]);
 
   // 当 isInstallable 变为 false 时，关闭弹窗
   useEffect(() => {
