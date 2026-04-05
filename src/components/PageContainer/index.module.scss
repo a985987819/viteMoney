@@ -3,15 +3,13 @@
 .pageContainer {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
-  min-height: 100dvh; // 动态视口高度，适配移动端
+  height: 100vh;
+  height: 100dvh; // 动态视口高度，适配移动端
   width: 100%;
   max-width: 100vw;
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: hidden;
   position: relative;
   background-color: $stardew-parchment-light;
-  -webkit-overflow-scrolling: touch;
 }
 
 .withSafeArea {

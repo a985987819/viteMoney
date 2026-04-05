@@ -543,6 +543,22 @@ const AddRecord = () => {
               onSelect={handleMonthSelect}
               fullscreen={false}
               mode="year"
+              headerRender={({ value, onChange }) => {
+                const year = value.year();
+                return (
+                  <div style={{ display: 'flex', justifyContent: 'center', padding: '8px' }}>
+                    <Radio.Group
+                      value={year}
+                      onChange={(e) => onChange(value.year(e.target.value))}
+                      buttonStyle="solid"
+                    >
+                      <Radio.Button value={year - 1}>{year - 1}年</Radio.Button>
+                      <Radio.Button value={year}>{year}年</Radio.Button>
+                      <Radio.Button value={year + 1}>{year + 1}年</Radio.Button>
+                    </Radio.Group>
+                  </div>
+                );
+              }}
             />
           )}
 

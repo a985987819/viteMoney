@@ -12,14 +12,13 @@ $content-bg-url: '#{$cdn-base-url}/homePageBg.png';
 // 主容器
 .homeContainer {
   width: 100%;
-  min-height: 100vh;
+  height: 100%;
   background: url($content-bg-url) no-repeat center top;
   background-size: cover;
   background-position-y: 140px;
   display: flex;
   flex-direction: column;
   position: relative;
-  padding-bottom: calc(120px + env(safe-area-inset-bottom, 0));
 }
 
 .homeBottom {
@@ -164,7 +163,8 @@ $content-bg-url: '#{$cdn-base-url}/homePageBg.png';
   display: flex;
   flex-direction: column;
   min-height: 0;
-  padding: 0 16px 20px;
+  padding: 0 16px;
+  overflow: hidden;
 }
 
 .recordsList {

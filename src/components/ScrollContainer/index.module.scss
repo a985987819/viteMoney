@@ -6,7 +6,8 @@
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
   min-height: 100%;
-  
+  padding-bottom: calc(70px + env(safe-area-inset-bottom, 0));
+
   // 隐藏滚动条但保持滚动功能
   scrollbar-width: thin;
   scrollbar-color: rgba($stardew-wood-mid, 0.3) transparent;
