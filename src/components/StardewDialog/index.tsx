@@ -105,16 +105,19 @@ const StardewDialog: React.FC<StardewDialogProps> = ({
   // 判断是否是最后一页
   const isLastPage = currentPage >= totalPages - 1;
 
-  // 处理点击空白区域（多步骤模式下切换到下一页）
-  const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (e.target === e.currentTarget) {
-      if (hasMultiplePages && !isLastPage) {
-        // 还有下一页，切换到下一页
-        setCurrentPage(prev => prev + 1);
-      } else if (onClose) {
-        // 已经是最后一页，关闭对话框
-        onClose();
-      }
+  // 处理点击对话框（多步骤模式下切换到下一页）
+  const handleDialogClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    // 如果点击的是按钮，不触发跳转
+    if ((e.target as HTMLElement).tagName === 'BUTTON') {
+      return;
+    }
+    
+    if (hasMultiplePages && !isLastPage) {
+      // 还有下一页，切换到下一页
+      setCurrentPage(prev => prev + 1);
+    } else if (isLastPage && onClose) {
+      // 已经是最后一页，关闭对话框
+      onClose();
     }
   };
 
@@ -137,8 +140,8 @@ const StardewDialog: React.FC<StardewDialogProps> = ({
   };
 
   return (
-    <div className={styles.dialogOverlay} onClick={handleOverlayClick}>
-      <div className={styles.dialogContainer}>
+    <div className={styles.dialogOverlay}>
+      <div className={styles.dialogContainer} onClick={handleDialogClick}>
         {/* 左侧对话内容区域 */}
         <div className={styles.contentSection}>
           <div className={styles.contentText} ref={contentRef}>

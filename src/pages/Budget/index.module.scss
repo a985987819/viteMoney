@@ -3,9 +3,8 @@
 .budgetPage {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  min-height: 100vh;
   background: $stardew-panel-bg;
-  padding-bottom: calc(70px + env(safe-area-inset-bottom, 0));
 }
 
 .loadingContainer {
@@ -30,7 +29,6 @@
 .content {
   flex: 1;
   padding: 16px;
-  padding-bottom: calc(16px + 70px + env(safe-area-inset-bottom, 0));
   overflow-y: auto;
 }
 

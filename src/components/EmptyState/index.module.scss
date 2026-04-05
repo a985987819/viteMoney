@@ -45,7 +45,7 @@
   border-radius: 22px;
   font-size: 15px;
   font-weight: 500;
-  background: linear-gradient(135deg, $stardew-wood-light 0%, $stardew-wood-mid 100%);
+  background-color: $stardew-wood-mid;
   border: 2px solid $stardew-wood-dark;
   box-shadow: 0 4px 12px rgba($stardew-wood-dark, 0.3);
   @include transition;

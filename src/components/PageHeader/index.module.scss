@@ -6,7 +6,7 @@
   justify-content: space-between;
   padding: 12px 16px;
   padding-top: calc(12px + env(safe-area-inset-top, 0));
-  background: linear-gradient(180deg, $stardew-sky-light 0%, $stardew-sky-deep 100%);
+  background-color: $stardew-sky-deep;
   border-bottom: 4px solid $stardew-wood-mid;
   flex-shrink: 0;
 }

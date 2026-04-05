@@ -22,7 +22,7 @@ $progress-bg: rgba(0, 0, 0, 0.3);
   // 使用百分比定位，确保在不同分辨率下木牌位置对齐
   padding-bottom: 22%;
 
-  // 底部渐变遮罩，让文字更清晰
+  // 底部纯色遮罩，让文字更清晰
   &::after {
     content: '';
     position: absolute;
@@ -30,7 +30,7 @@ $progress-bg: rgba(0, 0, 0, 0.3);
     left: 0;
     right: 0;
     height: 40%;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.3) 0%, transparent 100%);
+    background-color: rgba(0, 0, 0, 0.15);
     pointer-events: none;
     z-index: 1;
   }
@@ -83,8 +83,8 @@ $progress-bg: rgba(0, 0, 0, 0.3);
 
 .progressFill {
   height: 100%;
-  // 橙黄色渐变
-  background: linear-gradient(180deg, $progress-color 0%, $progress-color-dark 100%);
+  // 橙黄色纯色
+  background-color: $progress-color;
   transition: width 0.3s ease;
   border-radius: 3px;
   box-shadow: 0 0 6px rgba(220, 150, 78, 0.6);

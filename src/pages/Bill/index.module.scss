@@ -19,7 +19,7 @@ $cdn-base-url: 'https://vercel-icons.vercel.app';
 // 主容器
 .billContainer {
   min-height: 100vh;
-  background: linear-gradient(180deg, $summer-bg 0%, $summer-bg-dark 100%);
+  background-color: #fff8f0;
   padding-bottom: 80px;
   position: relative;
 }
@@ -198,7 +198,7 @@ $cdn-base-url: 'https://vercel-icons.vercel.app';
 }
 
 .recordDayHeader {
-  background: linear-gradient(135deg, $summer-primary 0%, $summer-secondary 100%);
+  background-color: $summer-primary;
   padding: 12px 16px;
   display: flex;
   justify-content: space-between;
@@ -251,7 +251,7 @@ $cdn-base-url: 'https://vercel-icons.vercel.app';
   width: 40px;
   height: 40px;
   border-radius: 8px;
-  background: linear-gradient(135deg, $summer-accent 0%, lighten($summer-accent, 10%) 100%);
+  background-color: $summer-accent;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -313,7 +313,7 @@ $cdn-base-url: 'https://vercel-icons.vercel.app';
 }
 
 .filterModalHeader {
-  background: linear-gradient(135deg, $summer-primary 0%, $summer-secondary 100%);
+  background-color: $summer-primary;
   padding: 16px;
   display: flex;
   justify-content: space-between;

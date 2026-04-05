@@ -542,13 +542,13 @@ const Profile = () => {
               className={styles.themeRadioGroup}
             >
               <Radio.Button value="light">
-                <SunOutlined /> {t('profile.light', '日间')}
+                <SunOutlined /> 
               </Radio.Button>
               <Radio.Button value="dark">
-                <MoonOutlined /> {t('profile.dark', '夜间')}
+                <MoonOutlined /> 
               </Radio.Button>
               <Radio.Button value="system">
-                <DesktopOutlined /> {t('profile.system', '跟随')}
+                <DesktopOutlined /> 
               </Radio.Button>
             </Radio.Group>
           </div>

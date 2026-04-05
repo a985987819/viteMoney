@@ -3,8 +3,8 @@
 .statisticsPage {
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  background: linear-gradient(180deg, $stardew-parchment 0%, $stardew-panel-bg 100%);
+  min-height: 100vh;
+  background-color: $stardew-panel-bg;
 }
 
 .tabHeader {

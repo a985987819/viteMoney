@@ -12,7 +12,6 @@ $dialog-bg-url: '#{$cdn-base-url}/dialogBg.png';
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: flex-end;
   z-index: 1000;
@@ -91,17 +90,17 @@ $dialog-bg-url: '#{$cdn-base-url}/dialogBg.png';
 // 继续提示
 .continueHint {
   position: absolute;
-  bottom: 45px;
-  right: 15px;
+  bottom: 5px;
+  right: 50px;
   font-family: 'PixelFont', monospace;
-  font-size: 11px;
+  font-size: 10px;
   color: $stardew-text-primary;
   text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.3);
   animation: blink 1.5s infinite;
   
   span {
     display: inline-block;
-    padding: 4px 8px;
+    padding: 2px 6px;
     background: rgba($stardew-wood-light, 0.5);
     border-radius: 3px;
   }

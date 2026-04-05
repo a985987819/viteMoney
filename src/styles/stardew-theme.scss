@@ -6,7 +6,7 @@
 // ==================== 天空与背景 ====================
 $stardew-sky-light: #a1d4ff;
 $stardew-sky-deep: #c8e6ff;
-$stardew-sky-gradient: linear-gradient(180deg, $stardew-sky-light 0%, $stardew-sky-deep 100%);
+$stardew-sky-solid: #b8dcff;
 
 // ==================== 草地与自然 ====================
 $stardew-grass: #4a9c3d;
@@ -14,7 +14,7 @@ $stardew-grass-light: #5f9c4e;
 $stardew-grass-deep: #3d7a32;
 $stardew-earth: #e19d1d;
 $stardew-earth-light: #f7b327;
-$stardew-earth-gradient: linear-gradient(180deg, $stardew-grass 0%, $stardew-earth 100%);
+$stardew-earth-solid: #d4a53a;
 
 // ==================== 木质元素（核心主题色） ====================
 $stardew-wood-dark: #8B5A2B;
@@ -22,7 +22,7 @@ $stardew-wood-deep: #6F3F1F;
 $stardew-wood-darkest: #3c2f1f;
 $stardew-wood-light: #d4b48c;
 $stardew-wood-mid: #A67C52;
-$stardew-wood-gradient: linear-gradient(180deg, $stardew-wood-light 0%, $stardew-wood-dark 100%);
+$stardew-wood-solid: #9c6b3f;
 
 // ==================== 面板与背景 ====================
 $stardew-panel-bg: #f5e8c7;
@@ -124,21 +124,9 @@ $cdn-base-url: 'https://vercel-icons.vercel.app';
   letter-spacing: 0.5px;
 }
 
-// ==================== 背景渐变变量 ====================
-$stardew-farm-bg: linear-gradient(
-  180deg,
-  $stardew-sky-light 0%,
-  $stardew-sky-deep 30%,
-  $stardew-grass-light 30%,
-  $stardew-grass 100%
-);
+// ==================== 背景纯色变量 ====================
+$stardew-farm-bg: #8bcba0;
 
 @mixin stardew-farm-bg-mixin {
-  background: linear-gradient(
-    180deg,
-    $stardew-sky-light 0%,
-    $stardew-sky-deep 30%,
-    $stardew-grass-light 30%,
-    $stardew-grass 100%
-  );
+  background-color: #8bcba0;
 }

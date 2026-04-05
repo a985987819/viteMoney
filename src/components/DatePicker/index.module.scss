@@ -44,7 +44,7 @@ $border-color: #d4a574;
 }
 
 .datePickerHeader {
-  background: linear-gradient(135deg, $primary-color 0%, $primary-light 100%);
+  background-color: $primary-color;
   color: $white;
   padding: 20px 16px;
   @include flex-between;

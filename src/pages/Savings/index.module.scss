@@ -3,7 +3,7 @@
 .savingsPage {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  min-height: 100vh;
   background: $stardew-panel-bg;
   position: relative;
   overflow-y: auto;

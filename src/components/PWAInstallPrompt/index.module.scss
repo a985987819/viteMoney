@@ -21,7 +21,7 @@
 // 提示内容
 .promptContent {
   @include stardew-wood-panel;
-  background: linear-gradient(180deg, $stardew-panel-bg 0%, $stardew-parchment 100%);
+  background-color: $stardew-panel-bg;
   padding: 16px 20px;
   display: flex;
   align-items: center;
@@ -36,7 +36,7 @@
   width: 56px;
   height: 56px;
   border-radius: 12px;
-  background: linear-gradient(135deg, $stardew-grass-light 0%, $stardew-grass 100%);
+  background-color: $stardew-grass;
   border: 3px solid $stardew-grass-deep;
   @include flex-center;
   flex-shrink: 0;
@@ -90,7 +90,7 @@
   cursor: pointer;
   transition: all 0.1s ease;
   white-space: nowrap;
-  background: linear-gradient(180deg, $stardew-grass-light 0%, $stardew-grass 100%);
+  background-color: $stardew-grass;
   border: 2px solid $stardew-grass-deep;
   color: white;
   box-shadow:
@@ -98,7 +98,7 @@
     0 3px 0 $stardew-grass-deep;
 
   &:hover {
-    background: linear-gradient(180deg, color.adjust($stardew-grass-light, $lightness: 5%) 0%, color.adjust($stardew-grass, $lightness: 5%) 100%);
+    background-color: color.adjust($stardew-grass, $lightness: 5%);
     transform: translateY(-1px);
   }
 
@@ -147,7 +147,7 @@
   left: 0;
   right: 0;
   z-index: 9999;
-  background: linear-gradient(180deg, $stardew-warning 0%, color.adjust($stardew-warning, $lightness: -10%) 100%);
+  background-color: $stardew-warning;
   padding: 8px 16px;
   text-align: center;
   font-size: 12px;
@@ -175,7 +175,7 @@
 
 .updateContent {
   @include stardew-wood-panel;
-  background: linear-gradient(180deg, $stardew-info 0%, color.adjust($stardew-info, $lightness: -10%) 100%);
+  background-color: $stardew-info;
   padding: 12px 16px;
   display: flex;
   align-items: center;
@@ -242,7 +242,7 @@
     cursor: pointer;
     transition: all 0.1s ease;
     white-space: nowrap;
-    background: linear-gradient(180deg, $stardew-grass-light 0%, $stardew-grass 100%);
+    background-color: $stardew-grass;
     border: 2px solid $stardew-grass-deep;
     color: white;
     box-shadow:
@@ -250,7 +250,7 @@
       0 3px 0 $stardew-grass-deep;
 
     &:hover {
-      background: linear-gradient(180deg, color.adjust($stardew-grass-light, $lightness: 5%) 0%, color.adjust($stardew-grass, $lightness: 5%) 100%);
+      background-color: color.adjust($stardew-grass, $lightness: 5%);
       transform: translateY(-1px);
     }
 

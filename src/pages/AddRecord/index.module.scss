@@ -19,17 +19,17 @@ $white: #fff;
 $border-color: #aed581;
 
 @mixin gradient-bg {
-  background: linear-gradient(135deg, $primary-light 0%, $primary-color 100%);
+  background-color: $primary-color;
 }
 
 @mixin gradient-warning {
-  background: linear-gradient(135deg, $warning-light 0%, $warning-color 100%);
+  background-color: $warning-color;
 }
 
 // 主容器
 .addRecordContainer {
   width: 100%;
-  height: 100%;
+  min-height: 100vh;
   background-color: $bg-color;
   display: flex;
   flex-direction: column;
@@ -181,7 +181,7 @@ $border-color: #aed581;
   justify-content: center;
   gap: 8px;
   padding: 8px 16px;
-  background: linear-gradient(135deg, $primary-light 0%, $primary-color 100%);
+  background-color: $primary-color;
   margin: 0 16px 12px;
   border-radius: 20px;
   border: 2px solid $primary-dark;
@@ -345,7 +345,7 @@ $border-color: #aed581;
     font-weight: 500;
 
     &:active {
-      background: linear-gradient(135deg, #9cc996 0%, $primary-dark 100%);
+      background-color: $primary-dark;
     }
   }
 
@@ -356,7 +356,7 @@ $border-color: #aed581;
     font-weight: 500;
 
     &:active {
-      background: linear-gradient(135deg, #ffc53d 0%, $warning-dark 100%);
+      background-color: $warning-dark;
     }
   }
 }

@@ -85,7 +85,7 @@
 .pixelGrass {
   width: 20px;
   height: 30px;
-  background: linear-gradient(180deg, $stardew-grass-light 0%, $stardew-grass 100%);
+  background-color: $stardew-grass;
   border-radius: 4px 4px 0 0;
   opacity: 0.6;
 

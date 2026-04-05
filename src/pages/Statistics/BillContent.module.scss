@@ -11,7 +11,7 @@
 }
 
 .billHeaderFixed {
-  background: linear-gradient(180deg, $stardew-parchment 0%, $stardew-panel-bg 100%);
+  background-color: $stardew-panel-bg;
   border-bottom: 3px solid $stardew-wood-dark;
   z-index: 10;
   flex-shrink: 0;

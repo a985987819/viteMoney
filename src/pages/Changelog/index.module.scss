@@ -2,7 +2,7 @@
 
 .changelogPage {
   min-height: 100vh;
-  background: linear-gradient(180deg, $stardew-sky-light 0%, $stardew-sky-deep 50%, $stardew-grass-light 100%);
+  background-color: #c8e6c9;
   position: relative;
   overflow-x: hidden;
 }
@@ -73,7 +73,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(180deg, $stardew-wood-light 0%, $stardew-wood-mid 100%);
+  background-color: $stardew-wood-mid;
   border: 3px solid $stardew-wood-dark;
   border-radius: 8px;
   cursor: pointer;
