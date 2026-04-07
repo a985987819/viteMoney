@@ -4,6 +4,7 @@ import { Tabs } from 'antd';
 import BottomNav from '../../components/BottomNav';
 import BillContent from './BillContent';
 import ReportContent from './ReportContent';
+import CompareContent from './CompareContent';
 import styles from './index.module.scss';
 
 /**
@@ -22,6 +23,10 @@ const Statistics = () => {
       key: 'report',
       label: t('statistics.report', '报表'),
     },
+    {
+      key: 'compare',
+      label: t('statistics.compare', '对比'),
+    },
   ];
 
   return (
@@ -39,7 +44,9 @@ const Statistics = () => {
 
       {/* 内容区域 */}
       <div className={styles.content}>
-        {activeTab === 'bill' ? <BillContent /> : <ReportContent />}
+        {activeTab === 'bill' && <BillContent />}
+        {activeTab === 'report' && <ReportContent />}
+        {activeTab === 'compare' && <CompareContent />}
       </div>
 
       {/* 底部导航 */}

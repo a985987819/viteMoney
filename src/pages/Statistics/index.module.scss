@@ -53,5 +53,5 @@
   overflow: auto;
   display: flex;
   flex-direction: column;
-  padding-bottom: calc(16px + 70px + env(safe-area-inset-bottom, 0));
+  padding-bottom: env(safe-area-inset-bottom, 0);
 }

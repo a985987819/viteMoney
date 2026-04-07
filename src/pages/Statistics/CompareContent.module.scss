@@ -1,0 +1,254 @@
+@use '../../styles/stardew-theme.scss' as *;
+
+.compareContent {
+  flex: 1;
+  padding: 16px;
+  padding-bottom: env(safe-area-inset-bottom, 0);
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+  -webkit-overflow-scrolling: touch;
+}
+
+.loadingContainer,
+.emptyContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+}
+
+.loadingText {
+  font-size: 14px;
+  color: $stardew-text-secondary;
+  font-family: 'PixelFont', monospace;
+}
+
+// 月份选择器
+.monthSelector {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.monthBox {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 16px;
+  background: rgba(white, 0.6);
+  border-radius: 12px;
+  border: 2px solid rgba($stardew-wood-dark, 0.3);
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    border-color: $stardew-wood-dark;
+    background: rgba(white, 0.8);
+  }
+
+  .monthLabel {
+    font-size: 11px;
+    color: $stardew-text-secondary;
+    margin-bottom: 4px;
+    font-family: 'PixelFont', monospace;
+  }
+
+  .monthValue {
+    font-size: 14px;
+    font-weight: bold;
+    color: $stardew-text-primary;
+    font-family: 'PixelFont', monospace;
+  }
+}
+
+.swapBtn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: $stardew-wood-dark;
+  color: white;
+  border: none;
+
+  &:hover {
+    background: darken($stardew-wood-dark, 10%);
+    color: white;
+  }
+
+  :global {
+    .anticon {
+      font-size: 16px;
+    }
+  }
+}
+
+// 总览对比卡片
+.summaryCards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.summaryCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 8px;
+  background: rgba(white, 0.6);
+  border-radius: 12px;
+  border: 2px solid rgba($stardew-wood-dark, 0.3);
+
+  .cardLabel {
+    font-size: 11px;
+    color: $stardew-text-secondary;
+    margin-bottom: 8px;
+    font-family: 'PixelFont', monospace;
+  }
+
+  .cardValues {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 4px;
+    font-family: 'PixelFont', monospace;
+
+    .baseValue,
+    .compareValue {
+      font-size: 12px;
+      font-weight: bold;
+      color: $stardew-text-primary;
+    }
+
+    .vs {
+      font-size: 10px;
+      color: $stardew-text-secondary;
+    }
+  }
+
+  .cardChange {
+    font-size: 11px;
+    font-family: 'PixelFont', monospace;
+  }
+}
+
+// 变化颜色
+.increase {
+  color: $stardew-danger;
+}
+
+.decrease {
+  color: $stardew-success;
+}
+
+.neutral {
+  color: $stardew-text-secondary;
+}
+
+// 图表容器
+.chartContainer {
+  background: rgba(white, 0.6);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.compareChart {
+  width: 100%;
+}
+
+// 分类对比区域
+.categoryCompareSection {
+  background: rgba(white, 0.6);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.sectionTitle {
+  font-size: 14px;
+  font-weight: bold;
+  color: $stardew-text-primary;
+  margin-bottom: 12px;
+  font-family: 'PixelFont', monospace;
+}
+
+.categoryList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.categoryItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  background: rgba($stardew-wood-light, 0.2);
+  border-radius: 8px;
+}
+
+.categoryInfo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.categoryIcon {
+  font-size: 20px;
+}
+
+.categoryDetail {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.categoryName {
+  font-size: 13px;
+  font-weight: bold;
+  color: $stardew-text-primary;
+  font-family: 'PixelFont', monospace;
+}
+
+.categoryType {
+  font-size: 10px;
+  color: $stardew-text-secondary;
+  font-family: 'PixelFont', monospace;
+}
+
+.categoryValues {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.valueRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'PixelFont', monospace;
+
+  .baseAmount,
+  .compareAmount {
+    font-size: 12px;
+    color: $stardew-text-primary;
+  }
+
+  .arrow {
+    font-size: 10px;
+    color: $stardew-text-secondary;
+  }
+}
+
+.diffRow {
+  font-size: 11px;
+  font-family: 'PixelFont', monospace;
+}
