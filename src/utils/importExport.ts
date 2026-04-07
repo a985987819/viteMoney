@@ -7,11 +7,9 @@ import {
   getCategoryMapping,
 } from '../constants/categoryIconMapping';
 
-// ==================== 导出功能 ====================
-
-// 导出为 CSV
-export const exportToCSV = (records: RecordItem[], filename: string = '记账记录') => {
-  const data = records.map(record => ({
+// 构建导出数据结构（复用映射逻辑）
+const buildExportData = (records: RecordItem[]) =>
+  records.map(record => ({
     '日期': dayjs(record.date).format('YYYY-MM-DD HH:mm:ss'),
     '类型': record.type === 'expense' ? '支出' : '收入',
     '金额': record.amount,
@@ -21,6 +19,9 @@ export const exportToCSV = (records: RecordItem[], filename: string = '记账记
     '账户': record.account || '',
   }));
 
+// 导出为 CSV
+export const exportToCSV = (records: RecordItem[], filename: string = '记账记录') => {
+  const data = buildExportData(records);
   const csv = Papa.unparse(data);
   const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
   const link = document.createElement('a');
@@ -31,16 +32,7 @@ export const exportToCSV = (records: RecordItem[], filename: string = '记账记
 
 // 导出为 XLSX
 export const exportToXLSX = (records: RecordItem[], filename: string = '记账记录') => {
-  const data = records.map(record => ({
-    '日期': dayjs(record.date).format('YYYY-MM-DD HH:mm:ss'),
-    '类型': record.type === 'expense' ? '支出' : '收入',
-    '金额': record.amount,
-    '分类': record.category,
-    '子分类': record.subCategory || '',
-    '备注': record.remark || '',
-    '账户': record.account || '',
-  }));
-
+  const data = buildExportData(records);
   const ws = XLSX.utils.json_to_sheet(data);
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, '记账记录');

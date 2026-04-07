@@ -1,6 +1,4 @@
-import { http } from '../utils/request';
-
-// 借贷管理相关接口
+import { createApiService, http } from '../utils/request';
 
 export type DebtType = 'lend' | 'borrow';
 
@@ -59,25 +57,16 @@ export interface DebtSummary {
   pendingBorrowed: number;
 }
 
+const api = createApiService<Debt, CreateDebtParams, UpdateDebtParams>('/debts');
+
 // 获取借贷列表
-export const getDebts = (): Promise<Debt[]> => {
-  return http.get('/debts');
-};
-
+export const getDebts = api.getList;
 // 创建借贷记录
-export const createDebt = (data: CreateDebtParams): Promise<Debt> => {
-  return http.post('/debts', data);
-};
-
+export const createDebt = api.create;
 // 更新借贷记录
-export const updateDebt = (id: string, data: UpdateDebtParams): Promise<Debt> => {
-  return http.put(`/debts/${id}`, data);
-};
-
+export const updateDebt = api.update;
 // 删除借贷记录
-export const deleteDebt = (id: string): Promise<{ message: string }> => {
-  return http.delete(`/debts/${id}`);
-};
+export const deleteDebt = api.delete;
 
 // 记录还款
 export const repayDebt = (id: string, data: RepayParams): Promise<{ debt: Debt; message: string }> => {

@@ -8,6 +8,15 @@ interface User {
   username: string;
 }
 
+interface AuthResponse {
+  user: User;
+  tokens: {
+    accessToken: string;
+    refreshToken: string;
+    expiresIn: number;
+  };
+}
+
 interface AuthContextType {
   user: User | null;
   isLoggedIn: boolean;
@@ -31,20 +40,27 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
+  const handleAuthSuccess = async (res: AuthResponse, action: 'login' | 'register') => {
+    saveUser(res.user);
+    saveTokens(res.tokens);
+    setUser(res.user);
+    setIsLoggedIn(true);
+    message.success(action === 'login' ? '登录成功' : '注册成功');
+  };
+
+  const handleAuthError = (error: unknown, action: 'login' | 'register') => {
+    const err = error as { response?: { data?: { error?: string } } };
+    const errorMsg = err.response?.data?.error || `${action === 'login' ? '登录' : '注册'}失败`;
+    message.error(errorMsg);
+    throw error;
+  };
+
   const login = async (username: string, password: string) => {
     try {
       const res = await loginApi({ username, password });
-
-      saveUser(res.user);
-      saveTokens(res.tokens);
-      setUser(res.user);
-      setIsLoggedIn(true);
-      message.success('登录成功');
+      await handleAuthSuccess(res, 'login');
     } catch (error: unknown) {
-      const err = error as { response?: { data?: { error?: string } } };
-      const errorMsg = err.response?.data?.error || '登录失败';
-      message.error(errorMsg);
-      throw error;
+      handleAuthError(error, 'login');
     }
   };
 
@@ -55,7 +71,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         await logoutApi({ refreshToken });
       }
     } catch (error) {
-      // 即使接口调用失败也清除本地数据
       console.error('Logout error:', error);
     } finally {
       clearUser();
@@ -68,17 +83,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const register = async (username: string, password: string) => {
     try {
       const res = await registerApi({ username, password });
-
-      saveUser(res.user);
-      saveTokens(res.tokens);
-      setUser(res.user);
-      setIsLoggedIn(true);
-      message.success('注册成功');
+      await handleAuthSuccess(res, 'register');
     } catch (error: unknown) {
-      const err = error as { response?: { data?: { error?: string } } };
-      const errorMsg = err.response?.data?.error || '注册失败';
-      message.error(errorMsg);
-      throw error;
+      handleAuthError(error, 'register');
     }
   };
 

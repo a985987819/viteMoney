@@ -1,7 +1,5 @@
-import { http } from '../utils/request';
+import { createApiService, http } from '../utils/request';
 import type { RecordItem } from './record';
-
-// 账单模板相关接口
 
 export interface BillTemplate {
   id: string;
@@ -45,25 +43,16 @@ export interface UseTemplateParams {
   remark?: string;
 }
 
+const api = createApiService<BillTemplate, CreateTemplateParams, UpdateTemplateParams>('/templates');
+
 // 获取模板列表
-export const getTemplates = (): Promise<BillTemplate[]> => {
-  return http.get('/templates');
-};
-
+export const getTemplates = api.getList;
 // 创建模板
-export const createTemplate = (data: CreateTemplateParams): Promise<BillTemplate> => {
-  return http.post('/templates', data);
-};
-
+export const createTemplate = api.create;
 // 更新模板
-export const updateTemplate = (id: string, data: UpdateTemplateParams): Promise<BillTemplate> => {
-  return http.put(`/templates/${id}`, data);
-};
-
+export const updateTemplate = api.update;
 // 删除模板
-export const deleteTemplate = (id: string): Promise<{ message: string }> => {
-  return http.delete(`/templates/${id}`);
-};
+export const deleteTemplate = api.delete;
 
 // 使用模板创建记录
 export const useTemplate = (id: string, data?: UseTemplateParams): Promise<{ record: RecordItem; message: string }> => {

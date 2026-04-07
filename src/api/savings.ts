@@ -1,6 +1,4 @@
-import { http } from '../utils/request';
-
-// 储蓄目标相关接口
+import { createApiService, http } from '../utils/request';
 
 export interface SavingsGoal {
   id: string;
@@ -50,25 +48,16 @@ export interface SavingsSummary {
   inProgressGoals: number;
 }
 
+const api = createApiService<SavingsGoal, CreateSavingsGoalParams, UpdateSavingsGoalParams>('/savings/goals');
+
 // 获取所有储蓄目标
-export const getSavingsGoals = (): Promise<SavingsGoal[]> => {
-  return http.get('/savings/goals');
-};
-
+export const getSavingsGoals = api.getList;
 // 创建储蓄目标
-export const createSavingsGoal = (data: CreateSavingsGoalParams): Promise<SavingsGoal> => {
-  return http.post('/savings/goals', data);
-};
-
+export const createSavingsGoal = api.create;
 // 更新储蓄目标
-export const updateSavingsGoal = (id: string, data: UpdateSavingsGoalParams): Promise<SavingsGoal> => {
-  return http.put(`/savings/goals/${id}`, data);
-};
-
+export const updateSavingsGoal = api.update;
 // 删除储蓄目标
-export const deleteSavingsGoal = (id: string): Promise<{ message: string }> => {
-  return http.delete(`/savings/goals/${id}`);
-};
+export const deleteSavingsGoal = api.delete;
 
 // 向目标存钱
 export const depositToGoal = (id: string, data: DepositParams): Promise<{ goal: SavingsGoal; message: string }> => {

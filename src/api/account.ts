@@ -1,6 +1,4 @@
-import { http } from '../utils/request';
-
-// 账户管理相关接口
+import { createApiService, http } from '../utils/request';
 
 export type AccountType = 'cash' | 'bank' | 'alipay' | 'wechat' | 'credit' | 'other';
 
@@ -50,25 +48,16 @@ export interface AccountSummary {
   }[];
 }
 
+const api = createApiService<Account, CreateAccountParams, UpdateAccountParams>('/accounts');
+
 // 获取账户列表
-export const getAccounts = (): Promise<Account[]> => {
-  return http.get('/accounts');
-};
-
+export const getAccounts = api.getList;
 // 创建账户
-export const createAccount = (data: CreateAccountParams): Promise<Account> => {
-  return http.post('/accounts', data);
-};
-
+export const createAccount = api.create;
 // 更新账户
-export const updateAccount = (id: string, data: UpdateAccountParams): Promise<Account> => {
-  return http.put(`/accounts/${id}`, data);
-};
-
+export const updateAccount = api.update;
 // 删除账户
-export const deleteAccount = (id: string): Promise<{ message: string }> => {
-  return http.delete(`/accounts/${id}`);
-};
+export const deleteAccount = api.delete;
 
 // 调整账户余额
 export const adjustAccountBalance = (id: string, data: AdjustBalanceParams): Promise<{ account: Account; message: string }> => {

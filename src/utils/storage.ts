@@ -63,12 +63,17 @@ export const saveUser = (user: User) => {
   localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(user));
 };
 
+// Token 相关 keys 列表
+const TOKEN_KEYS = [
+  STORAGE_KEYS.ACCESS_TOKEN,
+  STORAGE_KEYS.REFRESH_TOKEN,
+  STORAGE_KEYS.TOKEN_EXPIRES,
+];
+
 // 清除用户信息
 export const clearUser = () => {
   localStorage.removeItem(STORAGE_KEYS.USER);
-  localStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
-  localStorage.removeItem(STORAGE_KEYS.REFRESH_TOKEN);
-  localStorage.removeItem(STORAGE_KEYS.TOKEN_EXPIRES);
+  TOKEN_KEYS.forEach((key) => localStorage.removeItem(key));
 };
 
 // 获取 access token
@@ -97,28 +102,23 @@ export const isTokenExpired = (): boolean => {
   return Date.now() > parseInt(expiresAt, 10);
 };
 
-// 获取 token（兼容旧接口）
-export const getToken = (): string | null => {
-  return getAccessToken();
-};
-
-// 保存 token（兼容旧接口）
-export const saveToken = (token: string) => {
-  localStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, token);
-};
-
 // 检查是否登录
 export const isLoggedIn = (): boolean => {
   return !!getAccessToken() && !isTokenExpired();
 };
 
+// 所有用户数据 keys
+const ALL_DATA_KEYS = [
+  STORAGE_KEYS.RECORDS,
+  STORAGE_KEYS.USER,
+  STORAGE_KEYS.ACCESS_TOKEN,
+  STORAGE_KEYS.REFRESH_TOKEN,
+  STORAGE_KEYS.TOKEN_EXPIRES,
+];
+
 // 清除所有本地数据
 export const clearAllData = () => {
-  localStorage.removeItem(STORAGE_KEYS.RECORDS);
-  localStorage.removeItem(STORAGE_KEYS.USER);
-  localStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
-  localStorage.removeItem(STORAGE_KEYS.REFRESH_TOKEN);
-  localStorage.removeItem(STORAGE_KEYS.TOKEN_EXPIRES);
+  ALL_DATA_KEYS.forEach((key) => localStorage.removeItem(key));
 };
 
 // 分类相关

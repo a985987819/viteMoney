@@ -1,6 +1,4 @@
-import { http } from '../utils/request';
-
-// 周期记账相关接口
+import { createApiService, http } from '../utils/request';
 
 export type FrequencyType = 'daily' | 'workday' | 'weekly' | 'monthly' | 'yearly';
 
@@ -55,25 +53,16 @@ export interface RecurringSummary {
   monthlyEstimatedIncome: number;
 }
 
+const api = createApiService<RecurringRecord, CreateRecurringParams, UpdateRecurringParams>('/recurring');
+
 // 获取周期记账列表
-export const getRecurringRecords = (): Promise<RecurringRecord[]> => {
-  return http.get('/recurring');
-};
-
+export const getRecurringRecords = api.getList;
 // 创建周期记账
-export const createRecurringRecord = (data: CreateRecurringParams): Promise<RecurringRecord> => {
-  return http.post('/recurring', data);
-};
-
+export const createRecurringRecord = api.create;
 // 更新周期记账
-export const updateRecurringRecord = (id: string, data: UpdateRecurringParams): Promise<RecurringRecord> => {
-  return http.put(`/recurring/${id}`, data);
-};
-
+export const updateRecurringRecord = api.update;
 // 删除周期记账
-export const deleteRecurringRecord = (id: string): Promise<{ message: string }> => {
-  return http.delete(`/recurring/${id}`);
-};
+export const deleteRecurringRecord = api.delete;
 
 // 切换启用/禁用状态
 export const toggleRecurringRecord = (id: string): Promise<{ recurring: RecurringRecord; message: string }> => {

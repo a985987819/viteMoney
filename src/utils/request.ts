@@ -206,4 +206,15 @@ export const http = {
   },
 };
 
+// 通用 CRUD API 辅助函数
+export function createApiService<T, CreateDTO = unknown, UpdateDTO = unknown>(basePath: string) {
+  return {
+    getList: () => http.get<T[]>(basePath),
+    getById: (id: string) => http.get<T>(`${basePath}/${id}`),
+    create: (data: CreateDTO) => http.post<T>(basePath, data),
+    update: (id: string, data: UpdateDTO) => http.put<T>(`${basePath}/${id}`, data),
+    delete: (id: string) => http.delete<{ message: string }>(`${basePath}/${id}`),
+  };
+}
+
 export default request;
