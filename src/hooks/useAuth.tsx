@@ -1,20 +1,18 @@
 import { useState, useEffect, createContext, useContext, type ReactNode } from 'react';
 import { message } from 'antd';
-import { login as loginApi, register as registerApi, logout as logoutApi } from '../api/auth';
+import { login as loginApi, register as registerApi, logout as logoutApi, type User } from '../api/auth';
 import { getUser, saveUser, saveTokens, clearUser, getRefreshToken, isLoggedIn as checkIsLoggedIn } from '../utils/storage';
 
-interface User {
-  id: number;
-  username: string;
+interface AuthTokens {
+  accessToken: string;
+  refreshToken: string;
+  expiresIn: number;
+  tokenType: string;
 }
 
 interface AuthResponse {
   user: User;
-  tokens: {
-    accessToken: string;
-    refreshToken: string;
-    expiresIn: number;
-  };
+  tokens: AuthTokens;
 }
 
 interface AuthContextType {

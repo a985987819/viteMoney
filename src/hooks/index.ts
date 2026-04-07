@@ -7,3 +7,4 @@ export { useAuth, AuthProvider } from './useAuth';
 export { useCategories } from './useCategories';
 export { useMobileKeyboard } from './useMobileKeyboard';
 export { usePWA } from './usePWA';
+export { default as useCalculator, type UseCalculatorReturn } from './useCalculator';

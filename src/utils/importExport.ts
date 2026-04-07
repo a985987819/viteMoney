@@ -3,9 +3,13 @@ import Papa from 'papaparse';
 import type { RecordItem } from '../api/record';
 import dayjs from 'dayjs';
 import {
-  matchCategory,
-  getCategoryMapping,
-} from '../constants/categoryIconMapping';
+  transformImportRecord,
+  parseCSVRow,
+  detectColumnMapping,
+  generateTransformReport,
+  type TransformStats,
+  type ImportRecord,
+} from './categoryTransformer';
 
 // 构建导出数据结构（复用映射逻辑）
 const buildExportData = (records: RecordItem[]) =>
@@ -67,6 +71,11 @@ export interface ImportStats {
   unmatchedCategories: string[];
 }
 
+/**
+ * 导入记录的原始数据结构（列名可能来自多种来源）
+ */
+interface RawImportRow extends Record<string, unknown> {}
+
 // 从 CSV 导入
 export const importFromCSV = (file: File): Promise<ImportTransformResult> => {
   return new Promise((resolve, reject) => {
@@ -75,7 +84,7 @@ export const importFromCSV = (file: File): Promise<ImportTransformResult> => {
       encoding: 'UTF-8',
       complete: (results) => {
         try {
-          const transformResult = parseAndTransformImportedData(results.data as Record<string, string>[]);
+          const transformResult = parseAndTransformImportedData(results.data as RawImportRow[]);
           resolve(transformResult);
         } catch (error) {
           reject(error);
@@ -96,7 +105,7 @@ export const importFromXLSX = (file: File): Promise<ImportTransformResult> => {
         const workbook = XLSX.read(data, { type: 'array' });
         const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
         const jsonData = XLSX.utils.sheet_to_json(firstSheet);
-        const transformResult = parseAndTransformImportedData(jsonData as Record<string, string>[]);
+        const transformResult = parseAndTransformImportedData(jsonData as RawImportRow[]);
         resolve(transformResult);
       } catch (error) {
         reject(error);
@@ -179,109 +188,106 @@ export const getTimestamp = (dateValue: unknown): number => {
 // ==================== 数据解析和转换 ====================
 
 /**
- * 解析并转换导入的数据
- * 将外部数据格式转换为项目标准格式，同时进行分类映射
+ * 将原始行数据（多种列名）转换为标准 ImportRecord 格式
  */
-const parseAndTransformImportedData = (data: Record<string, string>[]): ImportTransformResult => {
+function toImportRecord(row: RawImportRow): ImportRecord {
+  // 解析金额（处理数字或字符串类型）
+  let amountStr: string;
+  const rawAmount: unknown = row['金额'] || row['amount'] || '0';
+  if (typeof rawAmount === 'number') {
+    amountStr = rawAmount.toString();
+  } else {
+    amountStr = String(rawAmount).replace(/[￥,$\s]/g, '');
+  }
+
+  // 解析类型
+  const typeStr = String(row['类型'] || row['收支类型'] || row['type'] || '').toLowerCase().trim();
+  let type: 'expense' | 'income' | undefined;
+  if (typeStr.includes('收入') || typeStr.includes('income') || typeStr === '+') {
+    type = 'income';
+  } else if (typeStr.includes('支出') || typeStr.includes('expense') || typeStr === '-') {
+    type = 'expense';
+  }
+
+  return {
+    category: String(row['分类'] || row['category'] || row['类别'] || row['type'] || ''),
+    subCategory: String(row['子分类'] || row['subCategory'] || row['分类小项'] || row['小项'] || ''),
+    amount: parseFloat(amountStr) || 0,
+    type,
+    date: String(row['日期'] || row['记账日期'] || row['date'] || row['时间'] || new Date().toISOString()),
+    remark: String(row['备注'] || row['remark'] || row['说明'] || ''),
+    account: String(row['账户'] || row['account'] || row['支付方式'] || ''),
+  };
+}
+
+/**
+ * 解析并转换导入的数据
+ * 复用 categoryTransformer 的分类转换管道
+ */
+const parseAndTransformImportedData = (data: RawImportRow[]): ImportTransformResult => {
   const records: Partial<RecordItem>[] = [];
   const byCategory: Record<string, number> = {};
   const unmatchedSet = new Set<string>();
   let matchedCount = 0;
   let unmatchedCount = 0;
 
+  // 尝试自动检测列名映射
+  const headers = data.length > 0 ? Object.keys(data[0]) : [];
+  const autoMapping = detectColumnMapping(headers);
+
   data.forEach((row, index) => {
-    // 解析金额（处理数字或字符串类型）
-    let amountStr: string;
-    const rawAmount: unknown = row['金额'] || row['amount'] || '0';
-    if (typeof rawAmount === 'number') {
-      amountStr = rawAmount.toString();
+    // 先尝试自动检测列名（如果检测成功，使用 categoryTransformer 的 parseCSVRow）
+    let importRecord: ImportRecord;
+    if (autoMapping.category || autoMapping.amount) {
+      // 将 RawImportRow 转换为 string-string 格式给 parseCSVRow
+      const stringRow: Record<string, string> = {};
+      for (const [key, val] of Object.entries(row)) {
+        stringRow[key] = val != null ? String(val) : '';
+      }
+      importRecord = parseCSVRow(stringRow, {
+        category: autoMapping.category || undefined,
+        subCategory: autoMapping.subCategory || undefined,
+        amount: autoMapping.amount || undefined,
+        type: autoMapping.type || undefined,
+        date: autoMapping.date || undefined,
+        remark: autoMapping.remark || undefined,
+        account: autoMapping.account || undefined,
+      });
     } else {
-      amountStr = String(rawAmount).replace(/[￥,$\s]/g, '');
+      // 无法自动检测，使用硬编码列名兼容
+      importRecord = toImportRecord(row);
     }
-    const amount = parseFloat(amountStr) || 0;
 
     // 跳过无效记录
-    if (amount <= 0) return;
-
-    // 解析类型
-    const typeStr = (row['类型'] || row['收支类型'] || row['type'] || '').toLowerCase().trim();
-    let type: 'expense' | 'income' = 'expense';
-    if (typeStr.includes('收入') || typeStr.includes('income') || typeStr === '+') {
-      type = 'income';
-    }
-
-    // 解析分类（支持多种列名）
-    const categoryInput = (row['分类'] || row['category'] || row['类别'] || row['类型'] || '').trim();
-    const subCategoryInput = (row['子分类'] || row['子类别'] || row['subCategory'] || row['分类小项'] || row['小项'] || '').trim();
-
-    // 解析备注和账户
-    const remark = (row['备注'] || row['remark'] || row['说明'] || '').trim();
-    const account = (row['账户'] || row['account'] || row['支付方式'] || row['备注'] || '现金').trim();
+    if (importRecord.amount <= 0) return;
 
     // 解析日期
-    const dateValue = row['日期'] || row['记账日期'] || row['date'] || row['时间'];
-    const dateTimestamp = parseDate(dateValue);
+    const dateTimestamp = parseDate(importRecord.date);
 
-    // 使用分类映射进行转换
-    const categoryMatch = matchCategory(categoryInput, subCategoryInput || undefined);
+    // 复用 categoryTransformer 的分类转换
+    const result = transformImportRecord(importRecord, 'expense');
 
-    let finalCategory: string;
-    let finalSubCategory: string | undefined;
-    let finalCategoryIcon: string;
-    let finalSubCategoryIcon: string | undefined;
-    let finalRemark = remark;
-
-    if (categoryMatch.mainCategory) {
-      // 成功匹配到分类
-      finalCategory = categoryMatch.mainCategory.standardName;
-      finalCategoryIcon = categoryMatch.mainCategory.defaultIcon;
-
-      if (categoryMatch.subCategory) {
-        // 匹配到子分类
-        finalSubCategory = categoryMatch.subCategory.name;
-        finalSubCategoryIcon = categoryMatch.subCategory.defaultIcon;
-      } else {
-        // 只匹配到主分类，没有子分类
-        finalSubCategory = undefined;
-        finalSubCategoryIcon = undefined;
-      }
-
+    if (result.isMatched) {
       matchedCount++;
-
-      // 统计
-      byCategory[finalCategory] = (byCategory[finalCategory] || 0) + 1;
+      byCategory[result.record.category] = (byCategory[result.record.category] || 0) + 1;
     } else {
-      // 未匹配到分类，使用默认分类
-      const defaultCategory = type === 'expense' ? '其他支出' : '礼金';
-      const defaultMapping = getCategoryMapping(defaultCategory)!;
-
-      finalCategory = defaultMapping.standardName;
-      finalCategoryIcon = defaultMapping.defaultIcon;
-      finalSubCategory = undefined;
-      finalSubCategoryIcon = undefined;
-
-      // 在备注中标注原始分类
-      if (categoryInput) {
-        finalRemark = remark ? `${remark} (原分类: ${categoryInput}${subCategoryInput ? `/${subCategoryInput}` : ''})` : `(原分类: ${categoryInput})`;
-      }
-
       unmatchedCount++;
-      if (categoryInput) {
-        unmatchedSet.add(categoryInput);
+      if (result.record.originalCategory) {
+        unmatchedSet.add(result.record.originalCategory);
       }
     }
 
     records.push({
       id: `imported_${Date.now()}_${index}`,
-      type,
-      category: finalCategory,
-      subCategory: finalSubCategory,
-      categoryIcon: finalCategoryIcon,
-      subCategoryIcon: finalSubCategoryIcon,
-      amount,
-      remark: finalRemark,
+      type: result.record.type,
+      category: result.record.category,
+      subCategory: result.record.subCategory ?? undefined,
+      categoryIcon: result.record.categoryIcon,
+      subCategoryIcon: result.record.subCategoryIcon ?? undefined,
+      amount: result.record.amount,
+      remark: result.record.remark,
       date: dateTimestamp,
-      account,
+      account: result.record.account,
     });
   });
 
@@ -297,39 +303,19 @@ const parseAndTransformImportedData = (data: Record<string, string>[]): ImportTr
 };
 
 /**
- * 生成导入报告
+ * 生成导入报告（复用 categoryTransformer 的 generateTransformReport）
  * @param stats 导入统计
  * @returns 报告文本
  */
 export const generateImportReport = (stats: ImportStats): string => {
-  const lines: string[] = [];
-  lines.push('=== 数据导入报告 ===');
-  lines.push('');
-  lines.push(`总记录数: ${stats.total}`);
-  lines.push(`成功匹配: ${stats.matched} (${((stats.matched / stats.total) * 100).toFixed(1)}%)`);
-  lines.push(`未匹配: ${stats.unmatched} (${((stats.unmatched / stats.total) * 100).toFixed(1)}%)`);
-  lines.push('');
-
-  if (Object.keys(stats.byCategory).length > 0) {
-    lines.push('按分类统计:');
-    Object.entries(stats.byCategory)
-      .sort((a, b) => b[1] - a[1])
-      .forEach(([cat, count]) => {
-        lines.push(`  ${cat}: ${count}条`);
-      });
-    lines.push('');
-  }
-
-  if (stats.unmatchedCategories.length > 0) {
-    lines.push('未匹配的分类:');
-    stats.unmatchedCategories.forEach(cat => {
-      lines.push(`  - ${cat}`);
-    });
-    lines.push('');
-    lines.push('提示: 未匹配的分类已归入"其他支出"或"礼金"，并在备注中标注原始分类。');
-  }
-
-  return lines.join('\n');
+  const transformStats: TransformStats = {
+    total: stats.total,
+    matched: stats.matched,
+    unmatched: stats.unmatched,
+    byCategory: stats.byCategory,
+    unmatchedCategories: stats.unmatchedCategories,
+  };
+  return generateTransformReport(transformStats);
 };
 
 export default {

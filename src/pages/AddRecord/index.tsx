@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Input, message, Tag, Modal, Calendar, Radio, DatePicker } from 'antd';
+import type { InputRef } from 'antd';
 import type { Dayjs } from 'dayjs';
 import {
   LeftOutlined,
@@ -13,6 +14,7 @@ import dayjs from 'dayjs';
 import { createRecord, updateRecord, type RecordItem } from '../../api/record';
 import { getLocalRecords, saveLocalRecords } from '../../utils/storage';
 import { useAuth } from '../../hooks/useAuth';
+import useCalculator from '../../hooks/useCalculator';
 import { useTranslation } from 'react-i18next';
 import { expenseCategories, incomeCategories, type MainCategory, type SubCategory } from '../../constants/categories';
 import { getCategoryIcon } from '../../constants/categoryIconMapping';
@@ -30,6 +32,36 @@ interface SelectedCategory {
   subCategory: SubCategory | null;
 }
 
+interface RecordData {
+  type: RecordType;
+  category: string;
+  subCategory: string | undefined;
+  categoryIcon: string;
+  amount: number;
+  remark: string;
+  date: number;
+  account: string;
+}
+
+/** 构建记录数据的辅助函数 */
+const buildRecordData = (params: {
+  activeType: RecordType;
+  selectedCategory: SelectedCategory;
+  finalAmount: string;
+  remark: string;
+  selectedDate: Dayjs;
+  account: string;
+}): RecordData => ({
+  type: params.activeType,
+  category: params.selectedCategory.mainCategory.name,
+  subCategory: params.selectedCategory.subCategory?.name,
+  categoryIcon: getCategoryIcon(params.selectedCategory.mainCategory.name) || '',
+  amount: parseFloat(params.finalAmount),
+  remark: params.remark,
+  date: params.selectedDate.valueOf(),
+  account: params.account,
+});
+
 const AddRecord = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -42,7 +74,6 @@ const AddRecord = () => {
 
   const [activeType, setActiveType] = useState<RecordType>('expense');
   const [selectedCategory, setSelectedCategory] = useState<SelectedCategory | null>(null);
-  const [amount, setAmount] = useState('');
   const [remark, setRemark] = useState('');
   const [selectedDate, setSelectedDate] = useState(dayjs());
   const [selectedAccount] = useState(t('addRecord.defaultAccount'));
@@ -52,11 +83,8 @@ const AddRecord = () => {
   const [isSubCategoryModalVisible, setIsSubCategoryModalVisible] = useState(false);
   const [currentExpandCategory, setCurrentExpandCategory] = useState<MainCategory | null>(null);
 
-  // 计算相关状态
-  const [hasOperator, setHasOperator] = useState(false);
-  const [operator, setOperator] = useState<Operator | null>(null);
-  const [firstOperand, setFirstOperand] = useState('');
-  const [secondOperand, setSecondOperand] = useState('');
+  // 计算器逻辑
+  const { amount, canCalculate, handleNumberClick, handleDelete, handleOperatorClick, handleCalculate, calculate, reset: resetCalculator, setAmount } = useCalculator('');
 
   // 如果是编辑模式，初始化数据
   useEffect(() => {
@@ -84,11 +112,6 @@ const AddRecord = () => {
     return activeType === 'expense' ? expenseCategories : incomeCategories;
   }, [activeType]);
 
-  // 判断是否需要显示计算按钮
-  const needCalculate = useMemo(() => {
-    return hasOperator && operator && firstOperand && secondOperand;
-  }, [hasOperator, operator, firstOperand, secondOperand]);
-
   // 处理分类点击（直接选择主分类）
   const handleCategoryClick = (category: MainCategory) => {
     setSelectedCategory({
@@ -114,95 +137,9 @@ const AddRecord = () => {
     }
   };
 
-  // 处理数字点击
-  const handleNumberClick = (num: string) => {
-    if (hasOperator && operator) {
-      if (num === '.' && secondOperand.includes('.')) return;
-      if (secondOperand.includes('.') && secondOperand.split('.')[1]?.length >= 2) return;
-      if (secondOperand === '0' && num !== '.') {
-        setSecondOperand(num);
-      } else {
-        setSecondOperand(secondOperand + num);
-      }
-      setAmount(firstOperand + operator + (secondOperand + num));
-      return;
-    }
-
-    if (num === '.' && amount.includes('.')) return;
-    if (amount.includes('.') && amount.split('.')[1]?.length >= 2) return;
-    if (amount === '0' && num !== '.') {
-      setAmount(num);
-    } else {
-      setAmount(amount + num);
-    }
-  };
-
-  // 处理删除
-  const handleDelete = () => {
-    if (hasOperator && operator) {
-      if (secondOperand) {
-        const newSecond = secondOperand.slice(0, -1);
-        setSecondOperand(newSecond);
-        setAmount(firstOperand + operator + newSecond);
-        if (!newSecond) {
-          setHasOperator(false);
-          setOperator(null);
-          setAmount(firstOperand);
-        }
-        return;
-      }
-      setHasOperator(false);
-      setOperator(null);
-      setAmount(firstOperand);
-      return;
-    }
-    setAmount(amount.slice(0, -1));
-  };
-
-  // 处理运算符点击
-  const handleOperatorClick = (op: Operator) => {
-    if (!amount || amount === '0') return;
-
-    if (hasOperator && operator && firstOperand && secondOperand) {
-      const result = calculate();
-      setFirstOperand(result);
-      setSecondOperand('');
-      setOperator(op);
-      setAmount(result + op);
-      return;
-    }
-
-    setFirstOperand(amount);
-    setOperator(op);
-    setHasOperator(true);
-    setAmount(amount + op);
-  };
-
-  // 计算结果
-  const calculate = (): string => {
-    if (!operator || !firstOperand || !secondOperand) return amount;
-
-    const num1 = parseFloat(firstOperand);
-    const num2 = parseFloat(secondOperand);
-    let result = 0;
-
-    if (operator === '+') {
-      result = num1 + num2;
-    } else if (operator === '-') {
-      result = num1 - num2;
-    }
-
-    return result.toFixed(2).replace(/\.00$/, '');
-  };
-
-  // 处理计算按钮
-  const handleCalculate = () => {
-    const result = calculate();
-    setAmount(result);
-    setFirstOperand('');
-    setSecondOperand('');
-    setOperator(null);
-    setHasOperator(false);
+  /** 获取最终金额（如果需要计算则计算） */
+  const getFinalAmount = (): string => {
+    return canCalculate ? calculate() : amount;
   };
 
   // 保存记录
@@ -216,25 +153,18 @@ const AddRecord = () => {
       return;
     }
 
-    let finalAmount = amount;
-    if (needCalculate) {
-      finalAmount = calculate();
-      setAmount(finalAmount);
-    }
+    const finalAmount = getFinalAmount();
+    const recordData = buildRecordData({
+      activeType,
+      selectedCategory,
+      finalAmount,
+      remark,
+      selectedDate,
+      account: selectedAccount,
+    });
 
     setLoading(true);
     try {
-      const recordData = {
-        type: activeType,
-        category: selectedCategory.mainCategory.name,
-        subCategory: selectedCategory.subCategory?.name,
-        categoryIcon: getCategoryIcon(selectedCategory.mainCategory.name) || '',
-        amount: parseFloat(finalAmount),
-        remark,
-        date: selectedDate.valueOf(),
-        account: selectedAccount,
-      };
-
       if (isEditMode && editingRecord) {
         if (isLoggedIn) {
           await updateRecord(editingRecord.id, recordData);
@@ -251,10 +181,7 @@ const AddRecord = () => {
           await createRecord(recordData);
         } else {
           const localRecords = getLocalRecords();
-          const newRecord = {
-            id: `local_${Date.now()}`,
-            ...recordData,
-          };
+          const newRecord = { id: `local_${Date.now()}`, ...recordData };
           saveLocalRecords([newRecord, ...localRecords]);
         }
         message.success(t('addRecord.saveSuccess'));
@@ -279,31 +206,23 @@ const AddRecord = () => {
       return;
     }
 
-    let finalAmount = amount;
-    if (needCalculate) {
-      finalAmount = calculate();
-    }
+    const finalAmount = getFinalAmount();
+    const recordData = buildRecordData({
+      activeType,
+      selectedCategory,
+      finalAmount,
+      remark,
+      selectedDate,
+      account: selectedAccount,
+    });
 
     setLoading(true);
     try {
-      await createRecord({
-        type: activeType,
-        category: selectedCategory.mainCategory.name,
-        subCategory: selectedCategory.subCategory?.name,
-        categoryIcon: getCategoryIcon(selectedCategory.mainCategory.name) || '',
-        amount: parseFloat(finalAmount),
-        remark,
-        date: selectedDate.valueOf(),
-        account: selectedAccount,
-      });
+      await createRecord(recordData);
       message.success(t('addRecord.saveSuccess'));
-      setAmount('');
       setRemark('');
       setSelectedCategory(null);
-      setFirstOperand('');
-      setSecondOperand('');
-      setOperator(null);
-      setHasOperator(false);
+      resetCalculator();
     } catch (error) {
       message.error(t('addRecord.saveFailed'));
     } finally {
@@ -332,14 +251,14 @@ const AddRecord = () => {
     { key: 'income', label: t('addRecord.income') },
   ];
 
-  const remarkInputRef = useRef<any>(null);
+  const remarkInputRef = useRef<InputRef | null>(null);
 
   // 处理备注输入框聚焦时的键盘避让
   const handleRemarkFocus = () => {
     // 延迟滚动，等待键盘弹出
     setTimeout(() => {
       // 获取 Ant Design Input 组件的实际 input 元素
-      const inputElement = remarkInputRef.current?.input || remarkInputRef.current;
+      const inputElement = remarkInputRef.current?.input ?? undefined;
       if (inputElement) {
         const rect = inputElement.getBoundingClientRect();
         const scrollContainer = inputElement.closest('.page-container');
@@ -458,7 +377,7 @@ const AddRecord = () => {
             <button className={styles.keyBtn} onClick={() => handleNumberClick('1')}>1</button>
             <button className={styles.keyBtn} onClick={() => handleNumberClick('2')}>2</button>
             <button className={styles.keyBtn} onClick={() => handleNumberClick('3')}>3</button>
-            <button className={`${styles.keyBtn} ${styles.deleteBtn}`} onClick={handleDelete}>×</button>
+            <button className={`${styles.keyBtn} ${styles.deleteBtn}`} onClick={handleDelete}>{'\u00d7'}</button>
           </div>
           <div className={styles.keyboardRow}>
             <button className={styles.keyBtn} onClick={() => handleNumberClick('4')}>4</button>
@@ -480,10 +399,10 @@ const AddRecord = () => {
             {!isEditMode && <button className={styles.keyBtn} onClick={() => handleNumberClick('0')}>0</button>}
             <button className={styles.keyBtn} onClick={() => handleNumberClick('.')}>.</button>
             <button
-              className={`${styles.keyBtn} ${needCalculate ? styles.calculateBtn : styles.saveBtn}`}
-              onClick={needCalculate ? handleCalculate : handleSave}
+              className={`${styles.keyBtn} ${canCalculate ? styles.calculateBtn : styles.saveBtn}`}
+              onClick={canCalculate ? () => handleCalculate() : handleSave}
             >
-              {needCalculate ? t('addRecord.calculate') : (isEditMode ? t('addRecord.update') : t('addRecord.save'))}
+              {canCalculate ? t('addRecord.calculate') : (isEditMode ? t('addRecord.update') : t('addRecord.save'))}
             </button>
           </div>
         </div>

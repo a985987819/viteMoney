@@ -42,6 +42,22 @@ const convertMappingToOptions = (mappings: CategoryMapping[]): CategoryOption[] 
   }));
 };
 
+// 查找分类映射（优先子分类，再找主分类）
+const findMapping = (name: string): {
+  subCategory?: SubCategoryMapping;
+  mainCategory: CategoryMapping | null;
+} => {
+  const subMatch = getSubCategoryMapping(name);
+  if (subMatch) {
+    return { subCategory: subMatch.subCategory, mainCategory: subMatch.parentCategory };
+  }
+  const mainMatch = getCategoryMapping(name);
+  if (mainMatch) {
+    return { mainCategory: mainMatch };
+  }
+  return { mainCategory: null };
+};
+
 // 将子分类转换为选项格式
 const convertSubCategoriesToOptions = (subCategories: SubCategoryMapping[]): SubCategoryOption[] => {
   return subCategories.map(sub => ({
@@ -169,22 +185,13 @@ export const useCategories = () => {
   const getIcon = (categoryName: string, subCategoryName?: string): string => {
     // 如果提供了子分类，优先使用子分类图标
     if (subCategoryName) {
-      const subMatch = getSubCategoryMapping(subCategoryName);
-      if (subMatch) {
-        return subMatch.subCategory.defaultIcon;
-      }
+      const sub = findMapping(subCategoryName);
+      if (sub.subCategory) return sub.subCategory.defaultIcon;
     }
 
-    // 先从映射文件查找
-    const mapping = getCategoryMapping(categoryName);
-    if (mapping) {
-      return mapping.defaultIcon;
-    }
-
-    // 尝试匹配子分类
-    const subMatch = getSubCategoryMapping(categoryName);
-    if (subMatch) {
-      return subMatch.subCategory.defaultIcon;
+    const mapping = findMapping(categoryName);
+    if (mapping.mainCategory) {
+      return mapping.subCategory?.defaultIcon || mapping.mainCategory.defaultIcon;
     }
 
     // 再从选项列表查找
@@ -196,21 +203,13 @@ export const useCategories = () => {
   const getEnglishName = (categoryName: string, subCategoryName?: string): string => {
     // 如果提供了子分类，优先使用子分类的英文名称
     if (subCategoryName) {
-      const subMatch = getSubCategoryMapping(subCategoryName);
-      if (subMatch) {
-        return subMatch.subCategory.englishName;
-      }
+      const sub = findMapping(subCategoryName);
+      if (sub.subCategory) return sub.subCategory.englishName;
     }
 
-    const mapping = getCategoryMapping(categoryName);
-    if (mapping) {
-      return mapping.englishName;
-    }
-
-    // 尝试匹配子分类
-    const subMatch = getSubCategoryMapping(categoryName);
-    if (subMatch) {
-      return subMatch.subCategory.englishName;
+    const mapping = findMapping(categoryName);
+    if (mapping.mainCategory) {
+      return mapping.subCategory?.englishName || mapping.mainCategory.englishName;
     }
 
     return 'other_expense';
@@ -218,20 +217,17 @@ export const useCategories = () => {
 
   // 获取分类类型
   const getType = (categoryName: string): 'expense' | 'income' | null => {
-    const mapping = getCategoryMapping(categoryName);
-    return mapping?.type || null;
+    return findMapping(categoryName).mainCategory?.type || null;
   };
 
   // 标准化分类名称
   const normalizeName = (categoryName: string): string => {
-    const mapping = getCategoryMapping(categoryName);
-    return mapping?.standardName || categoryName;
+    return findMapping(categoryName).mainCategory?.standardName || categoryName;
   };
 
   // 标准化子分类名称
   const normalizeSubCategoryName = (subCategoryName: string): string => {
-    const subMatch = getSubCategoryMapping(subCategoryName);
-    return subMatch?.subCategory.name || subCategoryName;
+    return findMapping(subCategoryName).subCategory?.name || subCategoryName;
   };
 
   // 智能匹配分类和子分类
@@ -244,37 +240,18 @@ export const useCategories = () => {
   } => {
     // 如果有子分类输入，优先匹配子分类
     if (subCategoryInput) {
-      const subMatch = getSubCategoryMapping(subCategoryInput);
-      if (subMatch) {
-        return {
-          mainCategory: subMatch.parentCategory,
-          subCategory: subMatch.subCategory,
-        };
+      const sub = findMapping(subCategoryInput);
+      if (sub.subCategory) {
+        return { mainCategory: sub.mainCategory, subCategory: sub.subCategory };
       }
     }
 
-    // 尝试将主输入作为子分类匹配
-    const subMatch = getSubCategoryMapping(categoryInput);
-    if (subMatch) {
-      return {
-        mainCategory: subMatch.parentCategory,
-        subCategory: subMatch.subCategory,
-      };
+    const sub = findMapping(categoryInput);
+    if (sub.subCategory) {
+      return { mainCategory: sub.mainCategory, subCategory: sub.subCategory };
     }
 
-    // 匹配主分类
-    const mainMatch = getCategoryMapping(categoryInput);
-    if (mainMatch) {
-      return {
-        mainCategory: mainMatch,
-        subCategory: null,
-      };
-    }
-
-    return {
-      mainCategory: null,
-      subCategory: null,
-    };
+    return sub.mainCategory ? { mainCategory: sub.mainCategory, subCategory: null } : { mainCategory: null, subCategory: null };
   };
 
   return {

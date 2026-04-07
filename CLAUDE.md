@@ -5,6 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Project Overview
 
 **星露谷记账本 (Stardew Valley Ledger)** — A pixel-styled expense tracking PWA built with React + TypeScript + Vite. Features a Stardew Valley-inspired UI with offline support, JWT authentication, and dual-mode data storage (server when logged in, localStorage when not).
+Use bun for package management and project running
 
 ## Commands
 
