@@ -211,6 +211,81 @@
   font-weight: normal !important;
 }
 
+.expandBtn {
+  margin-left: 4px !important;
+  padding: 0 4px !important;
+  height: 18px !important;
+  line-height: 18px !important;
+  color: $stardew-text-secondary !important;
+
+  &:hover {
+    color: $stardew-wood-dark !important;
+  }
+
+  :global {
+    .anticon {
+      font-size: 12px;
+    }
+  }
+}
+
+.recordDetailList {
+  background: rgba($stardew-wood-light, 0.15);
+  padding: 8px 12px 8px 48px;
+  border-bottom: 1px solid rgba($stardew-wood-dark, 0.1);
+}
+
+.recordDetailItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px dashed rgba($stardew-wood-dark, 0.1);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.recordDetailLeft {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+.recordDetailDate {
+  font-size: 11px;
+  color: $stardew-text-secondary;
+  font-family: 'PixelFont', monospace;
+  white-space: nowrap;
+}
+
+.recordDetailRemark {
+  font-size: 11px;
+  color: $stardew-text-primary;
+  font-family: 'PixelFont', monospace;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.recordDetailAmount {
+  font-size: 12px;
+  font-weight: bold;
+  font-family: 'PixelFont', monospace;
+  white-space: nowrap;
+
+  &.expense {
+    color: $stardew-danger;
+  }
+
+  &.income {
+    color: $stardew-success;
+  }
+}
+
 .filterContent {
   padding: 16px 0;
 }

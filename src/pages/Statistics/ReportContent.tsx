@@ -2,12 +2,14 @@ import { useState, useEffect, useRef, useMemo } from 'react';
 import { Radio, List, Drawer, Button, Checkbox, Empty } from 'antd';
 import {
   FilterOutlined,
+  PlusOutlined,
+  MinusOutlined,
 } from '@ant-design/icons';
 import * as echarts from 'echarts';
 import dayjs from 'dayjs';
 import { getPixelPieOption } from '../../utils/echartsPixelTheme';
-import type { ReportData, CategoryStats, DailyStats } from '../../api/record';
-import { getReportData } from '../../api/record';
+import type { ReportData, CategoryStats, DailyStats, RecordItem } from '../../api/record';
+import { getReportData, getRecords } from '../../api/record';
 import { getLocalRecords } from '../../utils/storage';
 import { useAuth } from '../../hooks/useAuth';
 import DatePicker, { type DateMode } from '../../components/DatePicker';
@@ -31,6 +33,10 @@ const ReportContent = () => {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [showExpense, setShowExpense] = useState(true);
   const [showIncome, setShowIncome] = useState(true);
+
+  // 展开的分类详情
+  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
+  const [categoryRecords, setCategoryRecords] = useState<Map<string, RecordItem[]>>(new Map());
 
   const chartRef = useRef<HTMLDivElement>(null);
   const chartInstance = useRef<echarts.ECharts | null>(null);
@@ -145,7 +151,7 @@ const ReportContent = () => {
     console.log('[ReportContent Chart] chartRef.current:', !!chartRef.current);
     console.log('[ReportContent Chart] reportData:', !!reportData);
     console.log('[ReportContent Chart] viewType:', viewType);
-    
+
     if (!chartRef.current || !reportData || viewType !== 'chart') {
       console.log('[ReportContent Chart] Cleanup - conditions not met');
       chartInstance.current?.dispose();
@@ -228,6 +234,47 @@ const ReportContent = () => {
     reportData.categoryStats.income.forEach(s => names.add(s.category));
     return Array.from(names);
   }, [reportData]);
+
+  // 切换分类展开状态
+  const toggleCategoryExpand = async (categoryKey: string, category: string, type: 'expense' | 'income') => {
+    const newExpanded = new Set(expandedCategories);
+    if (newExpanded.has(categoryKey)) {
+      newExpanded.delete(categoryKey);
+      setExpandedCategories(newExpanded);
+      return;
+    }
+
+    // 展开时加载该分类的明细记录
+    const startOfMonth = currentDate.startOf('month');
+    const endOfMonth = currentDate.endOf('month');
+    const startDate = startOfMonth.format('YYYY-MM-DD');
+    const endDate = endOfMonth.format('YYYY-MM-DD');
+
+    let records: RecordItem[] = [];
+    if (isLoggedIn) {
+      const response = await getRecords({ startDate, endDate, type });
+      records = response.filter(r => r.category === category);
+    } else {
+      const allRecords = getLocalRecords();
+      records = allRecords.filter(r => {
+        const recordDate = dayjs(r.date);
+        return r.type === type &&
+          r.category === category &&
+          recordDate.isAfter(startOfMonth.subtract(1, 'day')) &&
+          recordDate.isBefore(endOfMonth.add(1, 'day'));
+      });
+    }
+
+    // 按金额从大到小排序
+    records.sort((a, b) => b.amount - a.amount);
+
+    const newCategoryRecords = new Map(categoryRecords);
+    newCategoryRecords.set(categoryKey, records);
+    setCategoryRecords(newCategoryRecords);
+
+    newExpanded.add(categoryKey);
+    setExpandedCategories(newExpanded);
+  };
 
   // 确认日期选择
   const handleDateConfirm = (date: dayjs.Dayjs, _mode: DateMode) => {
@@ -312,23 +359,62 @@ const ReportContent = () => {
         <div className={styles.listView}>
           <List
             dataSource={filteredCategoryStats}
-            renderItem={(item) => (
-              <List.Item className={styles.categoryItem}>
-                <div className={styles.categoryInfo}>
-                  <span className={styles.categoryIcon}>{item.categoryIcon}</span>
-                  <div className={styles.categoryDetail}>
-                    <span className={styles.categoryName}>{item.category}</span>
-                    <span className={styles.categoryCount}>{item.count}笔</span>
-                  </div>
-                </div>
-                <div className={styles.categoryAmount}>
-                  <span className={item.type === 'expense' ? styles.expense : styles.income}>
-                    ¥{item.amount.toFixed(2)}
-                  </span>
-                  <span className={styles.percentage}>{item.percentage.toFixed(1)}%</span>
-                </div>
-              </List.Item>
-            )}
+            renderItem={(item) => {
+              const categoryKey = `${item.type}-${item.category}`;
+              const isExpanded = expandedCategories.has(categoryKey);
+              const records = categoryRecords.get(categoryKey) || [];
+              const canExpand = item.count > 1;
+
+              return (
+                <>
+                  <List.Item className={styles.categoryItem}>
+                    <div className={styles.categoryInfo}>
+                      <span className={styles.categoryIcon}>{item.categoryIcon}</span>
+                      <div className={styles.categoryDetail}>
+                        <span className={styles.categoryName}>{item.category}</span>
+                        <span className={styles.categoryCount}>
+                          {item.count}笔
+                          {canExpand && (
+                            <Button
+                              type="text"
+                              size="small"
+                              icon={isExpanded ? <MinusOutlined /> : <PlusOutlined />}
+                              onClick={() => toggleCategoryExpand(categoryKey, item.category, item.type)}
+                              className={styles.expandBtn}
+                            />
+                          )}
+                        </span>
+                      </div>
+                    </div>
+                    <div className={styles.categoryAmount}>
+                      <span className={item.type === 'expense' ? styles.expense : styles.income}>
+                        ¥{item.amount.toFixed(2)}
+                      </span>
+                      <span className={styles.percentage}>{item.percentage.toFixed(1)}%</span>
+                    </div>
+                  </List.Item>
+                  {isExpanded && records.length > 0 && (
+                    <div className={styles.recordDetailList}>
+                      {records.map((record) => (
+                        <div key={record.id} className={styles.recordDetailItem}>
+                          <div className={styles.recordDetailLeft}>
+                            <span className={styles.recordDetailDate}>
+                              {dayjs(record.date).format('MM-DD')}
+                            </span>
+                            {record.remark && (
+                              <span className={styles.recordDetailRemark}>{record.remark}</span>
+                            )}
+                          </div>
+                          <span className={`${styles.recordDetailAmount} ${record.type === 'expense' ? styles.expense : styles.income}`}>
+                            ¥{record.amount.toFixed(2)}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </>
+              );
+            }}
           />
         </div>
       )}
