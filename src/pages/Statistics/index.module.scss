@@ -1,10 +1,14 @@
-@use '../../styles/stardew-theme.scss' as *;
+@use "../../styles/stardew-theme.scss" as *;
 
 .statisticsPage {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
-  background-color: $stardew-panel-bg;
+  height: 100vh;
+  background: linear-gradient(
+    180deg,
+    $stardew-parchment 0%,
+    $stardew-panel-bg 100%
+  );
 }
 
 .tabHeader {
@@ -23,7 +27,7 @@
       }
 
       .ant-tabs-tab {
-        font-family: 'PixelFont', monospace;
+        font-family: "PixelFont", monospace;
         font-size: 14px;
         color: $stardew-text-secondary;
         padding: 12px 24px;
@@ -53,5 +57,5 @@
   overflow: auto;
   display: flex;
   flex-direction: column;
-  padding-bottom: env(safe-area-inset-bottom, 0);
+  padding-bottom: calc(16px + 70px + env(safe-area-inset-bottom, 0));
 }

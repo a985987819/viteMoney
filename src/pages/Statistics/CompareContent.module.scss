@@ -1,4 +1,4 @@
-@use '../../styles/stardew-theme.scss' as *;
+@use "../../styles/stardew-theme.scss" as *;
 
 .compareContent {
   flex: 1;
@@ -9,7 +9,7 @@
   display: flex;
   flex-direction: column;
   min-height: 0;
-  height: 100%;
+  height: 0;
   -webkit-overflow-scrolling: touch;
 }
 
@@ -24,7 +24,7 @@
 .loadingText {
   font-size: 14px;
   color: $stardew-text-secondary;
-  font-family: 'PixelFont', monospace;
+  font-family: "PixelFont", monospace;
 }
 
 // 月份选择器
@@ -57,14 +57,14 @@
     font-size: 11px;
     color: $stardew-text-secondary;
     margin-bottom: 4px;
-    font-family: 'PixelFont', monospace;
+    font-family: "PixelFont", monospace;
   }
 
   .monthValue {
     font-size: 14px;
     font-weight: bold;
     color: $stardew-text-primary;
-    font-family: 'PixelFont', monospace;
+    font-family: "PixelFont", monospace;
   }
 }
 
@@ -92,49 +92,60 @@
 .summaryCards {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
+  gap: 8px;
   margin-bottom: 16px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .summaryCard {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 12px 8px;
+  padding: 10px 6px;
   background: rgba(white, 0.6);
   border-radius: 12px;
   border: 2px solid rgba($stardew-wood-dark, 0.3);
+  min-width: 0;
+  overflow: hidden;
 
   .cardLabel {
     font-size: 11px;
     color: $stardew-text-secondary;
-    margin-bottom: 8px;
-    font-family: 'PixelFont', monospace;
+    margin-bottom: 6px;
+    font-family: "PixelFont", monospace;
+    white-space: nowrap;
   }
 
   .cardValues {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 2px;
     margin-bottom: 4px;
-    font-family: 'PixelFont', monospace;
+    font-family: "PixelFont", monospace;
+    flex-wrap: wrap;
+    justify-content: center;
 
     .baseValue,
     .compareValue {
-      font-size: 12px;
+      font-size: 11px;
       font-weight: bold;
       color: $stardew-text-primary;
+      white-space: nowrap;
     }
 
     .vs {
-      font-size: 10px;
+      font-size: 9px;
       color: $stardew-text-secondary;
     }
   }
 
   .cardChange {
-    font-size: 11px;
-    font-family: 'PixelFont', monospace;
+    font-size: 10px;
+    font-family: "PixelFont", monospace;
+    text-align: center;
+    word-break: break-all;
+    line-height: 1.3;
   }
 }
 
@@ -176,7 +187,7 @@
   font-weight: bold;
   color: $stardew-text-primary;
   margin-bottom: 12px;
-  font-family: 'PixelFont', monospace;
+  font-family: "PixelFont", monospace;
 }
 
 .categoryList {
@@ -214,13 +225,13 @@
   font-size: 13px;
   font-weight: bold;
   color: $stardew-text-primary;
-  font-family: 'PixelFont', monospace;
+  font-family: "PixelFont", monospace;
 }
 
 .categoryType {
   font-size: 10px;
   color: $stardew-text-secondary;
-  font-family: 'PixelFont', monospace;
+  font-family: "PixelFont", monospace;
 }
 
 .categoryValues {
@@ -234,7 +245,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  font-family: 'PixelFont', monospace;
+  font-family: "PixelFont", monospace;
 
   .baseAmount,
   .compareAmount {
@@ -250,5 +261,5 @@
 
 .diffRow {
   font-size: 11px;
-  font-family: 'PixelFont', monospace;
+  font-family: "PixelFont", monospace;
 }
