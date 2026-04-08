@@ -19,6 +19,7 @@ import EmptyState from '../../components/EmptyState';
 import ScrollContainer from '../../components/ScrollContainer';
 import AnimatedWrapper from '../../components/AnimatedWrapper';
 import PageContainer from '../../components/PageContainer';
+import ShareReceipt from '../../components/ShareReceipt';
 import styles from './index.module.scss';
 import StardewPanel from '../../components/StardewPanel';
 
@@ -263,7 +264,13 @@ const Home = () => {
                         <StardewPanel>
                           <div className={styles.recordDayGroup}>
                             <div className={styles.recordDayHeader}>
-                              <span>{getDateLabel(group.date)}</span>
+                              <div className={styles.dayHeaderLeft}>
+                                <span>{getDateLabel(group.date)}</span>
+                                <ShareReceipt
+                                  date={group.date}
+                                  records={group.records}
+                                />
+                              </div>
                               <span className={styles.dayTotal}>
                                 {expense > 0 && `${t('home.expenseShort')}:${expense.toFixed(2)}`}
                                 {income > 0 && ` ${t('home.incomeShort')}:${income.toFixed(2)}`}

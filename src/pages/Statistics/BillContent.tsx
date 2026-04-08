@@ -18,6 +18,7 @@ import { compareDate } from '../../utils/importExport';
 import type { Category } from '../../api/category';
 import SwipeableRecordItem from '../../components/SwipeableRecordItem';
 import DatePicker, { type DateMode } from '../../components/DatePicker';
+import ShareReceipt from '../../components/ShareReceipt';
 import styles from './BillContent.module.scss';
 
 // 默认分类
@@ -232,7 +233,7 @@ const BillContent = () => {
     console.log('[BillContent Chart] chartRef.current:', !!chartRef.current);
     console.log('[BillContent Chart] chartCollapsed:', chartCollapsed);
     console.log('[BillContent Chart] stats.dailyStats.length:', stats.dailyStats.length);
-    
+
     if (!chartRef.current || chartCollapsed || stats.dailyStats.length === 0) {
       console.log('[BillContent Chart] Cleanup - conditions not met');
       chartInstance.current?.dispose();
@@ -468,6 +469,23 @@ const BillContent = () => {
     return { expense, income };
   };
 
+  // 获取日期标签（今天/昨天/前天/星期X）
+  const getDateLabel = (dateStr: string) => {
+    const today = dayjs().format('YYYY-MM-DD');
+    const yesterday = dayjs().subtract(1, 'day').format('YYYY-MM-DD');
+    const dayBeforeYesterday = dayjs().subtract(2, 'day').format('YYYY-MM-DD');
+    const date = dayjs(dateStr);
+
+    if (dateStr === today) return '今天';
+    if (dateStr === yesterday) return '昨天';
+    if (dateStr === dayBeforeYesterday) return '前天';
+
+    const weekdays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+    const weekday = weekdays[date.day()];
+
+    return `${date.format('M月D日')} ${weekday}`;
+  };
+
   // 获取显示文本
   const getDisplayText = () => {
     return `${startDate.format('YYYY年M月D日')} - ${endDate.format('M月D日')}`;
@@ -618,7 +636,13 @@ const BillContent = () => {
               return (
                 <div key={dateKey} className={styles.dayGroup}>
                   <div className={styles.dayHeader}>
-                    <span className={styles.dayDate}>{dayjs(dateKey).format('M月D日')}</span>
+                    <div className={styles.dayHeaderLeft}>
+                      <span className={styles.dayDate}>{getDateLabel(dateKey)}</span>
+                      <ShareReceipt
+                        date={dateKey}
+                        records={dayRecords}
+                      />
+                    </div>
                     <div className={styles.dayTotal}>
                       {dayTotal.income > 0 && <span className={styles.income}>收¥{dayTotal.income.toFixed(2)}</span>}
                       {dayTotal.expense > 0 && <span className={styles.expense}>支¥{dayTotal.expense.toFixed(2)}</span>}

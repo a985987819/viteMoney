@@ -1,0 +1,81 @@
+@use '../../styles/stardew-theme.scss' as *;
+
+.shareBtn {
+  color: $stardew-text-secondary;
+  padding: 4px 8px;
+  font-size: 14px;
+
+  &:hover {
+    color: $stardew-wood-dark;
+  }
+}
+
+.shareModal {
+  :global {
+    .ant-modal-content {
+      background: $stardew-panel-bg;
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .ant-modal-body {
+      padding: 20px;
+    }
+
+    .ant-modal-close {
+      color: $stardew-text-secondary;
+
+      &:hover {
+        color: $stardew-wood-dark;
+      }
+    }
+  }
+}
+
+.receiptContainer {
+  background: #ffffff;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.receiptCanvas {
+  display: none;
+}
+
+.receiptImage {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.saveBtn {
+  background: $stardew-wood-light;
+  border-color: $stardew-wood-dark;
+  color: $stardew-text-primary;
+  font-family: 'PixelFont', monospace;
+
+  &:hover {
+    background: $stardew-wood-light;
+    border-color: $stardew-wood-dark;
+    color: $stardew-wood-dark;
+  }
+}
+
+.shareActionBtn {
+  background: $stardew-wood-dark;
+  border-color: $stardew-wood-dark;
+  font-family: 'PixelFont', monospace;
+
+  &:hover {
+    background: darken($stardew-wood-dark, 10%);
+    border-color: darken($stardew-wood-dark, 10%);
+  }
+}

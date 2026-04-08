@@ -1,4 +1,4 @@
-@use '../../styles/stardew-theme.scss' as *;
+@use "../../styles/stardew-theme.scss" as *;
 
 .billContent {
   flex: 1;
@@ -32,7 +32,7 @@
   font-size: 14px;
   color: $stardew-text-primary;
   cursor: pointer;
-  font-family: 'PixelFont', monospace;
+  font-family: "PixelFont", monospace;
 
   .arrowDown {
     font-size: 10px;
@@ -47,7 +47,7 @@
   font-size: 12px;
   color: white;
   cursor: pointer;
-  font-family: 'PixelFont', monospace;
+  font-family: "PixelFont", monospace;
 }
 
 .billStatsOverview {
@@ -110,13 +110,13 @@
 .statsLabel {
   font-size: 12px;
   color: $stardew-text-secondary;
-  font-family: 'PixelFont', monospace;
+  font-family: "PixelFont", monospace;
 }
 
 .statsValue {
   font-size: 18px;
   font-weight: bold;
-  font-family: 'PixelFont', monospace;
+  font-family: "PixelFont", monospace;
 
   &.expense {
     color: $stardew-danger;
@@ -159,13 +159,13 @@
 .balanceLabel {
   font-size: 14px;
   color: $stardew-text-secondary;
-  font-family: 'PixelFont', monospace;
+  font-family: "PixelFont", monospace;
 }
 
 .balanceValue {
   font-size: 18px;
   font-weight: bold;
-  font-family: 'PixelFont', monospace;
+  font-family: "PixelFont", monospace;
 
   &.income {
     color: $stardew-success;
@@ -179,7 +179,7 @@
 .balanceCount {
   font-size: 12px;
   color: $stardew-text-secondary;
-  font-family: 'PixelFont', monospace;
+  font-family: "PixelFont", monospace;
 }
 
 .statsToggleBar {
@@ -208,14 +208,14 @@
 .sortLabel {
   font-size: 12px;
   color: $stardew-text-secondary;
-  font-family: 'PixelFont', monospace;
+  font-family: "PixelFont", monospace;
 }
 
 .sortType {
   font-size: 12px;
   color: $stardew-wood-dark;
   cursor: pointer;
-  font-family: 'PixelFont', monospace;
+  font-family: "PixelFont", monospace;
   padding: 4px 8px;
   background: rgba($stardew-wood-light, 0.3);
   border-radius: 4px;
@@ -279,14 +279,26 @@
   font-size: 14px;
   font-weight: bold;
   color: $stardew-text-primary;
-  font-family: 'PixelFont', monospace;
+  font-family: "PixelFont", monospace;
+}
+
+.dayHeaderLeft {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dayHeaderRight {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .dayTotal {
   display: flex;
   gap: 12px;
   font-size: 12px;
-  font-family: 'PixelFont', monospace;
+  font-family: "PixelFont", monospace;
 
   .income {
     color: $stardew-success;
@@ -306,9 +318,8 @@
   color: $stardew-text-secondary;
   font-size: 12px;
   cursor: pointer;
-  font-family: 'PixelFont', monospace;
+  font-family: "PixelFont", monospace;
 }
-
 
 .backTopBtn {
   position: fixed;
@@ -329,7 +340,7 @@
   font-weight: bold;
   color: $stardew-text-primary;
   margin-bottom: 12px;
-  font-family: 'PixelFont', monospace;
+  font-family: "PixelFont", monospace;
 }
 
 .amountRange {

@@ -1,8 +1,8 @@
 // 导入星露谷物语主题
-@use '../../styles/stardew-theme.scss' as *;
+@use "../../styles/stardew-theme.scss" as *;
 
-$header-bg-url: '#{$cdn-base-url}/homePageHead.png';
-$content-bg-url: '#{$cdn-base-url}/homePageBg.png';
+$header-bg-url: "#{$cdn-base-url}/homePageHead.png";
+$content-bg-url: "#{$cdn-base-url}/homePageBg.png";
 
 @mixin flex-column {
   display: flex;
@@ -49,7 +49,7 @@ $content-bg-url: '#{$cdn-base-url}/homePageBg.png';
   font-size: 20px;
   font-weight: bold;
   color: $stardew-text-primary;
-  font-family: 'PixelFont', monospace;
+  font-family: "PixelFont", monospace;
   text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5);
 }
 
@@ -74,7 +74,7 @@ $content-bg-url: '#{$cdn-base-url}/homePageBg.png';
 .statsLabel {
   font-size: 13px;
   color: $stardew-text-secondary;
-  font-family: 'PixelFont', monospace;
+  font-family: "PixelFont", monospace;
 }
 
 .statsAmount {
@@ -86,7 +86,7 @@ $content-bg-url: '#{$cdn-base-url}/homePageBg.png';
   font-size: 32px;
   font-weight: bold;
   color: $stardew-text-primary;
-  font-family: 'PixelFont', monospace;
+  font-family: "PixelFont", monospace;
   text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.5);
 }
 
@@ -118,7 +118,7 @@ $content-bg-url: '#{$cdn-base-url}/homePageBg.png';
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
-  font-family: 'PixelFont', monospace;
+  font-family: "PixelFont", monospace;
   image-rendering: pixelated;
 }
 
@@ -151,7 +151,7 @@ $content-bg-url: '#{$cdn-base-url}/homePageBg.png';
   border-radius: 8px;
   border: 3px solid $stardew-wood-dark;
   color: $stardew-text-primary;
-  font-family: 'PixelFont', monospace;
+  font-family: "PixelFont", monospace;
   font-weight: bold;
   @include transition;
   max-width: 200px;
@@ -179,7 +179,7 @@ $content-bg-url: '#{$cdn-base-url}/homePageBg.png';
   padding: 16px;
   color: $stardew-text-secondary;
   font-size: 12px;
-  font-family: 'PixelFont', monospace;
+  font-family: "PixelFont", monospace;
 }
 
 // 记录列表头部
@@ -193,13 +193,13 @@ $content-bg-url: '#{$cdn-base-url}/homePageBg.png';
   font-size: 14px;
   font-weight: bold;
   color: $stardew-text-primary;
-  font-family: 'PixelFont', monospace;
+  font-family: "PixelFont", monospace;
 }
 
 .recordsTag {
   font-size: 12px;
   color: $stardew-text-secondary;
-  font-family: 'PixelFont', monospace;
+  font-family: "PixelFont", monospace;
 }
 
 // 记录列表
@@ -222,10 +222,22 @@ $content-bg-url: '#{$cdn-base-url}/homePageBg.png';
   border-bottom: 2px solid $stardew-wood-mid;
 }
 
+.dayHeaderLeft {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dayHeaderRight {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .dayTotal {
   font-size: 12px;
   color: $stardew-text-secondary;
-  font-family: 'PixelFont', monospace;
+  font-family: "PixelFont", monospace;
 }
 
 // 记录项
@@ -274,31 +286,31 @@ $content-bg-url: '#{$cdn-base-url}/homePageBg.png';
   font-size: 14px;
   font-weight: bold;
   color: $stardew-text-primary;
-  font-family: 'PixelFont', monospace;
+  font-family: "PixelFont", monospace;
 }
 
 .recordRemark {
   font-size: 12px;
   color: $stardew-text-secondary;
-  font-family: 'PixelFont', monospace;
+  font-family: "PixelFont", monospace;
 }
 
 .recordSubCategory {
   font-size: 11px;
   color: $stardew-wood-mid;
-  font-family: 'PixelFont', monospace;
+  font-family: "PixelFont", monospace;
 }
 
 .recordAccount {
   font-size: 11px;
   color: $stardew-text-secondary;
-  font-family: 'PixelFont', monospace;
+  font-family: "PixelFont", monospace;
 }
 
 .recordAmount {
   font-size: 16px;
   font-weight: bold;
-  font-family: 'PixelFont', monospace;
+  font-family: "PixelFont", monospace;
 
   &.expense {
     color: $stardew-danger;
