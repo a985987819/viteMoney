@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
-import { Radio, List, Drawer, Button, Checkbox, Empty } from 'antd';
+import { Radio, List, Drawer, Button, Checkbox, Empty, Calendar, Badge } from 'antd';
+import type { Dayjs } from 'dayjs';
 import {
   FilterOutlined,
   PlusOutlined,
@@ -33,6 +34,11 @@ const ReportContent = () => {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [showExpense, setShowExpense] = useState(true);
   const [showIncome, setShowIncome] = useState(true);
+  const [showBalance, setShowBalance] = useState(false);
+
+  // 日历相关
+  const [calendarMode, setCalendarMode] = useState<'month' | 'year'>('month');
+  const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
 
   // 展开的分类详情
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
@@ -145,6 +151,60 @@ const ReportContent = () => {
     loadReportData();
   }, [currentDate, isLoggedIn]);
 
+  // 获取选中日期的分类统计
+  const dailyCategoryStats = useMemo(() => {
+    if (!selectedDate || !reportData) return null;
+
+    const dateStr = selectedDate.format('YYYY-MM-DD');
+    const allRecords = getLocalRecords();
+
+    // 获取选中当天的记录
+    const dayRecords = allRecords.filter(r => r.date === dateStr);
+
+    if (dayRecords.length === 0) return null;
+
+    const totalExpense = dayRecords
+      .filter(r => r.type === 'expense')
+      .reduce((sum, r) => sum + r.amount, 0);
+    const totalIncome = dayRecords
+      .filter(r => r.type === 'income')
+      .reduce((sum, r) => sum + r.amount, 0);
+
+    // 按分类统计
+    const categoryMap = new Map<string, CategoryStats>();
+    dayRecords.forEach(r => {
+      const key = `${r.type}-${r.category}`;
+      if (!categoryMap.has(key)) {
+        categoryMap.set(key, {
+          category: r.category,
+          categoryIcon: r.categoryIcon,
+          type: r.type,
+          amount: 0,
+          percentage: 0,
+          count: 0,
+        });
+      }
+      const stats = categoryMap.get(key)!;
+      stats.amount += r.amount;
+      stats.count += 1;
+    });
+
+    // 计算百分比
+    categoryMap.forEach(stats => {
+      const total = stats.type === 'expense' ? totalExpense : totalIncome;
+      stats.percentage = total > 0 ? (stats.amount / total) * 100 : 0;
+    });
+
+    return {
+      expense: Array.from(categoryMap.values()).filter(s => s.type === 'expense'),
+      income: Array.from(categoryMap.values()).filter(s => s.type === 'income'),
+      summary: {
+        totalExpense,
+        totalIncome,
+        balance: totalIncome - totalExpense,
+      },
+    };
+  }, [selectedDate, reportData]);
   // 初始化饼图
   useEffect(() => {
     console.log('[ReportContent Chart] Initializing pie chart...');
@@ -168,8 +228,14 @@ const ReportContent = () => {
 
       console.log('[ReportContent Chart] Preparing pie data...');
       const pieData: { name: string; value: number; itemStyle: { color: string } }[] = [];
+
+      // 如果选中了具体日期，显示当天数据
+      const chartSourceData = selectedDate && dailyCategoryStats
+        ? dailyCategoryStats
+        : reportData.categoryStats;
+
       if (showExpense) {
-        reportData.categoryStats.expense.forEach(item => {
+        chartSourceData.expense.forEach(item => {
           pieData.push({
             name: `${item.categoryIcon} ${item.category}`,
             value: item.amount,
@@ -178,7 +244,7 @@ const ReportContent = () => {
         });
       }
       if (showIncome) {
-        reportData.categoryStats.income.forEach(item => {
+        chartSourceData.income.forEach(item => {
           pieData.push({
             name: `${item.categoryIcon} ${item.category}`,
             value: item.amount,
@@ -208,23 +274,29 @@ const ReportContent = () => {
       chartInstance.current?.dispose();
       chartInstance.current = null;
     };
-  }, [reportData, viewType, showExpense, showIncome]);
+  }, [reportData, viewType, showExpense, showIncome, selectedDate, dailyCategoryStats]);
 
   // 筛选后的分类统计
   const filteredCategoryStats = useMemo(() => {
     if (!reportData) return [];
+
+    // 如果选中了具体日期，显示当天数据
+    const sourceData = selectedDate && dailyCategoryStats
+      ? dailyCategoryStats
+      : reportData.categoryStats;
+
     let stats: CategoryStats[] = [];
     if (showExpense) {
-      stats = [...stats, ...reportData.categoryStats.expense];
+      stats = [...stats, ...sourceData.expense];
     }
     if (showIncome) {
-      stats = [...stats, ...reportData.categoryStats.income];
+      stats = [...stats, ...sourceData.income];
     }
     if (selectedCategories.length > 0) {
       stats = stats.filter(s => selectedCategories.includes(s.category));
     }
     return stats.sort((a, b) => b.amount - a.amount);
-  }, [reportData, showExpense, showIncome, selectedCategories]);
+  }, [reportData, showExpense, showIncome, selectedCategories, dailyCategoryStats, selectedDate]);
 
   // 获取所有分类名称
   const allCategoryNames = useMemo(() => {
@@ -234,6 +306,47 @@ const ReportContent = () => {
     reportData.categoryStats.income.forEach(s => names.add(s.category));
     return Array.from(names);
   }, [reportData]);
+
+  // 获取某天的收支数据
+  const getDailyData = useMemo(() => {
+    if (!reportData) return new Map<string, DailyStats>();
+    const map = new Map<string, DailyStats>();
+    reportData.dailyStats.forEach(day => {
+      map.set(day.date, day);
+    });
+    return map;
+  }, [reportData]);
+
+
+  // 渲染日历日期单元格
+  const dateCellRender = (date: Dayjs) => {
+    const dateStr = date.format('YYYY-MM-DD');
+    const dayData = getDailyData.get(dateStr);
+
+    if (!dayData) return null;
+
+    const hasExpense = dayData.expense > 0;
+    const hasIncome = dayData.income > 0;
+    const balance = dayData.income - dayData.expense;
+
+    if (!hasExpense && !hasIncome) return null;
+
+    return (
+      <div className={styles.calendarCell}>
+        {showExpense && hasExpense && (
+          <span className={styles.calendarExpense}>-{dayData.expense.toFixed(0)}</span>
+        )}
+        {showIncome && hasIncome && (
+          <span className={styles.calendarIncome}>+{dayData.income.toFixed(0)}</span>
+        )}
+        {showBalance && balance !== 0 && (
+          <span className={balance >= 0 ? styles.calendarIncome : styles.calendarExpense}>
+            {balance >= 0 ? '+' : ''}{balance.toFixed(0)}
+          </span>
+        )}
+      </div>
+    );
+  };
 
   // 切换分类展开状态
   const toggleCategoryExpand = async (categoryKey: string, category: string, type: 'expense' | 'income') => {
@@ -306,24 +419,108 @@ const ReportContent = () => {
         <span className={styles.arrowDown}>▼</span>
       </div>
 
+      {/* 日历显示控制 */}
+      <div className={styles.calendarControls}>
+        <Checkbox
+          checked={showExpense}
+          onChange={(e) => {
+            const checked = e.target.checked;
+            setShowExpense(checked);
+            if (checked && showBalance) {
+              setShowBalance(false);
+            }
+          }}
+          className={styles.controlCheckbox}
+        >
+          <span className={styles.expenseLabel}>支出</span>
+        </Checkbox>
+        <Checkbox
+          checked={showIncome}
+          onChange={(e) => {
+            const checked = e.target.checked;
+            setShowIncome(checked);
+            if (checked && showBalance) {
+              setShowBalance(false);
+            }
+          }}
+          className={styles.controlCheckbox}
+        >
+          <span className={styles.incomeLabel}>收入</span>
+        </Checkbox>
+        <Checkbox
+          checked={showBalance}
+          onChange={(e) => {
+            const checked = e.target.checked;
+            setShowBalance(checked);
+            if (checked) {
+              setShowExpense(false);
+              setShowIncome(false);
+            }
+          }}
+          className={styles.controlCheckbox}
+        >
+          <span className={styles.balanceLabel}>结余</span>
+        </Checkbox>
+      </div>
+
+      {/* 日历组件 */}
+      <div className={styles.calendarSection}>
+        <Calendar
+          value={currentDate}
+          mode={calendarMode}
+          onChange={(date) => {
+            setCurrentDate(date);
+            setSelectedDate(date);
+          }}
+          onPanelChange={(date, mode) => {
+            setCurrentDate(date);
+            setCalendarMode(mode);
+          }}
+          dateCellRender={dateCellRender}
+          fullscreen={false}
+          className={styles.miniCalendar}
+        />
+      </div>
+
+      {/* 选中日期显示 */}
+      {selectedDate && (
+        <div className={styles.selectedDateBar}>
+          <span className={styles.selectedDateText}>{selectedDate.format('YYYY年M月D日')}数据</span>
+          <Button
+            type="text"
+            size="small"
+            onClick={() => setSelectedDate(null)}
+            className={styles.clearDateBtn}
+          >
+            查看整月
+          </Button>
+        </div>
+      )}
+
       {/* 汇总卡片 */}
       <div className={styles.summaryCards}>
         <div className={styles.summaryCard}>
           <span className={styles.cardLabel}>支出</span>
           <span className={`${styles.cardValue} ${styles.expense}`}>
-            ¥{reportData.summary.totalExpense.toFixed(2)}
+            ¥{selectedDate && dailyCategoryStats
+              ? dailyCategoryStats.summary.totalExpense.toFixed(2)
+              : reportData.summary.totalExpense.toFixed(2)}
           </span>
         </div>
         <div className={styles.summaryCard}>
           <span className={styles.cardLabel}>收入</span>
           <span className={`${styles.cardValue} ${styles.income}`}>
-            ¥{reportData.summary.totalIncome.toFixed(2)}
+            ¥{selectedDate && dailyCategoryStats
+              ? dailyCategoryStats.summary.totalIncome.toFixed(2)
+              : reportData.summary.totalIncome.toFixed(2)}
           </span>
         </div>
         <div className={styles.summaryCard}>
           <span className={styles.cardLabel}>结余</span>
-          <span className={`${styles.cardValue} ${reportData.summary.balance >= 0 ? styles.income : styles.expense}`}>
-            ¥{reportData.summary.balance.toFixed(2)}
+          <span className={`${styles.cardValue} ${(selectedDate && dailyCategoryStats ? dailyCategoryStats.summary.balance : reportData.summary.balance) >= 0 ? styles.income : styles.expense}`}>
+            ¥{selectedDate && dailyCategoryStats
+              ? dailyCategoryStats.summary.balance.toFixed(2)
+              : reportData.summary.balance.toFixed(2)}
           </span>
         </div>
       </div>

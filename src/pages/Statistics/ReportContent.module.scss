@@ -1,4 +1,4 @@
-@use '../../styles/stardew-theme.scss' as *;
+@use "../../styles/stardew-theme.scss" as *;
 
 .reportContent {
   flex: 1;
@@ -30,7 +30,7 @@
 .loadingText {
   font-size: 14px;
   color: $stardew-text-secondary;
-  font-family: 'PixelFont', monospace;
+  font-family: "PixelFont", monospace;
 }
 
 .monthSelector {
@@ -41,19 +41,163 @@
   padding: 12px;
   background: rgba($stardew-wood-light, 0.3);
   border-radius: 8px;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
   cursor: pointer;
 
   .monthText {
     font-size: 16px;
     font-weight: bold;
     color: $stardew-text-primary;
-    font-family: 'PixelFont', monospace;
+    font-family: "PixelFont", monospace;
   }
 
   .arrowDown {
     font-size: 12px;
     color: $stardew-text-secondary;
+  }
+}
+
+// 日历控制区域
+.calendarControls {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 12px;
+  padding: 8px;
+  background: rgba(white, 0.4);
+  border-radius: 8px;
+
+  :global {
+    .ant-checkbox-wrapper {
+      font-family: "PixelFont", monospace;
+    }
+  }
+}
+
+.controlCheckbox {
+  .expenseLabel {
+    color: $stardew-danger;
+    font-weight: bold;
+  }
+
+  .incomeLabel {
+    color: $stardew-success;
+    font-weight: bold;
+  }
+
+  .balanceLabel {
+    color: $stardew-wood-dark;
+    font-weight: bold;
+  }
+}
+
+// 日历区域
+.calendarSection {
+  background: rgba(white, 0.6);
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 16px;
+
+  :global {
+    .ant-picker-calendar {
+      background: transparent;
+    }
+
+    .ant-picker-calendar-header {
+      display: none;
+    }
+
+    .ant-picker-calendar-date {
+      border: none;
+      border-radius: 4px;
+    }
+
+    .ant-picker-calendar-date-content {
+      height: auto;
+      min-height: 40px;
+    }
+
+    .ant-picker-calendar-date-value {
+      font-size: 12px;
+      font-family: "PixelFont", monospace;
+    }
+
+    .ant-picker-cell {
+      padding: 2px;
+    }
+
+    .ant-picker-cell-in-view {
+      .ant-picker-calendar-date-value {
+        color: $stardew-text-primary;
+      }
+    }
+
+    .ant-picker-cell-today {
+      .ant-picker-calendar-date {
+        background: rgba($stardew-wood-light, 0.3);
+        border: 1px solid $stardew-wood-dark;
+      }
+    }
+
+    .ant-picker-cell-selected {
+      .ant-picker-calendar-date {
+        background: $stardew-wood-dark;
+
+        .ant-picker-calendar-date-value {
+          color: white;
+        }
+      }
+    }
+  }
+}
+
+.miniCalendar {
+  .calendarCell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    font-size: 10px;
+    font-family: "PixelFont", monospace;
+    line-height: 1.2;
+  }
+
+  .calendarExpense {
+    color: $stardew-danger;
+    font-size: 9px;
+  }
+
+  .calendarIncome {
+    color: $stardew-success;
+    font-size: 9px;
+  }
+}
+
+// 选中日期栏
+.selectedDateBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  background: rgba($stardew-wood-light, 0.3);
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.selectedDateText {
+  font-size: 14px;
+  font-weight: bold;
+  color: $stardew-text-primary;
+  font-family: "PixelFont", monospace;
+}
+
+.clearDateBtn {
+  font-family: "PixelFont", monospace;
+  font-size: 12px;
+  color: $stardew-wood-dark;
+
+  &:hover {
+    color: darken($stardew-wood-dark, 10%);
   }
 }
 
@@ -77,13 +221,13 @@
     font-size: 12px;
     color: $stardew-text-secondary;
     margin-bottom: 8px;
-    font-family: 'PixelFont', monospace;
+    font-family: "PixelFont", monospace;
   }
 
   .cardValue {
     font-size: 16px;
     font-weight: bold;
-    font-family: 'PixelFont', monospace;
+    font-family: "PixelFont", monospace;
 
     &.expense {
       color: $stardew-danger;
@@ -107,7 +251,7 @@
         background: rgba($stardew-wood-light, 0.3);
         border-color: $stardew-wood-dark;
         color: $stardew-text-primary;
-        font-family: 'PixelFont', monospace;
+        font-family: "PixelFont", monospace;
 
         &.ant-radio-button-wrapper-checked {
           background: $stardew-wood-dark;
@@ -123,7 +267,7 @@
   background: $stardew-wood-dark;
   border-color: $stardew-wood-dark;
   color: white;
-  font-family: 'PixelFont', monospace;
+  font-family: "PixelFont", monospace;
 
   &:hover {
     background: $stardew-wood-dark;
@@ -175,13 +319,13 @@
   font-size: 14px;
   font-weight: bold;
   color: $stardew-text-primary;
-  font-family: 'PixelFont', monospace;
+  font-family: "PixelFont", monospace;
 }
 
 .categoryCount {
   font-size: 12px;
   color: $stardew-text-secondary;
-  font-family: 'PixelFont', monospace;
+  font-family: "PixelFont", monospace;
 }
 
 .categoryAmount {
@@ -193,7 +337,7 @@
   span {
     font-size: 14px;
     font-weight: bold;
-    font-family: 'PixelFont', monospace;
+    font-family: "PixelFont", monospace;
 
     &.expense {
       color: $stardew-danger;
@@ -258,14 +402,14 @@
 .recordDetailDate {
   font-size: 11px;
   color: $stardew-text-secondary;
-  font-family: 'PixelFont', monospace;
+  font-family: "PixelFont", monospace;
   white-space: nowrap;
 }
 
 .recordDetailRemark {
   font-size: 11px;
   color: $stardew-text-primary;
-  font-family: 'PixelFont', monospace;
+  font-family: "PixelFont", monospace;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -274,7 +418,7 @@
 .recordDetailAmount {
   font-size: 12px;
   font-weight: bold;
-  font-family: 'PixelFont', monospace;
+  font-family: "PixelFont", monospace;
   white-space: nowrap;
 
   &.expense {
@@ -297,7 +441,7 @@
     .ant-checkbox-wrapper {
       display: block;
       margin-bottom: 8px;
-      font-family: 'PixelFont', monospace;
+      font-family: "PixelFont", monospace;
     }
   }
 }
@@ -307,13 +451,13 @@
   font-weight: bold;
   color: $stardew-text-primary;
   margin-bottom: 12px;
-  font-family: 'PixelFont', monospace;
+  font-family: "PixelFont", monospace;
 }
 
 .confirmBtn {
   background: $stardew-wood-dark;
   border-color: $stardew-wood-dark;
-  font-family: 'PixelFont', monospace;
+  font-family: "PixelFont", monospace;
 
   &:hover {
     background: $stardew-wood-dark;
