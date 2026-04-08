@@ -61,14 +61,12 @@ const BillContent = () => {
   const { isLoggedIn } = useAuth();
   const [records, setRecords] = useState<RecordItem[]>([]);
   const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
   const [showBackTop, setShowBackTop] = useState(false);
   const [chartCollapsed, setChartCollapsed] = useState(false);
 
   // 当前加载的日期范围（默认当月1号到今天）
   const [startDate, setStartDate] = useState(dayjs().startOf('month'));
   const [endDate, setEndDate] = useState(dayjs());
-  const [currentLoadMonth, setCurrentLoadMonth] = useState(dayjs());
 
   const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
   const [isFilterVisible, setIsFilterVisible] = useState(false);
@@ -97,7 +95,7 @@ const BillContent = () => {
   const chartInstance = useRef<echarts.ECharts | null>(null);
 
   // 加载数据
-  const loadRecords = useCallback(async (isRefresh = false, loadStartDate?: dayjs.Dayjs, loadEndDate?: dayjs.Dayjs) => {
+  const loadRecords = useCallback(async (loadStartDate?: dayjs.Dayjs, loadEndDate?: dayjs.Dayjs) => {
     if (loading) return;
     setLoading(true);
 
@@ -113,13 +111,8 @@ const BillContent = () => {
           ...filter,
         };
         const response: BillListResponse = await getBillsWithFilter(params);
-        if (isRefresh) {
-          setRecords(response.records);
-        } else {
-          setRecords(prev => [...prev, ...response.records]);
-        }
+        setRecords(response.records);
         setSummary(response.summary);
-        setHasMore(false);
       } else {
         // 从本地存储获取数据
         const allRecords = getLocalRecords();
@@ -167,15 +160,6 @@ const BillContent = () => {
           .filter(r => r.type === 'income')
           .reduce((sum, r) => sum + r.amount, 0);
         setSummary({ totalExpense, totalIncome, count: filteredRecords.length });
-
-        // 检查是否还有更多（上一个月是否有数据）
-        const prevMonth = currentLoadMonth.subtract(1, 'month');
-        const prevMonthRecords = allRecords.filter(r => {
-          const recordDate = dayjs(r.date);
-          return recordDate.isAfter(prevMonth.startOf('month').subtract(1, 'day')) &&
-            recordDate.isBefore(prevMonth.endOf('month').add(1, 'day'));
-        });
-        setHasMore(prevMonthRecords.length > 0);
       }
     } catch (error) {
       console.error('Load records error:', error);
@@ -183,11 +167,11 @@ const BillContent = () => {
     } finally {
       setLoading(false);
     }
-  }, [loading, startDate, endDate, filter, sortType, sortOrder, isLoggedIn, currentLoadMonth]);
+  }, [loading, startDate, endDate, filter, sortType, sortOrder, isLoggedIn]);
 
   // 初始加载（当月1号到今天）
   useEffect(() => {
-    loadRecords(true);
+    loadRecords();
   }, [filter, sortType, sortOrder]);
 
   // 统计数据
@@ -210,8 +194,8 @@ const BillContent = () => {
     }, {} as Record<string, { expense: number; income: number }>);
 
     // 获取当前选择月份的所有日期
-    const daysInMonth = currentLoadMonth.daysInMonth();
-    const yearMonth = currentLoadMonth.format('YYYY-MM');
+    const daysInMonth = startDate.daysInMonth();
+    const yearMonth = startDate.format('YYYY-MM');
     const chartData = [];
 
     for (let i = 1; i <= daysInMonth; i++) {
@@ -225,7 +209,7 @@ const BillContent = () => {
     }
 
     return { expense, income, dailyStats: chartData };
-  }, [records, summary, currentLoadMonth]);
+  }, [records, summary, startDate]);
 
   // 初始化柱状图
   useEffect(() => {
@@ -292,7 +276,7 @@ const BillContent = () => {
             saveLocalRecords(updatedRecords);
           }
           message.success('删除成功');
-          loadRecords(true);
+          loadRecords();
         } catch (error) {
           message.error('删除失败');
           console.error('Delete error:', error);
@@ -301,16 +285,12 @@ const BillContent = () => {
     });
   };
 
-  // 是否显示加载提示
-  const [showLoadHint, setShowLoadHint] = useState(false);
-  // 是否正在加载上一个月
-  const [isLoadingPrevMonth, setIsLoadingPrevMonth] = useState(false);
   // 是否手动展开统计区域（true表示用户手动展开，false表示自动收起或默认）
   const [isManuallyExpanded, setIsManuallyExpanded] = useState(false);
   // 记录上一次滚动位置
   const lastScrollTopRef = useRef(0);
 
-  // 滚动加载更多
+  // 滚动处理
   const handleScroll = useCallback(() => {
     if (!listRef.current) return;
 
@@ -344,15 +324,7 @@ const BillContent = () => {
         setShowCustomScrollbar(false);
       }
     }, 1000);
-
-    // 滚动到底部显示加载提示
-    const isNearBottom = scrollTop + clientHeight >= scrollHeight - 20;
-    if (isNearBottom && hasMore && !loading && !isLoadingPrevMonth && records.length > 0) {
-      setShowLoadHint(true);
-    } else if (!isNearBottom) {
-      setShowLoadHint(false);
-    }
-  }, [hasMore, loading, isLoadingPrevMonth, isDragging, isManuallyExpanded, chartCollapsed]);
+  }, [isDragging, isManuallyExpanded, chartCollapsed]);
 
   useEffect(() => {
     const listEl = listRef.current;
@@ -410,30 +382,6 @@ const BillContent = () => {
       };
     }
   }, [isDragging, handleScrollbarMouseMove, handleScrollbarMouseUp]);
-
-  // 加载上一个月的数据
-  const loadPrevMonth = useCallback(async () => {
-    if (isLoadingPrevMonth || !hasMore) return;
-
-    setIsLoadingPrevMonth(true);
-    setShowLoadHint(false);
-
-    const prevMonth = currentLoadMonth.subtract(1, 'month');
-    const newStartDate = prevMonth.startOf('month');
-    const newEndDate = prevMonth.endOf('month');
-
-    setCurrentLoadMonth(prevMonth);
-    setStartDate(newStartDate);
-    setEndDate(newEndDate);
-
-    try {
-      await loadRecords(true, newStartDate, newEndDate);
-    } finally {
-      setIsLoadingPrevMonth(false);
-    }
-
-    listRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [isLoadingPrevMonth, hasMore, currentLoadMonth, loadRecords]);
 
   // 按日期分组
   const groupedRecords = useMemo(() => {
@@ -493,7 +441,7 @@ const BillContent = () => {
 
   // 应用筛选
   const applyFilter = () => {
-    loadRecords(true);
+    loadRecords();
     setIsFilterVisible(false);
   };
 
@@ -513,9 +461,8 @@ const BillContent = () => {
   const handleDateConfirm = (date: dayjs.Dayjs, _mode: DateMode) => {
     setStartDate(date.startOf('month'));
     setEndDate(date.endOf('month'));
-    setCurrentLoadMonth(date);
     setIsDatePickerVisible(false);
-    loadRecords(true, date.startOf('month'), date.endOf('month'));
+    loadRecords(date.startOf('month'), date.endOf('month'));
   };
 
   // 切换排序类型
@@ -661,20 +608,6 @@ const BillContent = () => {
                 </div>
               );
             })
-        )}
-
-        {/* 加载更多提示 */}
-        {showLoadHint && hasMore && (
-          <div className={styles.loadMoreHint} onClick={loadPrevMonth}>
-            {isLoadingPrevMonth ? (
-              <Spin size="small" />
-            ) : (
-              <>
-                <span>点击加载上一个月</span>
-                <DownOutlined />
-              </>
-            )}
-          </div>
         )}
 
         {/* 底部留白 */}
