@@ -44,6 +44,10 @@ const ReportContent = () => {
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
   const [categoryRecords, setCategoryRecords] = useState<Map<string, RecordItem[]>>(new Map());
 
+  // 单日记录数据
+  const [dailyRecords, setDailyRecords] = useState<RecordItem[]>([]);
+  const [dailyRecordsLoading, setDailyRecordsLoading] = useState(false);
+
   const chartRef = useRef<HTMLDivElement>(null);
   const chartInstance = useRef<echarts.ECharts | null>(null);
 
@@ -147,32 +151,76 @@ const ReportContent = () => {
     }
   };
 
+  // 加载单日记录数据
+  const loadDailyRecords = async (date: Dayjs) => {
+    if (!date) return;
+
+    setDailyRecordsLoading(true);
+    try {
+      const dateStr = date.format('YYYY-MM-DD');
+      let records: RecordItem[] = [];
+
+      if (isLoggedIn) {
+        records = await getRecords({
+          startDate: dateStr,
+          endDate: dateStr
+        });
+      } else {
+        const allRecords = getLocalRecords();
+        records = allRecords.filter(r => r.date === dateStr);
+      }
+
+      setDailyRecords(records);
+    } catch (error) {
+      console.error('Failed to load daily records:', error);
+      setDailyRecords([]);
+    } finally {
+      setDailyRecordsLoading(false);
+    }
+  };
+
   useEffect(() => {
     loadReportData();
   }, [currentDate, isLoggedIn]);
 
+  // 监听选中日期变化，加载单日数据
+  useEffect(() => {
+    if (selectedDate) {
+      loadDailyRecords(selectedDate);
+    } else {
+      setDailyRecords([]);
+    }
+  }, [selectedDate, isLoggedIn]);
+
   // 获取选中日期的分类统计
   const dailyCategoryStats = useMemo(() => {
-    if (!selectedDate || !reportData) return null;
+    if (!selectedDate) {
+      return null;
+    }
 
-    const dateStr = selectedDate.format('YYYY-MM-DD');
-    const allRecords = getLocalRecords();
+    if (dailyRecords.length === 0) {
+      // 选中日期但没有记录，返回空统计
+      return {
+        expense: [],
+        income: [],
+        summary: {
+          totalExpense: 0,
+          totalIncome: 0,
+          balance: 0,
+        },
+      };
+    }
 
-    // 获取选中当天的记录
-    const dayRecords = allRecords.filter(r => r.date === dateStr);
-
-    if (dayRecords.length === 0) return null;
-
-    const totalExpense = dayRecords
+    const totalExpense = dailyRecords
       .filter(r => r.type === 'expense')
       .reduce((sum, r) => sum + r.amount, 0);
-    const totalIncome = dayRecords
+    const totalIncome = dailyRecords
       .filter(r => r.type === 'income')
       .reduce((sum, r) => sum + r.amount, 0);
 
     // 按分类统计
     const categoryMap = new Map<string, CategoryStats>();
-    dayRecords.forEach(r => {
+    dailyRecords.forEach(r => {
       const key = `${r.type}-${r.category}`;
       if (!categoryMap.has(key)) {
         categoryMap.set(key, {
@@ -204,7 +252,22 @@ const ReportContent = () => {
         balance: totalIncome - totalExpense,
       },
     };
-  }, [selectedDate, reportData]);
+  }, [selectedDate, dailyRecords]);
+
+  // 统一数据显示源
+  const displayData = useMemo(() => {
+    if (selectedDate && dailyCategoryStats) {
+      return {
+        categoryStats: dailyCategoryStats,
+        summary: dailyCategoryStats.summary,
+      };
+    }
+    return {
+      categoryStats: reportData?.categoryStats || { expense: [], income: [] },
+      summary: reportData?.summary || { totalExpense: 0, totalIncome: 0, balance: 0 },
+    };
+  }, [selectedDate, dailyCategoryStats, reportData]);
+
   // 初始化饼图
   useEffect(() => {
     console.log('[ReportContent Chart] Initializing pie chart...');
@@ -229,10 +292,8 @@ const ReportContent = () => {
       console.log('[ReportContent Chart] Preparing pie data...');
       const pieData: { name: string; value: number; itemStyle: { color: string } }[] = [];
 
-      // 如果选中了具体日期，显示当天数据
-      const chartSourceData = selectedDate && dailyCategoryStats
-        ? dailyCategoryStats
-        : reportData.categoryStats;
+      // 使用统一的数据源
+      const chartSourceData = displayData.categoryStats;
 
       if (showExpense) {
         chartSourceData.expense.forEach(item => {
@@ -274,16 +335,12 @@ const ReportContent = () => {
       chartInstance.current?.dispose();
       chartInstance.current = null;
     };
-  }, [reportData, viewType, showExpense, showIncome, selectedDate, dailyCategoryStats]);
+  }, [displayData, viewType, showExpense, showIncome]);
 
   // 筛选后的分类统计
   const filteredCategoryStats = useMemo(() => {
-    if (!reportData) return [];
-
-    // 如果选中了具体日期，显示当天数据
-    const sourceData = selectedDate && dailyCategoryStats
-      ? dailyCategoryStats
-      : reportData.categoryStats;
+    // 使用统一的数据源
+    const sourceData = displayData.categoryStats;
 
     let stats: CategoryStats[] = [];
     if (showExpense) {
@@ -296,7 +353,7 @@ const ReportContent = () => {
       stats = stats.filter(s => selectedCategories.includes(s.category));
     }
     return stats.sort((a, b) => b.amount - a.amount);
-  }, [reportData, showExpense, showIncome, selectedCategories, dailyCategoryStats, selectedDate]);
+  }, [displayData, showExpense, showIncome, selectedCategories]);
 
   // 获取所有分类名称
   const allCategoryNames = useMemo(() => {
@@ -502,25 +559,19 @@ const ReportContent = () => {
         <div className={styles.summaryCard}>
           <span className={styles.cardLabel}>支出</span>
           <span className={`${styles.cardValue} ${styles.expense}`}>
-            ¥{selectedDate && dailyCategoryStats
-              ? dailyCategoryStats.summary.totalExpense.toFixed(2)
-              : reportData.summary.totalExpense.toFixed(2)}
+            ¥{displayData.summary.totalExpense.toFixed(2)}
           </span>
         </div>
         <div className={styles.summaryCard}>
           <span className={styles.cardLabel}>收入</span>
           <span className={`${styles.cardValue} ${styles.income}`}>
-            ¥{selectedDate && dailyCategoryStats
-              ? dailyCategoryStats.summary.totalIncome.toFixed(2)
-              : reportData.summary.totalIncome.toFixed(2)}
+            ¥{displayData.summary.totalIncome.toFixed(2)}
           </span>
         </div>
         <div className={styles.summaryCard}>
           <span className={styles.cardLabel}>结余</span>
-          <span className={`${styles.cardValue} ${(selectedDate && dailyCategoryStats ? dailyCategoryStats.summary.balance : reportData.summary.balance) >= 0 ? styles.income : styles.expense}`}>
-            ¥{selectedDate && dailyCategoryStats
-              ? dailyCategoryStats.summary.balance.toFixed(2)
-              : reportData.summary.balance.toFixed(2)}
+          <span className={`${styles.cardValue} ${displayData.summary.balance >= 0 ? styles.income : styles.expense}`}>
+            ¥{displayData.summary.balance.toFixed(2)}
           </span>
         </div>
       </div>
