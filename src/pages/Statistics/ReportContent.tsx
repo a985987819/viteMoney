@@ -167,7 +167,7 @@ const ReportContent = () => {
         });
       } else {
         const allRecords = getLocalRecords();
-        records = allRecords.filter(r => r.date === dateStr);
+        records = allRecords.filter(r => dayjs(r.date).format('YYYY-MM-DD') === dateStr);
       }
 
       setDailyRecords(records);
@@ -275,7 +275,7 @@ const ReportContent = () => {
     console.log('[ReportContent Chart] reportData:', !!reportData);
     console.log('[ReportContent Chart] viewType:', viewType);
 
-    if (!chartRef.current || !reportData || viewType !== 'chart') {
+    if (!chartRef.current || viewType !== 'chart') {
       console.log('[ReportContent Chart] Cleanup - conditions not met');
       chartInstance.current?.dispose();
       chartInstance.current = null;
@@ -357,12 +357,18 @@ const ReportContent = () => {
 
   // 获取所有分类名称
   const allCategoryNames = useMemo(() => {
-    if (!reportData) return [];
     const names = new Set<string>();
-    reportData.categoryStats.expense.forEach(s => names.add(s.category));
-    reportData.categoryStats.income.forEach(s => names.add(s.category));
+
+    // 从当前显示的数据源获取分类名称
+    if (displayData.categoryStats.expense) {
+      displayData.categoryStats.expense.forEach(s => names.add(s.category));
+    }
+    if (displayData.categoryStats.income) {
+      displayData.categoryStats.income.forEach(s => names.add(s.category));
+    }
+
     return Array.from(names);
-  }, [reportData]);
+  }, [displayData]);
 
   // 获取某天的收支数据
   const getDailyData = useMemo(() => {
