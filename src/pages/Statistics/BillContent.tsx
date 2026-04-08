@@ -146,11 +146,7 @@ const BillContent = () => {
           }
         });
 
-        if (isRefresh) {
-          setRecords(filteredRecords);
-        } else {
-          setRecords(prev => [...prev, ...filteredRecords]);
-        }
+        setRecords(filteredRecords);
 
         // 计算汇总
         const totalExpense = filteredRecords
