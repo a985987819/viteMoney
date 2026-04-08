@@ -115,7 +115,7 @@ describe('generateImportReport', () => {
 
     const report = generateImportReport(stats);
 
-    expect(report).toContain('=== 数据导入报告 ===');
+    expect(report).toContain('=== 数据导入转换报告 ===');
     expect(report).toContain('总记录数: 10');
     expect(report).toContain('成功匹配: 8 (80.0%)');
     expect(report).toContain('未匹配: 2 (20.0%)');
@@ -134,7 +134,7 @@ describe('generateImportReport', () => {
     };
 
     const report = generateImportReport(stats);
-    expect(report).toContain('=== 数据导入报告 ===');
+    expect(report).toContain('=== 数据导入转换报告 ===');
     expect(report).toContain('总记录数: 0');
   });
 });
