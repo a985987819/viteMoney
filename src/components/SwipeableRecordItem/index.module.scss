@@ -1,5 +1,4 @@
-
-@use '../../styles/stardew-theme.scss' as *;
+@use "../../styles/stardew-theme.scss" as *;
 
 $primary-color: #d4a574;
 $danger-color: #e74c3c;
@@ -17,13 +16,12 @@ $content-bg: #fed284;
 .swipeableItemWrapper {
   box-sizing: border-box;
   position: relative;
-  // overflow: hidden;
   background-color: transparent;
   border: none;
   height: 56px;
 
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     left: 50%;
     bottom: 0;

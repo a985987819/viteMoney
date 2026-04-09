@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, memo } from 'react';
+import { useState, useRef, useCallback, memo, useEffect } from 'react';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import type { RecordItem } from '../../api/record';
 import RecordItemComponent from '../RecordItem';
@@ -16,25 +16,34 @@ const SwipeableRecordItem = memo(({ record, onEdit, onDelete, isLastItem }: Swip
   const [isDragging, setIsDragging] = useState(false);
   const startXRef = useRef(0);
   const currentXRef = useRef(0);
-  const buttonWidth = 120; // 两个按钮的总宽度
+  const diffXRef = useRef(0);
+  const buttonWidth = 120;
+  const contentRef = useRef<HTMLDivElement>(null);
 
-  const handleTouchStart = useCallback((e: React.TouchEvent | React.MouseEvent) => {
-    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
-    startXRef.current = clientX;
-    currentXRef.current = clientX;
+  useEffect(() => {
+    if (contentRef.current) {
+      contentRef.current.style.transform = `translateX(${translateX}px)`;
+    }
+  }, [translateX]);
+
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    e.stopPropagation();
+    const touch = e.touches[0];
+    startXRef.current = touch.clientX;
+    currentXRef.current = touch.clientX;
+    diffXRef.current = 0;
     setIsDragging(true);
   }, []);
 
-  const handleTouchMove = useCallback((e: React.TouchEvent | React.MouseEvent) => {
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
     if (!isDragging) return;
 
-    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
-    currentXRef.current = clientX;
+    const touch = e.touches[0];
+    currentXRef.current = touch.clientX;
+    diffXRef.current = currentXRef.current - startXRef.current;
 
-    const diff = clientX - startXRef.current;
-    // 只允许向左滑动，最大滑动距离为按钮宽度
-    if (diff < 0) {
-      setTranslateX(Math.max(diff, -buttonWidth));
+    if (diffXRef.current < 0) {
+      setTranslateX(Math.max(diffXRef.current, -buttonWidth));
     } else {
       setTranslateX(0);
     }
@@ -42,10 +51,8 @@ const SwipeableRecordItem = memo(({ record, onEdit, onDelete, isLastItem }: Swip
 
   const handleTouchEnd = useCallback(() => {
     setIsDragging(false);
-    const diff = currentXRef.current - startXRef.current;
 
-    // 如果滑动超过一半，则完全展开，否则收起
-    if (diff < -buttonWidth / 2) {
+    if (diffXRef.current < -buttonWidth / 2) {
       setTranslateX(-buttonWidth);
     } else {
       setTranslateX(0);
@@ -64,7 +71,6 @@ const SwipeableRecordItem = memo(({ record, onEdit, onDelete, isLastItem }: Swip
 
   return (
     <div className={`${styles.swipeableItemWrapper} ${isLastItem ? styles.lastItem : ''}`}>
-      {/* 背景按钮层 */}
       <div className={styles.swipeableActions}>
         <button
           className={`${styles.actionBtn} ${styles.editBtn}`}
@@ -82,17 +88,12 @@ const SwipeableRecordItem = memo(({ record, onEdit, onDelete, isLastItem }: Swip
         </button>
       </div>
 
-      {/* 内容层 */}
       <div
+        ref={contentRef}
         className={styles.swipeableContent}
-        style={{ transform: `translateX(${translateX}px)` }}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
-        onMouseDown={handleTouchStart}
-        onMouseMove={handleTouchMove}
-        onMouseUp={handleTouchEnd}
-        onMouseLeave={handleTouchEnd}
       >
         <RecordItemComponent record={record} />
       </div>
