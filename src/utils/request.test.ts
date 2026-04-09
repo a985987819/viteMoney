@@ -21,11 +21,11 @@ vi.mock('axios', () => {
     },
   };
 
-  const mockAxios = vi.fn(() => mockAxiosInstance);
+  const mockAxios = vi.fn(() => mockAxiosInstance) as any;
   mockAxios.create = vi.fn(() => mockAxiosInstance);
-  mockAxios.isCancel = vi.fn((val) => val instanceof axios.Cancel);
+  mockAxios.isCancel = vi.fn((val: unknown) => val?.constructor?.name === 'Cancel');
   mockAxios.CancelToken = class {
-    constructor(executor: (cancel: any) => void) {
+    constructor(executor: (cancel: unknown) => void) {
       executor(vi.fn());
     }
   };

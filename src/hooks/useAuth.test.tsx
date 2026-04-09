@@ -37,11 +37,11 @@ describe('useAuth', () => {
   });
 
   it('should initialize with user when stored user exists and is logged in', () => {
-    vi.mocked(storage.getUser).mockReturnValue({ id: 1, username: 'test' });
+    vi.mocked(storage.getUser).mockReturnValue({ id: 1, username: 'test', createdAt: '2024-01-01' });
     vi.mocked(storage.isLoggedIn).mockReturnValue(true);
 
     const { result } = renderHook(() => useAuth(), { wrapper });
-    expect(result.current.user).toEqual({ id: 1, username: 'test' });
+    expect(result.current.user).toEqual({ id: 1, username: 'test', createdAt: '2024-01-01' });
     expect(result.current.isLoggedIn).toBe(true);
   });
 
@@ -74,7 +74,7 @@ describe('useAuth', () => {
     vi.mocked(authApi.logout).mockResolvedValue({ message: 'OK' });
 
     // First set a user
-    vi.mocked(storage.getUser).mockReturnValue({ id: 1, username: 'test' });
+    vi.mocked(storage.getUser).mockReturnValue({ id: 1, username: 'test', createdAt: '2024-01-01' });
     vi.mocked(storage.isLoggedIn).mockReturnValue(true);
 
     const { result } = renderHook(() => useAuth(), { wrapper });

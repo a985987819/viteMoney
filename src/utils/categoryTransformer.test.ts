@@ -40,7 +40,7 @@ describe('transformImportRecord', () => {
       date: '2026-01-15',
       amount: 100,
       category: '未知分类',
-      type: 'expense',
+      type: 'expense' as const,
     };
 
     const result = transformImportRecord(record);
