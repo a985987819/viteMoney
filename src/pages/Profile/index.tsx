@@ -38,8 +38,10 @@ import {
   MoonOutlined,
   DesktopOutlined,
   ClockCircleOutlined,
+  DownloadOutlined,
 } from '@ant-design/icons';
 import { useAuth } from '../../hooks/useAuth';
+import { usePWA } from '../../hooks/usePWA';
 import { exportToCSV, exportToXLSX, importFromCSV, importFromXLSX, parseDate, compareDate, generateImportReport } from '../../utils/importExport';
 import { getLocalRecords, saveLocalRecords, clearAllData } from '../../utils/storage';
 import { importRecords, deleteImportedRecords, removeDuplicates, type RecordItem } from '../../api/record';
@@ -51,6 +53,7 @@ import styles from './index.module.scss';
 const Profile = () => {
   const { t, i18n } = useTranslation();
   const { user, isLoggedIn, login, logout, register } = useAuth();
+  const { isInstallable, isInstalled, triggerInstall } = usePWA();
   const navigate = useNavigate();
   const [loginModalVisible, setLoginModalVisible] = useState(false);
   const [registerModalVisible, setRegisterModalVisible] = useState(false);
@@ -64,6 +67,10 @@ const Profile = () => {
   const [loginForm] = Form.useForm();
   const [registerForm] = Form.useForm();
   const [theme, setTheme] = useState<ThemeType>(themeManager.getTheme());
+
+  const handleInstallApp = async () => {
+    await triggerInstall();
+  };
 
   // 监听主题变化
   useEffect(() => {
@@ -345,6 +352,13 @@ const Profile = () => {
       icon: <SettingOutlined />,
       onClick: () => setSettingsModalVisible(true),
     },
+    // PWA安装按钮（仅在可安装且未安装时显示）
+    ...(!isInstalled && isInstallable ? [{
+      title: t('pwa.install', '安装应用'),
+      icon: <DownloadOutlined />,
+      onClick: handleInstallApp,
+      className: styles.installMenuItem,
+    }] : []),
   ];
 
   return (
@@ -430,7 +444,7 @@ const Profile = () => {
         {mainMenuItems.map((item) => (
           <div
             key={item.title}
-            className={styles.menuButton}
+            className={`${styles.menuButton} ${item.className || ''}`}
             onClick={item.onClick}
           >
             <span className={styles.menuTitle}>{item.title}</span>
@@ -542,13 +556,13 @@ const Profile = () => {
               className={styles.themeRadioGroup}
             >
               <Radio.Button value="light">
-                <SunOutlined /> 
+                <SunOutlined />
               </Radio.Button>
               <Radio.Button value="dark">
-                <MoonOutlined /> 
+                <MoonOutlined />
               </Radio.Button>
               <Radio.Button value="system">
-                <DesktopOutlined /> 
+                <DesktopOutlined />
               </Radio.Button>
             </Radio.Group>
           </div>

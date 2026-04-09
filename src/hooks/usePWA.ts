@@ -120,13 +120,13 @@ export function usePWA() {
     }
 
     // 检查 PWA 安装条件
-    const checkPWAConditions = () => {
+    const checkPWAConditions = async () => {
       console.log('[PWA] Checking PWA conditions...');
 
       const isSecureContext = window.isSecureContext;
       const isHTTPS = window.location.protocol === 'https:';
       const isLocalhost = window.location.hostname === 'localhost' ||
-                          window.location.hostname === '127.0.0.1';
+        window.location.hostname === '127.0.0.1';
       const isSecureEnvironment = isSecureContext || isHTTPS || isLocalhost;
 
       console.log('[PWA] isSecureContext:', isSecureContext);
@@ -139,11 +139,58 @@ export function usePWA() {
         console.warn('[PWA] ⚠️ 警告：当前不是安全环境（HTTPS 或 localhost）');
         console.warn('[PWA] PWA 功能将被禁用');
       }
+
+      // 检查 Service Worker 状态
+      if ('serviceWorker' in navigator) {
+        try {
+          const registration = await navigator.serviceWorker.ready;
+          console.log('[PWA] Service Worker ready:', registration);
+          console.log('[PWA] SW active:', registration.active);
+          console.log('[PWA] SW waiting:', registration.waiting);
+          console.log('[PWA] SW installing:', registration.installing);
+
+          // 检查 manifest 是否存在
+          const manifestLink = document.querySelector('link[rel="manifest"]');
+          console.log('[PWA] Manifest link element:', manifestLink);
+          if (manifestLink) {
+            console.log('[PWA] Manifest href:', (manifestLink as HTMLLinkElement).href);
+          }
+
+          // 检查是否已经触发过 beforeinstallprompt（通过检测全局变量）
+          console.log('[PWA] globalInstallPrompt exists:', !!globalInstallPrompt);
+        } catch (err) {
+          console.error('[PWA] Error checking SW:', err);
+        }
+      }
+
+      // 检查图标
+      const icons = document.querySelectorAll('link[rel="apple-touch-icon"], link[rel="icon"]');
+      console.log('[PWA] Icon elements found:', icons.length);
     };
 
     checkPWAConditions();
 
+    // 备用检测：如果 beforeinstallprompt 事件未触发，定期检查安装条件
+    const fallbackCheckInterval = setInterval(async () => {
+      if (!globalInstallPrompt && 'serviceWorker' in navigator) {
+        console.log('[PWA] Fallback check: re-checking install conditions...');
+        try {
+          const registration = await navigator.serviceWorker.ready;
+          const manifestLink = document.querySelector('link[rel="manifest"]');
+
+          // 如果 manifest 存在且 SW 就绪，但 isInstallable 仍为 false，尝试手动触发
+          if (manifestLink && registration.active) {
+            console.log('[PWA] Fallback: Manifest and SW ready, checking if can prompt...');
+            // Chrome 可能不会再次触发 beforeinstallprompt，但我们仍然尝试
+          }
+        } catch (err) {
+          // 忽略错误
+        }
+      }
+    }, 5000);
+
     return () => {
+      clearInterval(fallbackCheckInterval);
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
       window.removeEventListener('appinstalled', handleAppInstalled);
     };
@@ -165,6 +212,40 @@ export function usePWA() {
     return () => {
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
+
+  // 监听 Service Worker 更新
+  useEffect(() => {
+    if (!('serviceWorker' in navigator)) return;
+
+    const handleControllerChange = () => {
+      console.log('[PWA] Service Worker controller changed');
+      setState((prev) => ({ ...prev, updateAvailable: true, needRefresh: true }));
+    };
+
+    const handleUpdateFound = async () => {
+      console.log('[PWA] Update found in Service Worker');
+      setState((prev) => ({ ...prev, updateAvailable: true, needRefresh: true }));
+
+      const registration = await navigator.serviceWorker.ready;
+      if (registration.waiting) {
+        registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+      }
+    };
+
+    navigator.serviceWorker.addEventListener('controllerchange', handleControllerChange);
+
+    navigator.serviceWorker.ready.then((registration) => {
+      registration.addEventListener('updatefound', handleUpdateFound);
+
+      if (registration.active && registration.waiting) {
+        setState((prev) => ({ ...prev, updateAvailable: true, needRefresh: true }));
+      }
+    });
+
+    return () => {
+      navigator.serviceWorker.removeEventListener('controllerchange', handleControllerChange);
     };
   }, []);
 
@@ -206,6 +287,21 @@ export function usePWA() {
     }));
   }, []);
 
+  // 手动触发安装提示
+  const triggerInstall = useCallback(async () => {
+    const promptEvent = state.installPrompt || globalInstallPrompt;
+    if (promptEvent) {
+      await installApp();
+    } else {
+      // 如果没有可用的 prompt，尝试重新检查
+      if ('serviceWorker' in navigator) {
+        const registration = await navigator.serviceWorker.ready;
+        await registration.update();
+      }
+      console.warn('[PWA] No install prompt available');
+    }
+  }, [state.installPrompt, installApp]);
+
   // 检查更新
   const checkUpdate = useCallback(async () => {
     if ('serviceWorker' in navigator) {
@@ -219,5 +315,6 @@ export function usePWA() {
     installApp,
     dismissInstall,
     checkUpdate,
+    triggerInstall,
   };
 }
