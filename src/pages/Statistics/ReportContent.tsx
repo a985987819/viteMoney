@@ -130,7 +130,7 @@ const ReportContent = () => {
           }
         });
 
-        setReportData({
+        const reportData = {
           period: {
             startDate: startOfMonth.format('YYYY-MM-DD'),
             endDate: endOfMonth.format('YYYY-MM-DD'),
@@ -142,7 +142,9 @@ const ReportContent = () => {
           },
           dailyStats: Array.from(dailyStatsMap.values()),
           categoryStats,
-        });
+        };
+        console.log('[ReportContent] Generated reportData (offline):', reportData);
+        setReportData(reportData);
       }
     } catch (error) {
       console.error('Load report error:', error);
@@ -243,7 +245,7 @@ const ReportContent = () => {
       stats.percentage = total > 0 ? (stats.amount / total) * 100 : 0;
     });
 
-    return {
+    const result = {
       expense: Array.from(categoryMap.values()).filter(s => s.type === 'expense'),
       income: Array.from(categoryMap.values()).filter(s => s.type === 'income'),
       summary: {
@@ -252,6 +254,13 @@ const ReportContent = () => {
         balance: totalIncome - totalExpense,
       },
     };
+
+    console.log('[ReportContent] dailyCategoryStats computed:', {
+      selectedDate: selectedDate?.format('YYYY-MM-DD'),
+      dailyRecordsLength: dailyRecords.length,
+      result: result
+    });
+    return result;
   }, [selectedDate, dailyRecords]);
 
   // 统一数据显示源
@@ -267,6 +276,8 @@ const ReportContent = () => {
       summary: reportData?.summary || { totalExpense: 0, totalIncome: 0, balance: 0 },
     };
   }, [selectedDate, dailyCategoryStats, reportData]);
+
+  console.log('[ReportContent] displayData computed:', displayData);
 
   // 初始化饼图
   useEffect(() => {
@@ -342,6 +353,11 @@ const ReportContent = () => {
     // 使用统一的数据源
     const sourceData = displayData.categoryStats;
 
+    console.log('[ReportContent] displayData:', displayData);
+    console.log('[ReportContent] showExpense:', showExpense, 'showIncome:', showIncome);
+    console.log('[ReportContent] sourceData.expense:', sourceData.expense);
+    console.log('[ReportContent] sourceData.income:', sourceData.income);
+
     let stats: CategoryStats[] = [];
     if (showExpense) {
       stats = [...stats, ...sourceData.expense];
@@ -352,7 +368,10 @@ const ReportContent = () => {
     if (selectedCategories.length > 0) {
       stats = stats.filter(s => selectedCategories.includes(s.category));
     }
-    return stats.sort((a, b) => b.amount - a.amount);
+
+    const result = stats.sort((a, b) => b.amount - a.amount);
+    console.log('[ReportContent] filteredCategoryStats result:', result);
+    return result;
   }, [displayData, showExpense, showIncome, selectedCategories]);
 
   // 获取所有分类名称
@@ -611,65 +630,76 @@ const ReportContent = () => {
       {/* 列表视图 */}
       {viewType === 'area' && (
         <div className={styles.listView}>
-          <List
-            dataSource={filteredCategoryStats}
-            renderItem={(item) => {
-              const categoryKey = `${item.type}-${item.category}`;
-              const isExpanded = expandedCategories.has(categoryKey);
-              const records = categoryRecords.get(categoryKey) || [];
-              const canExpand = item.count > 1;
+          {filteredCategoryStats.length === 0 ? (
+            <Empty
+              description={
+                showExpense || showIncome
+                  ? "暂无数据"
+                  : "请选择显示支出或收入"
+              }
+              className={styles.listEmpty}
+            />
+          ) : (
+            <List
+              dataSource={filteredCategoryStats}
+              renderItem={(item) => {
+                const categoryKey = `${item.type}-${item.category}`;
+                const isExpanded = expandedCategories.has(categoryKey);
+                const records = categoryRecords.get(categoryKey) || [];
+                const canExpand = item.count > 1;
 
-              return (
-                <>
-                  <List.Item className={styles.categoryItem}>
-                    <div className={styles.categoryInfo}>
-                      <span className={styles.categoryIcon}>{item.categoryIcon}</span>
-                      <div className={styles.categoryDetail}>
-                        <span className={styles.categoryName}>{item.category}</span>
-                        <span className={styles.categoryCount}>
-                          {item.count}笔
-                          {canExpand && (
-                            <Button
-                              type="text"
-                              size="small"
-                              icon={isExpanded ? <MinusOutlined /> : <PlusOutlined />}
-                              onClick={() => toggleCategoryExpand(categoryKey, item.category, item.type)}
-                              className={styles.expandBtn}
-                            />
-                          )}
-                        </span>
-                      </div>
-                    </div>
-                    <div className={styles.categoryAmount}>
-                      <span className={item.type === 'expense' ? styles.expense : styles.income}>
-                        ¥{item.amount.toFixed(2)}
-                      </span>
-                      <span className={styles.percentage}>{item.percentage.toFixed(1)}%</span>
-                    </div>
-                  </List.Item>
-                  {isExpanded && records.length > 0 && (
-                    <div className={styles.recordDetailList}>
-                      {records.map((record) => (
-                        <div key={record.id} className={styles.recordDetailItem}>
-                          <div className={styles.recordDetailLeft}>
-                            <span className={styles.recordDetailDate}>
-                              {dayjs(record.date).format('MM-DD')}
-                            </span>
-                            {record.remark && (
-                              <span className={styles.recordDetailRemark}>{record.remark}</span>
+                return (
+                  <>
+                    <List.Item className={styles.categoryItem}>
+                      <div className={styles.categoryInfo}>
+                        <span className={styles.categoryIcon}>{item.categoryIcon}</span>
+                        <div className={styles.categoryDetail}>
+                          <span className={styles.categoryName}>{item.category}</span>
+                          <span className={styles.categoryCount}>
+                            {item.count}笔
+                            {canExpand && (
+                              <Button
+                                type="text"
+                                size="small"
+                                icon={isExpanded ? <MinusOutlined /> : <PlusOutlined />}
+                                onClick={() => toggleCategoryExpand(categoryKey, item.category, item.type)}
+                                className={styles.expandBtn}
+                              />
                             )}
-                          </div>
-                          <span className={`${styles.recordDetailAmount} ${record.type === 'expense' ? styles.expense : styles.income}`}>
-                            ¥{record.amount.toFixed(2)}
                           </span>
                         </div>
-                      ))}
-                    </div>
-                  )}
-                </>
-              );
-            }}
-          />
+                      </div>
+                      <div className={styles.categoryAmount}>
+                        <span className={item.type === 'expense' ? styles.expense : styles.income}>
+                          ¥{item.amount.toFixed(2)}
+                        </span>
+                        <span className={styles.percentage}>{item.percentage.toFixed(1)}%</span>
+                      </div>
+                    </List.Item>
+                    {isExpanded && records.length > 0 && (
+                      <div className={styles.recordDetailList}>
+                        {records.map((record) => (
+                          <div key={record.id} className={styles.recordDetailItem}>
+                            <div className={styles.recordDetailLeft}>
+                              <span className={styles.recordDetailDate}>
+                                {dayjs(record.date).format('MM-DD')}
+                              </span>
+                              {record.remark && (
+                                <span className={styles.recordDetailRemark}>{record.remark}</span>
+                              )}
+                            </div>
+                            <span className={`${styles.recordDetailAmount} ${record.type === 'expense' ? styles.expense : styles.income}`}>
+                              ¥{record.amount.toFixed(2)}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </>
+                );
+              }}
+            />
+          )}
         </div>
       )}
 
