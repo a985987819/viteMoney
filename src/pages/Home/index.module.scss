@@ -16,7 +16,7 @@ $content-bg-url: "#{$cdn-base-url}/homePageBg.png";
   overflow: hidden;
   background: url($content-bg-url) no-repeat center top;
   background-size: cover;
-  background-position-y: 140px;
+  background-position-y: 120px;
   display: flex;
   flex-direction: column;
   position: relative;
@@ -142,7 +142,6 @@ $content-bg-url: "#{$cdn-base-url}/homePageBg.png";
 // 添加按钮区域
 .addButtonSection {
   padding: 16px 20px;
-  padding-bottom: calc(90px + env(safe-area-inset-bottom, 0));
   display: flex;
   justify-content: center;
 }

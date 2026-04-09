@@ -362,7 +362,7 @@ const Profile = () => {
   ];
 
   return (
-    <div className="page-container profile-container">
+    <div className={styles.pageContainer }>
       {/* 顶部背景 */}
       <div className={styles.profileHeader}>
         <div className={styles.headerTitle}>{t('profile.title')}</div>

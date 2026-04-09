@@ -19,9 +19,8 @@ $border-color: #d4a574;
 @mixin gradient-bg {
   background: $primary-color;
 }
-
 // 主容器
-.profileContainer {
+.pageContainer {
   width: 100%;
   min-height: 100vh;
   background-color: $bg-color;
@@ -30,6 +29,10 @@ $border-color: #d4a574;
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
+  
+.page-container{
+  height: 100%;
+}
 }
 
 // 顶部背景
