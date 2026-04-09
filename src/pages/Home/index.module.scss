@@ -24,8 +24,8 @@ $content-bg-url: "#{$cdn-base-url}/homePageBg.png";
 }
 
 .homeBottom {
-  position: fixed;
-  bottom: calc(70px + env(safe-area-inset-bottom, 0));
+  position: absolute;
+  bottom: 0;
   left: 0;
   right: 0;
   z-index: 99;
@@ -168,7 +168,7 @@ $content-bg-url: "#{$cdn-base-url}/homePageBg.png";
   flex-direction: column;
   min-height: 0;
   padding: 0 16px;
-  padding-bottom: calc(90px + env(safe-area-inset-bottom, 0));
+  padding-bottom: calc(70px + env(safe-area-inset-bottom, 0));
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
