@@ -175,6 +175,7 @@ export default defineConfig({
     }
   },
   build: {
+    outDir: 'dist',   // 必须是 dist 目录
     target: 'esnext',
     minify: false, // 取消代码混淆，方便调试
     cssMinify: true,
