@@ -25,6 +25,7 @@ import type { Category } from '../../api/category';
 import SwipeableRecordItem from '../../components/SwipeableRecordItem';
 import DatePicker, { type DateMode } from '../../components/DatePicker';
 import { getLocalCategories } from '../../utils/storage';
+import { useCategories } from '../../hooks/useCategories';
 import styles from './index.module.scss';
 
 // 从本地存储获取所有分类
@@ -34,28 +35,6 @@ const getAllCategoriesFromStorage = (): Category[] => {
     return [...(stored.expense || []), ...(stored.income || [])];
   }
   return [];
-};
-
-// 默认分类（仅当本地存储没有数据时使用）
-const defaultCategories: Record<string, Category[]> = {
-  expense: [
-    { id: '1', name: '餐饮', icon: '🍜', type: 'expense' },
-    { id: '2', name: '购物', icon: '🛍️', type: 'expense' },
-    { id: '3', name: '美妆', icon: '💄', type: 'expense' },
-    { id: '4', name: '交通', icon: '🚗', type: 'expense' },
-    { id: '5', name: '住宿', icon: '🏠', type: 'expense' },
-    { id: '6', name: '娱乐', icon: '🎮', type: 'expense' },
-    { id: '7', name: '人情', icon: '❤️', type: 'expense' },
-    { id: '8', name: '旅游', icon: '✈️', type: 'expense' },
-    { id: '9', name: '医疗', icon: '💊', type: 'expense' },
-  ],
-  income: [
-    { id: '11', name: '工资', icon: '💰', type: 'income' },
-    { id: '12', name: '奖金', icon: '🎁', type: 'income' },
-    { id: '13', name: '投资', icon: '📈', type: 'income' },
-    { id: '14', name: '兼职', icon: '💼', type: 'income' },
-    { id: '15', name: '红包', icon: '🧧', type: 'income' },
-  ],
 };
 
 interface FilterState {
@@ -71,6 +50,7 @@ type SortOrder = 'asc' | 'desc';
 const Bill = () => {
   const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
+  const { allCategoryOptions } = useCategories();
   const [records, setRecords] = useState<RecordItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
@@ -520,8 +500,17 @@ const Bill = () => {
   // 获取所有分类
   const allCategories = useMemo<Category[]>(() => {
     const storedCategories = getAllCategoriesFromStorage();
-    return storedCategories.length > 0 ? storedCategories : Object.values(defaultCategories).flat();
-  }, []);
+    if (storedCategories.length > 0) {
+      return storedCategories;
+    }
+    // 使用 useCategories 提供的分类
+    return allCategoryOptions.map(opt => ({
+      id: opt.value,
+      name: opt.label,
+      icon: opt.icon,
+      type: opt.type,
+    }));
+  }, [allCategoryOptions]);
 
   // 打开日期选择器
   const openDatePicker = () => {

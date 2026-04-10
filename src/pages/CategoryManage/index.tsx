@@ -9,10 +9,7 @@ import {
 } from '@ant-design/icons';
 import type { Category, CategoryType } from '../../api/category';
 import PageHeader from '../../components/PageHeader';
-import {
-  expenseCategoryList,
-  incomeCategoryList,
-} from '../../constants/categoryIconMapping';
+import { expenseCategories, incomeCategories } from '../../constants/categories';
 import { getLocalCategories, saveLocalCategories } from '../../utils/storage';
 import styles from './index.module.scss';
 
@@ -30,29 +27,37 @@ const commonEmojis = [
   '🏠', '🏡', '🏢', '🏣', '🏤', '🏥', '🏦', '🏨', '🏩', '🏪',
 ];
 
-// 从映射文件生成分类数据
-const generateCategoriesFromMapping = (): Record<CategoryType, Category[]> => {
-  const expenseCategories: Category[] = expenseCategoryList.map((mapping, index) => ({
+// 从统一分类源生成分类数据
+const generateDefaultCategories = (): Record<CategoryType, Category[]> => {
+  // 转换支出分类
+  const expense: Category[] = expenseCategories.map((cat, index) => ({
     id: `expense_${index + 1}`,
-    name: mapping.standardName,
-    icon: mapping.defaultIcon,
+    name: cat.name,
+    icon: cat.icon,
     type: 'expense' as const,
-    englishName: mapping.englishName,
-    synonyms: mapping.synonyms,
+    subCategories: cat.subCategories.map((sub, subIndex) => ({
+      id: `expense_${index + 1}_${subIndex + 1}`,
+      name: sub.name,
+      icon: sub.icon,
+    })),
   }));
 
-  const incomeCategories: Category[] = incomeCategoryList.map((mapping, index) => ({
+  // 转换收入分类
+  const income: Category[] = incomeCategories.map((cat, index) => ({
     id: `income_${index + 1}`,
-    name: mapping.standardName,
-    icon: mapping.defaultIcon,
+    name: cat.name,
+    icon: cat.icon,
     type: 'income' as const,
-    englishName: mapping.englishName,
-    synonyms: mapping.synonyms,
+    subCategories: cat.subCategories.map((sub, subIndex) => ({
+      id: `income_${index + 1}_${subIndex + 1}`,
+      name: sub.name,
+      icon: sub.icon,
+    })),
   }));
 
   return {
-    expense: expenseCategories,
-    income: incomeCategories,
+    expense,
+    income,
     transfer: [
       { id: 'transfer_1', name: '转账', icon: '🔄', type: 'transfer' },
       { id: 'transfer_2', name: '还款', icon: '💳', type: 'transfer' },
@@ -68,8 +73,8 @@ const generateCategoriesFromMapping = (): Record<CategoryType, Category[]> => {
   };
 };
 
-// 默认分类（使用映射文件）
-const defaultCategories = generateCategoriesFromMapping();
+// 默认分类（使用统一分类源）
+const defaultCategories = generateDefaultCategories();
 
 const typeLabels: Record<CategoryType, string> = {
   expense: '支出',
