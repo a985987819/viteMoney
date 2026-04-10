@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Button, Card, Progress, Modal, Form, Input, InputNumber, DatePicker, message, Tabs, Tag } from 'antd';
+import { Button, Card, Progress, Modal, Form, Input, InputNumber, DatePicker, message, Tag, Space } from 'antd';
 import dayjs from 'dayjs';
 import BottomNav from '../../components/BottomNav';
 import {
@@ -10,14 +10,12 @@ import {
   ThunderboltOutlined,
   TeamOutlined,
   DeleteOutlined,
-  EditOutlined,
 } from '@ant-design/icons';
-import type { SavingsPlan, CreateDepositParams } from '../../api/savings';
+import type { SavingsPlan } from '../../api/savings';
 import {
   getLocalSavingsPlans,
   saveLocalSavingsPlans,
   deleteSavingsPlan,
-  makeDeposit,
   saveLocalDeposit,
 } from '../../api/savings';
 import styles from './index.module.scss';
@@ -27,12 +25,10 @@ const Savings = () => {
   const navigate = useNavigate();
   const [plans, setPlans] = useState<SavingsPlan[]>([]);
   const [createModalVisible, setCreateModalVisible] = useState(false);
-  const [depositModalVisible, setDepositModalVisible] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState<SavingsPlan | null>(null);
-  const [depositType, setDepositType] = useState<'average' | 'random' | 'manual'>('average');
-  const [manualAmount, setManualAmount] = useState<number | undefined>();
+  const [manualDepositVisible, setManualDepositVisible] = useState(false);
+  const [selectedManualPlan, setSelectedManualPlan] = useState<SavingsPlan | null>(null);
   const [form] = Form.useForm();
-  const [depositForm] = Form.useForm();
+  const [manualForm] = Form.useForm();
 
   useEffect(() => {
     loadPlans();
@@ -41,6 +37,43 @@ const Savings = () => {
   const loadPlans = () => {
     const localPlans = getLocalSavingsPlans();
     setPlans(localPlans);
+  };
+
+  const handleDeposit = (plan: SavingsPlan, type: 'average' | 'random' | 'manual', amount?: number) => {
+    if (type === 'manual') {
+      setSelectedManualPlan(plan);
+      setManualDepositVisible(true);
+      return;
+    }
+
+    let finalAmount = amount;
+
+    if (type === 'average') {
+      finalAmount = plan.dailyAverage;
+    } else if (type === 'random') {
+      finalAmount = plan.dailyAverage * (0.8 + Math.random() * 0.4);
+    }
+
+    if (!finalAmount || finalAmount <= 0) {
+      message.warning(t('savings.amountRequired', '请输入有效金额'));
+      return;
+    }
+
+    try {
+      const deposit: any = {
+        id: `deposit_${Date.now()}`,
+        planId: plan.id,
+        amount: Number(finalAmount.toFixed(2)),
+        type,
+        createdAt: new Date().toISOString(),
+      };
+
+      saveLocalDeposit(deposit);
+      loadPlans();
+      message.success(t('savings.depositSuccess', '攒钱成功'));
+    } catch (error) {
+      message.error(t('savings.depositFailed', '攒钱失败'));
+    }
   };
 
   const handleCreatePlan = async (values: any) => {
@@ -87,58 +120,6 @@ const Savings = () => {
         message.success(t('common.success'));
       },
     });
-  };
-
-  const handleOpenDeposit = (plan: SavingsPlan) => {
-    setSelectedPlan(plan);
-    setDepositType('average');
-    setManualAmount(undefined);
-    depositForm.setFieldsValue({
-      amount: plan.dailyAverage.toFixed(2),
-    });
-    setDepositModalVisible(true);
-  };
-
-  const handleDepositTypeChange = (type: 'average' | 'random' | 'manual') => {
-    setDepositType(type);
-    if (selectedPlan) {
-      if (type === 'average') {
-        depositForm.setFieldsValue({ amount: selectedPlan.dailyAverage.toFixed(2) });
-      } else if (type === 'random') {
-        const randomAmount = selectedPlan.dailyAverage * (0.8 + Math.random() * 0.4);
-        depositForm.setFieldsValue({ amount: randomAmount.toFixed(2) });
-      } else {
-        depositForm.setFieldsValue({ amount: undefined });
-      }
-    }
-  };
-
-  const handleDeposit = async () => {
-    try {
-      const values = await depositForm.validateFields();
-      if (!selectedPlan) return;
-
-      const deposit: CreateDepositParams = {
-        amount: Number(values.amount),
-        type: depositType,
-        remark: values.remark,
-      };
-
-      const newDeposit: any = {
-        id: `deposit_${Date.now()}`,
-        planId: selectedPlan.id,
-        ...deposit,
-        createdAt: new Date().toISOString(),
-      };
-
-      saveLocalDeposit(newDeposit);
-      loadPlans();
-      message.success(t('savings.depositSuccess', '攒钱成功'));
-      setDepositModalVisible(false);
-      depositForm.resetFields();
-    } catch (error) {
-      message.error(t('savings.depositFailed', '攒钱失败'));
-    }
   };
 
   const calculateProgress = (plan: SavingsPlan) => {
@@ -201,30 +182,12 @@ const Savings = () => {
             {plans.map(plan => {
               const progress = calculateProgress(plan);
               const daysRemaining = getDaysRemaining(plan);
+              const randomAmount = plan.dailyAverage * (0.8 + Math.random() * 0.4);
+
               return (
                 <Card
                   key={plan.id}
                   className={styles.planCard}
-                  actions={[
-                    <Button
-                      key="deposit"
-                      type="primary"
-                      size="small"
-                      icon={<WalletOutlined />}
-                      onClick={() => handleOpenDeposit(plan)}
-                    >
-                      {t('savings.deposit', '攒钱')}
-                    </Button>,
-                    <Button
-                      key="delete"
-                      size="small"
-                      danger
-                      icon={<DeleteOutlined />}
-                      onClick={() => handleDeletePlan(plan.id)}
-                    >
-                      {t('common.delete')}
-                    </Button>,
-                  ]}
                 >
                   <div className={styles.planHeader}>
                     <h3 className={styles.planName}>{plan.name}</h3>
@@ -233,40 +196,78 @@ const Savings = () => {
                     </Tag>
                   </div>
 
-                  <div className={styles.planProgress}>
-                    <Progress
-                      percent={progress}
-                      strokeColor={getStatusColor(plan)}
-                      format={(percent) => `${percent}%`}
-                    />
+                  <div className={styles.planActions}>
+                    <Button
+                      icon={<TeamOutlined />}
+                      onClick={() => handleDeposit(plan, 'average')}
+                      className={styles.actionBtn}
+                    >
+                      <div className={styles.actionBtnContent}>
+                        <span>{t('savings.average', '平均攒钱')}</span>
+                        <span className={styles.actionAmount}>¥{plan.dailyAverage.toFixed(2)}</span>
+                      </div>
+                    </Button>
+                    <Button
+                      icon={<ThunderboltOutlined />}
+                      onClick={() => handleDeposit(plan, 'random')}
+                      className={styles.actionBtn}
+                    >
+                      <div className={styles.actionBtnContent}>
+                        <span>{t('savings.random', '随机攒钱')}</span>
+                        <span className={styles.actionAmount}>¥{randomAmount.toFixed(2)}</span>
+                      </div>
+                    </Button>
+                    <Button
+                      icon={<WalletOutlined />}
+                      onClick={() => handleDeposit(plan, 'manual')}
+                      className={styles.actionBtn}
+                    >
+                      <div className={styles.actionBtnContent}>
+                        <span>{t('savings.manual', '主动攒钱')}</span>
+                        <span className={styles.actionHint}>{t('savings.clickInput', '点击输入')}</span>
+                      </div>
+                    </Button>
                   </div>
 
-                  <div className={styles.planStats}>
-                    <div className={styles.planStat}>
-                      <div className={styles.planStatLabel}>{t('savings.saved', '已攒')}</div>
-                      <div className={styles.planStatValue}>¥{plan.savedAmount.toFixed(2)}</div>
+                  <div className={styles.planFooter}>
+                    <div className={styles.planProgress}>
+                      <Progress
+                        percent={progress}
+                        strokeColor={getStatusColor(plan)}
+                        format={(percent) => `${percent}%`}
+                        size="small"
+                      />
                     </div>
-                    <div className={styles.planStat}>
-                      <div className={styles.planStatLabel}>{t('savings.target', '目标')}</div>
-                      <div className={styles.planStatValue}>¥{plan.targetAmount.toFixed(2)}</div>
-                    </div>
-                    <div className={styles.planStat}>
-                      <div className={styles.planStatLabel}>{t('savings.dailyAverage', '每日均攒')}</div>
-                      <div className={styles.planStatValue}>¥{plan.dailyAverage.toFixed(2)}</div>
-                    </div>
-                    <div className={styles.planStat}>
-                      <div className={styles.planStatLabel}>{t('savings.daysRemaining', '剩余天数')}</div>
-                      <div className={styles.planStatValue}>{daysRemaining > 0 ? daysRemaining : 0}天</div>
-                    </div>
-                  </div>
 
-                  <div className={styles.planDates}>
-                    <span className={styles.planDate}>
-                      {t('savings.startDate', '开始日期')}: {dayjs(plan.startDate).format('YYYY-MM-DD')}
-                    </span>
-                    <span className={styles.planDate}>
-                      {t('savings.endDate', '截止日期')}: {dayjs(plan.endDate).format('YYYY-MM-DD')}
-                    </span>
+                    <div className={styles.planStatsCompact}>
+                      <div className={styles.planStatCompact}>
+                        <div className={styles.planStatLabel}>{t('savings.saved', '已攒')}</div>
+                        <div className={styles.planStatValue}>¥{plan.savedAmount.toFixed(2)}</div>
+                      </div>
+                      <div className={styles.planStatCompact}>
+                        <div className={styles.planStatLabel}>{t('savings.target', '目标')}</div>
+                        <div className={styles.planStatValue}>¥{plan.targetAmount.toFixed(2)}</div>
+                      </div>
+                      <div className={styles.planStatCompact}>
+                        <div className={styles.planStatLabel}>{t('savings.dailyAverage', '每日均攒')}</div>
+                        <div className={styles.planStatValue}>¥{plan.dailyAverage.toFixed(2)}</div>
+                      </div>
+                      <div className={styles.planStatCompact}>
+                        <div className={styles.planStatLabel}>{t('savings.daysRemaining', '剩余天数')}</div>
+                        <div className={styles.planStatValue}>{daysRemaining > 0 ? daysRemaining : 0}</div>
+                      </div>
+                    </div>
+
+                    <div className={styles.planDelete}>
+                      <Button
+                        size="small"
+                        danger
+                        icon={<DeleteOutlined />}
+                        onClick={() => handleDeletePlan(plan.id)}
+                      >
+                        {t('common.delete')}
+                      </Button>
+                    </div>
                   </div>
                 </Card>
               );
@@ -323,58 +324,31 @@ const Savings = () => {
         </Form>
       </Modal>
 
-      {/* 攒钱弹窗 */}
+      {/* 主动攒钱输入弹窗 */}
       <Modal
-        title={t('savings.depositTo', '攒钱到') + `: ${selectedPlan?.name || ''}`}
-        open={depositModalVisible}
+        title={t('savings.manualDeposit', '主动攒钱')}
+        open={manualDepositVisible}
         onCancel={() => {
-          setDepositModalVisible(false);
-          depositForm.resetFields();
+          setManualDepositVisible(false);
+          manualForm.resetFields();
         }}
-        onOk={handleDeposit}
+        onOk={() => {
+          manualForm.submit();
+        }}
         okText={t('savings.confirmDeposit', '确认攒钱')}
         cancelText={t('common.cancel')}
       >
-        <Form form={depositForm} layout="vertical">
-          <Form.Item label={t('savings.depositType', '攒钱方式')}>
-            <Tabs
-              activeKey={depositType}
-              onChange={(key) => handleDepositTypeChange(key as 'average' | 'random' | 'manual')}
-              items={[
-                {
-                  key: 'average',
-                  label: t('savings.average', '平均攒钱'),
-                  children: (
-                    <div className={styles.depositTypeDesc}>
-                      <TeamOutlined /> {t('savings.averageDesc', '按每日平均金额攒钱')}
-                      <div className={styles.amountHint}>¥{selectedPlan?.dailyAverage.toFixed(2)}</div>
-                    </div>
-                  ),
-                },
-                {
-                  key: 'random',
-                  label: t('savings.random', '随机攒钱'),
-                  children: (
-                    <div className={styles.depositTypeDesc}>
-                      <ThunderboltOutlined /> {t('savings.randomDesc', '随机金额（±20% 浮动）')}
-                      <div className={styles.amountHint}>
-                        ¥{(selectedPlan ? selectedPlan.dailyAverage * (0.8 + Math.random() * 0.4) : 0).toFixed(2)}
-                      </div>
-                    </div>
-                  ),
-                },
-                {
-                  key: 'manual',
-                  label: t('savings.manual', '主动攒钱'),
-                  children: (
-                    <div className={styles.depositTypeDesc}>
-                      <WalletOutlined /> {t('savings.manualDesc', '自定义攒钱金额')}
-                    </div>
-                  ),
-                },
-              ]}
-            />
-          </Form.Item>
+        <Form
+          form={manualForm}
+          layout="vertical"
+          onFinish={(values) => {
+            if (selectedManualPlan) {
+              handleDeposit(selectedManualPlan, 'manual', values.amount);
+              setManualDepositVisible(false);
+              manualForm.resetFields();
+            }
+          }}
+        >
           <Form.Item
             name="amount"
             label={t('savings.amount', '金额')}
@@ -388,9 +362,6 @@ const Savings = () => {
               addonAfter="元"
               placeholder={t('savings.amountPlaceholder', '输入攒钱金额')}
             />
-          </Form.Item>
-          <Form.Item name="remark" label={t('savings.remark', '备注')}>
-            <Input.TextArea rows={2} placeholder={t('savings.remarkPlaceholder', '可选，记录这次攒钱的原因')} />
           </Form.Item>
         </Form>
       </Modal>

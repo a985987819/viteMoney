@@ -120,20 +120,7 @@
 
   :global {
     .ant-card-body {
-      padding: 16px;
-    }
-
-    .ant-card-actions {
-      background: #fafafa;
-      border-top: 2px solid $stardew-wood-light;
-
-      li {
-        margin: 8px 0;
-
-        button {
-          border-radius: 6px;
-        }
-      }
+      padding: 12px;
     }
   }
 }
@@ -142,27 +129,87 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 
 .planName {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
   color: $stardew-wood-deep;
   margin: 0;
   flex: 1;
 }
 
-.planProgress {
-  margin-bottom: 16px;
+// 攒钱操作按钮区域
+.planActions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 12px;
+}
 
+.actionBtn {
+  height: auto;
+  min-height: 64px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 4px;
+  border-radius: 8px;
+  border: 2px solid $stardew-wood-light;
+  background: linear-gradient(
+    135deg,
+    $stardew-parchment-light 0%,
+    $stardew-parchment 100%
+  );
+  transition: all 0.3s ease;
+
+  &:hover {
+    border-color: $stardew-wood-mid;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.actionBtnContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.actionAmount {
+  font-size: 14px;
+  font-weight: bold;
+  color: $stardew-wood-deep;
+  font-family: "PixelFont", monospace;
+}
+
+.actionHint {
+  font-size: 12px;
+  color: #999;
+}
+
+.planFooter {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.planProgress {
   :global {
     .ant-progress {
       .ant-progress-bg {
-        border-radius: 8px;
+        border-radius: 4px;
       }
 
       .ant-progress-text {
+        font-size: 12px;
         font-weight: 600;
         color: $stardew-wood-deep;
       }
@@ -170,57 +217,37 @@
   }
 }
 
-.planStats {
+.planStatsCompact {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-  margin-bottom: 16px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+  padding: 8px;
+  background: rgba($stardew-wood-light, 0.2);
+  border-radius: 6px;
 }
 
-.planStat {
+.planStatCompact {
   text-align: center;
-  padding: 10px;
-  background: linear-gradient(
-    135deg,
-    $stardew-parchment-light 0%,
-    $stardew-parchment 100%
-  );
-  border-radius: 8px;
-  border: 1px solid $stardew-wood-light;
+  padding: 4px;
 }
 
 .planStatLabel {
-  font-size: 12px;
-  color: #666;
-  margin-bottom: 4px;
+  font-size: 10px;
+  color: #888;
+  margin-bottom: 2px;
 }
 
 .planStatValue {
-  font-size: 16px;
+  font-size: 12px;
   font-weight: bold;
   color: $stardew-wood-deep;
   font-family: "PixelFont", monospace;
 }
 
-.planDates {
-  display: flex;
-  justify-content: space-between;
-  font-size: 12px;
-  color: #888;
-  padding-top: 12px;
+.planDelete {
+  text-align: right;
+  padding-top: 8px;
   border-top: 1px solid $stardew-wood-light;
-}
-
-.planDate {
-  flex: 1;
-
-  &:first-child {
-    text-align: left;
-  }
-
-  &:last-child {
-    text-align: right;
-  }
 }
 
 // 攒钱方式描述
