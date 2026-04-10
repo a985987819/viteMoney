@@ -1,19 +1,28 @@
 @use "../../styles/stardew-theme.scss" as *;
 
+// 秋季丰收配色
+$autumn-gold: #d4a574;
+$autumn-orange: #e67e22;
+$autumn-pumpkin: #f39c12;
+$autumn-leaf: #c0392b;
+$autumn-brown: #6b4423;
+$autumn-cream: #fef9e7;
+$autumn-wheat: #f5deb3;
+
 .statisticsPage {
   display: flex;
   flex-direction: column;
   height: 100vh;
   background: linear-gradient(
     180deg,
-    $stardew-parchment 0%,
-    $stardew-panel-bg 100%
+    $autumn-cream 0%,
+    $autumn-wheat 100%
   );
 }
 
 .tabHeader {
-  background: $stardew-panel-bg;
-  border-bottom: 3px solid $stardew-wood-dark;
+  background: $autumn-wheat;
+  border-bottom: 3px solid $autumn-brown;
   padding-top: env(safe-area-inset-top, 0);
 
   :global {
@@ -29,23 +38,23 @@
       .ant-tabs-tab {
         font-family: "PixelFont", monospace;
         font-size: 14px;
-        color: $stardew-text-secondary;
+        color: $autumn-brown;
         padding: 12px 24px;
 
         &:hover {
-          color: $stardew-wood-dark;
+          color: $autumn-orange;
         }
 
         &.ant-tabs-tab-active {
           .ant-tabs-tab-btn {
-            color: $stardew-wood-dark;
+            color: $autumn-orange;
             font-weight: bold;
           }
         }
       }
 
       .ant-tabs-ink-bar {
-        background: $stardew-wood-dark;
+        background: $autumn-orange;
         height: 3px;
       }
     }

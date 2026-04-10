@@ -113,10 +113,27 @@ const CATEGORY_EMOJI_MAP: Record<string, string> = {
 
 /**
  * 获取分类的Emoji图标
- * @param iconId 图标ID或分类名称
+ * @param iconId 图标ID或分类名称或Emoji
  * @returns Emoji字符串
  */
 export function getCategoryEmoji(iconId: string): string {
+  // 如果已经是Emoji（包含中文字符或特殊符号），直接返回
+  if (iconId && /[\u{1F600}-\u{1F64F}]/u.test(iconId)) {
+    return iconId;
+  }
+  if (iconId && /[\u{1F300}-\u{1F5FF}]/u.test(iconId)) {
+    return iconId;
+  }
+  if (iconId && /[\u{1F680}-\u{1F6FF}]/u.test(iconId)) {
+    return iconId;
+  }
+  if (iconId && /[\u{2600}-\u{26FF}]/u.test(iconId)) {
+    return iconId;
+  }
+  if (iconId && /[\u{2700}-\u{27BF}]/u.test(iconId)) {
+    return iconId;
+  }
+
   // 首先尝试从映射表中获取
   if (CATEGORY_EMOJI_MAP[iconId]) {
     return CATEGORY_EMOJI_MAP[iconId];

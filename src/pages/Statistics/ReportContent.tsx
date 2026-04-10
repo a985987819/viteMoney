@@ -8,6 +8,7 @@ import {
 } from '@ant-design/icons';
 import * as echarts from 'echarts';
 import dayjs from 'dayjs';
+import { getCategoryEmoji } from '../../utils/spriteIcons';
 import { getPixelPieOption } from '../../utils/echartsPixelTheme';
 import type { ReportData, CategoryStats, DailyStats, RecordItem } from '../../api/record';
 import { getReportData, getRecords } from '../../api/record';
@@ -308,8 +309,9 @@ const ReportContent = () => {
 
       if (showExpense) {
         chartSourceData.expense.forEach(item => {
+          const icon = getCategoryEmoji(item.categoryIcon);
           pieData.push({
-            name: `${item.categoryIcon} ${item.category}`,
+            name: `${icon} ${item.category}`,
             value: item.amount,
             itemStyle: { color: '#c45c48' },
           });
@@ -317,8 +319,9 @@ const ReportContent = () => {
       }
       if (showIncome) {
         chartSourceData.income.forEach(item => {
+          const icon = getCategoryEmoji(item.categoryIcon);
           pieData.push({
-            name: `${item.categoryIcon} ${item.category}`,
+            name: `${icon} ${item.category}`,
             value: item.amount,
             itemStyle: { color: '#4a9c3d' },
           });
@@ -652,7 +655,7 @@ const ReportContent = () => {
                   <>
                     <List.Item className={styles.categoryItem}>
                       <div className={styles.categoryInfo}>
-                        <span className={styles.categoryIcon}>{item.categoryIcon}</span>
+                        <span className={styles.categoryIcon}>{getCategoryEmoji(item.categoryIcon)}</span>
                         <div className={styles.categoryDetail}>
                           <span className={styles.categoryName}>{item.category}</span>
                           <span className={styles.categoryCount}>

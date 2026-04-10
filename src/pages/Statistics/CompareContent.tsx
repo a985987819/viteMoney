@@ -3,6 +3,7 @@ import { Empty, Button } from 'antd';
 import { SwapOutlined } from '@ant-design/icons';
 import * as echarts from 'echarts';
 import dayjs from 'dayjs';
+import { getCategoryEmoji } from '../../utils/spriteIcons';
 import type { ReportData, CategoryStats, RecordItem } from '../../api/record';
 import { getReportData, getRecords } from '../../api/record';
 import { getLocalRecords } from '../../utils/storage';
@@ -32,19 +33,19 @@ interface CategoryCompare {
 const CompareContent = () => {
   const { isLoggedIn } = useAuth();
   const [loading, setLoading] = useState(false);
-  
+
   // 两个月份选择
   const [baseMonth, setBaseMonth] = useState(dayjs());
   const [compareMonth, setCompareMonth] = useState(dayjs().subtract(1, 'month'));
-  
+
   // 日期选择器状态
   const [datePickerVisible, setDatePickerVisible] = useState(false);
   const [datePickerTarget, setDatePickerTarget] = useState<'base' | 'compare'>('base');
-  
+
   // 两个月的数据
   const [baseData, setBaseData] = useState<MonthData | null>(null);
   const [compareData, setCompareData] = useState<MonthData | null>(null);
-  
+
   // 图表引用
   const chartRef = useRef<HTMLDivElement>(null);
   const chartInstance = useRef<echarts.ECharts | null>(null);
@@ -185,24 +186,24 @@ const CompareContent = () => {
         base: base.totalExpense,
         compare: compare.totalExpense,
         diff: base.totalExpense - compare.totalExpense,
-        diffPercent: compare.totalExpense > 0 
-          ? ((base.totalExpense - compare.totalExpense) / compare.totalExpense) * 100 
+        diffPercent: compare.totalExpense > 0
+          ? ((base.totalExpense - compare.totalExpense) / compare.totalExpense) * 100
           : 0,
       },
       income: {
         base: base.totalIncome,
         compare: compare.totalIncome,
         diff: base.totalIncome - compare.totalIncome,
-        diffPercent: compare.totalIncome > 0 
-          ? ((base.totalIncome - compare.totalIncome) / compare.totalIncome) * 100 
+        diffPercent: compare.totalIncome > 0
+          ? ((base.totalIncome - compare.totalIncome) / compare.totalIncome) * 100
           : 0,
       },
       balance: {
         base: base.balance,
         compare: compare.balance,
         diff: base.balance - compare.balance,
-        diffPercent: compare.balance !== 0 
-          ? ((base.balance - compare.balance) / Math.abs(compare.balance)) * 100 
+        diffPercent: compare.balance !== 0
+          ? ((base.balance - compare.balance) / Math.abs(compare.balance)) * 100
           : 0,
       },
     };
@@ -223,19 +224,19 @@ const CompareContent = () => {
 
     // 获取所有分类
     const allKeys = new Set([...baseCategories.keys(), ...compareCategories.keys()]);
-    
+
     const result: CategoryCompare[] = [];
     allKeys.forEach(key => {
       const baseItem = baseCategories.get(key);
       const compareItem = compareCategories.get(key);
-      
+
       const baseAmount = baseItem?.amount || 0;
       const compareAmount = compareItem?.amount || 0;
       const diff = baseAmount - compareAmount;
-      
+
       result.push({
         category: baseItem?.category || compareItem?.category || '',
-        categoryIcon: baseItem?.categoryIcon || compareItem?.categoryIcon || '📦',
+        categoryIcon: getCategoryEmoji(baseItem?.categoryIcon || compareItem?.categoryIcon || '📦'),
         type: (baseItem?.type || compareItem?.type) as 'expense' | 'income',
         baseAmount,
         compareAmount,
@@ -379,23 +380,23 @@ const CompareContent = () => {
     <div className={styles.compareContent}>
       {/* 月份选择器 */}
       <div className={styles.monthSelector}>
-        <div 
-          className={styles.monthBox} 
+        <div
+          className={styles.monthBox}
           onClick={() => openDatePicker('base')}
         >
           <span className={styles.monthLabel}>基准月</span>
           <span className={styles.monthValue}>{baseMonth.format('YYYY年M月')}</span>
         </div>
-        
-        <Button 
-          type="text" 
-          icon={<SwapOutlined />} 
+
+        <Button
+          type="text"
+          icon={<SwapOutlined />}
           onClick={swapMonths}
           className={styles.swapBtn}
         />
-        
-        <div 
-          className={styles.monthBox} 
+
+        <div
+          className={styles.monthBox}
           onClick={() => openDatePicker('compare')}
         >
           <span className={styles.monthLabel}>对比月</span>
@@ -416,7 +417,7 @@ const CompareContent = () => {
             {formatChange(compareResult.expense.diff, compareResult.expense.diffPercent)}
           </div>
         </div>
-        
+
         <div className={styles.summaryCard}>
           <span className={styles.cardLabel}>收入对比</span>
           <div className={styles.cardValues}>
@@ -428,7 +429,7 @@ const CompareContent = () => {
             {formatChange(compareResult.income.diff, compareResult.income.diffPercent)}
           </div>
         </div>
-        
+
         <div className={styles.summaryCard}>
           <span className={styles.cardLabel}>结余对比</span>
           <div className={styles.cardValues}>
@@ -454,7 +455,7 @@ const CompareContent = () => {
           {categoryCompare.slice(0, 10).map((item) => (
             <div key={`${item.type}-${item.category}`} className={styles.categoryItem}>
               <div className={styles.categoryInfo}>
-                <span className={styles.categoryIcon}>{item.categoryIcon}</span>
+                <span className={styles.categoryIcon}>{getCategoryEmoji(item.categoryIcon)}</span>
                 <div className={styles.categoryDetail}>
                   <span className={styles.categoryName}>{item.category}</span>
                   <span className={styles.categoryType}>{item.type === 'expense' ? '支出' : '收入'}</span>
