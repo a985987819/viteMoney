@@ -1,14 +1,22 @@
 @use "../../styles/stardew-theme.scss" as *;
 
+// 冬季雪景配色
+$winter-sky: #87ceeb;
+$winter-sky-deep: #5dade2;
+$winter-snow: #f0f8ff;
+$winter-snow-light: #ffffff;
+$winter-ice: #b8d4e3;
+$winter-wood: #6b4423;
+
 @mixin card-shadow {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 12px rgba(93, 173, 226, 0.15);
 }
 
 .pageContainer {
   width: 100%;
   height: 100vh;
   height: 100dvh;
-  background-color: $bg-color;
+  background: linear-gradient(180deg, $winter-snow 0%, $winter-ice 100%);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -16,7 +24,7 @@
 
 .headerSection {
   flex-shrink: 0;
-  background: $primary-color;
+  background: linear-gradient(135deg, $winter-sky 0%, $winter-sky-deep 100%);
   padding: 16px 20px;
   padding-top: calc(16px + env(safe-area-inset-top, 0));
 }
@@ -28,7 +36,7 @@
 
 .backBtn {
   font-size: 20px;
-  color: $stardew-text-primary;
+  color: $winter-wood;
   cursor: pointer;
   width: 32px;
   height: 32px;
@@ -38,7 +46,7 @@
 .headerTitle {
   font-size: 18px;
   font-weight: bold;
-  color: $stardew-text-primary;
+  color: $winter-wood;
   font-family: "PixelFont", monospace;
 }
 
@@ -60,19 +68,19 @@
   .typeTab {
     flex: 1;
     padding: 10px 16px;
-    border: 2px solid $border-color;
+    border: 2px solid $winter-ice;
     border-radius: 8px;
-    background-color: rgba($white, 0.5);
-    color: $text-secondary;
+    background-color: rgba($winter-snow-light, 0.8);
+    color: #7f8c8d;
     font-family: "PixelFont", monospace;
     font-size: 14px;
     cursor: pointer;
     @include transition;
 
     &.active {
-      background-color: $primary-color;
-      border-color: $primary-color;
-      color: $white;
+      background-color: $winter-sky-deep;
+      border-color: $winter-sky-deep;
+      color: $winter-snow-light;
     }
 
     &:active {
@@ -82,17 +90,18 @@
 }
 
 .quickRecordForm {
-  background-color: $white;
+  background: linear-gradient(135deg, $winter-snow-light 0%, $winter-snow 100%);
   border-radius: 12px;
   padding: 16px;
   margin-bottom: 16px;
+  border: 2px solid $winter-ice;
   @include card-shadow;
 }
 
 .formTitle {
   font-size: 15px;
   font-weight: 600;
-  color: $text-primary;
+  color: $winter-wood;
   margin-bottom: 16px;
   font-family: "PixelFont", monospace;
 }
@@ -103,7 +112,7 @@
 
 .formLabel {
   font-size: 13px;
-  color: $text-secondary;
+  color: #7f8c8d;
   margin-bottom: 6px;
   font-family: "PixelFont", monospace;
 }
@@ -120,7 +129,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: rgba($bg-color, 0.3);
+  background-color: rgba($winter-ice, 0.3);
   border: 2px solid transparent;
   border-radius: 8px;
   cursor: pointer;
@@ -133,8 +142,8 @@
   }
 
   &.selected {
-    border-color: $primary-color;
-    background-color: rgba($primary-color, 0.15);
+    border-color: $winter-sky-deep;
+    background-color: rgba($winter-sky-deep, 0.15);
   }
 
   &.disabled {
@@ -150,7 +159,7 @@
 
 .categoryName {
   font-size: 9px;
-  color: $text-primary;
+  color: $winter-wood;
   text-align: center;
   max-width: 100%;
   overflow: hidden;
@@ -174,13 +183,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba($bg-color, 0.3);
+  background-color: rgba($winter-ice, 0.3);
   border: 2px solid transparent;
   border-radius: 8px;
   cursor: pointer;
   @include transition;
   font-size: 12px;
-  color: $text-primary;
+  color: $winter-wood;
   font-family: "PixelFont", monospace;
 
   &:active {
@@ -188,25 +197,25 @@
   }
 
   &.selected {
-    border-color: $primary-color;
-    background-color: rgba($primary-color, 0.15);
+    border-color: $winter-sky-deep;
+    background-color: rgba($winter-sky-deep, 0.15);
   }
 }
 
 .amountInput {
   width: 100%;
   height: 44px;
-  border: 2px solid $border-color;
+  border: 2px solid $winter-ice;
   border-radius: 8px;
   padding: 0 12px;
   font-size: 18px;
   font-family: "PixelFont", monospace;
-  color: $text-primary;
-  background-color: rgba($white, 0.8);
+  color: $winter-wood;
+  background-color: rgba($winter-snow-light, 0.8);
 
   &:focus {
     outline: none;
-    border-color: $primary-color;
+    border-color: $winter-sky-deep;
   }
 }
 
@@ -214,10 +223,10 @@
   width: 100%;
   height: 48px;
   margin-top: 16px;
-  background: $primary-color;
-  border: 3px solid $stardew-wood-dark;
+  background: linear-gradient(135deg, $winter-sky 0%, $winter-sky-deep 100%);
+  border: 3px solid $winter-sky-deep;
   border-radius: 8px;
-  color: $stardew-text-primary;
+  color: $winter-snow-light;
   font-family: "PixelFont", monospace;
   font-size: 16px;
   font-weight: bold;
@@ -226,7 +235,7 @@
 
   &:active {
     transform: scale(0.98);
-    background-color: #b8936a;
+    background: linear-gradient(135deg, $winter-sky-deep 0%, $winter-sky 100%);
   }
 
   &.disabled {
@@ -236,23 +245,24 @@
 }
 
 .quickRecordList {
-  background-color: $white;
+  background: linear-gradient(135deg, $winter-snow-light 0%, $winter-snow 100%);
   border-radius: 12px;
   padding: 16px;
+  border: 2px solid $winter-ice;
   @include card-shadow;
 }
 
 .listTitle {
   font-size: 15px;
   font-weight: 600;
-  color: $text-primary;
+  color: $winter-wood;
   margin-bottom: 12px;
   font-family: "PixelFont", monospace;
 }
 
 .listEmpty {
   text-align: center;
-  color: $text-tertiary;
+  color: #7f8c8d;
   padding: 24px;
   font-size: 13px;
 }
@@ -261,7 +271,7 @@
   display: flex;
   align-items: center;
   padding: 10px;
-  background-color: rgba($bg-color, 0.3);
+  background-color: rgba($winter-ice, 0.3);
   border-radius: 8px;
   margin-bottom: 8px;
 
@@ -281,25 +291,25 @@
 
 .recordCategory {
   font-size: 14px;
-  color: $text-primary;
+  color: $winter-wood;
   font-weight: 500;
 }
 
 .recordSubCategory {
   font-size: 12px;
-  color: $text-tertiary;
+  color: #7f8c8d;
   margin-top: 2px;
 }
 
 .recordAmount {
   font-size: 16px;
-  color: $danger-color;
+  color: #c45c48;
   font-family: "PixelFont", monospace;
   font-weight: bold;
   margin-right: 12px;
 
   &.income {
-    color: $success-color;
+    color: #4a9c3d;
   }
 }
 
@@ -307,7 +317,7 @@
   padding: 6px 10px;
   background-color: transparent;
   border: none;
-  color: $danger-color;
+  color: #c45c48;
   font-size: 12px;
   cursor: pointer;
 

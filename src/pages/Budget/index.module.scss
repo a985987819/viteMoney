@@ -1,10 +1,18 @@
 @use '../../styles/stardew-theme.scss' as *;
 
+// 冬季雪景配色
+$winter-sky: #87ceeb;
+$winter-sky-deep: #5dade2;
+$winter-snow: #f0f8ff;
+$winter-snow-light: #ffffff;
+$winter-ice: #b8d4e3;
+$winter-wood: #6b4423;
+
 .budgetPage {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background: $stardew-panel-bg;
+  background: linear-gradient(180deg, $winter-snow 0%, $winter-ice 100%);
 }
 
 .loadingContainer {
@@ -12,17 +20,17 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background: $stardew-panel-bg;
+  background: linear-gradient(180deg, $winter-snow 0%, $winter-ice 100%);
 }
 
 .addBtn {
-  background: $stardew-wood-dark;
-  border-color: $stardew-wood-dark;
+  background: linear-gradient(135deg, $winter-sky 0%, $winter-sky-deep 100%);
+  border-color: $winter-sky-deep;
   font-family: 'PixelFont', monospace;
 
   &:hover {
-    background: $stardew-wood-deep;
-    border-color: $stardew-wood-deep;
+    background: linear-gradient(135deg, $winter-sky-deep 0%, $winter-sky 100%);
+    border-color: $winter-sky;
   }
 }
 
@@ -35,10 +43,10 @@
 // 当前预算卡片
 .currentBudgetCard {
   margin-bottom: 16px;
-  background: rgba(white, 0.9);
-  border: 2px solid $stardew-wood-dark;
+  background: linear-gradient(135deg, $winter-snow-light 0%, $winter-snow 100%);
+  border: 2px solid $winter-ice;
   border-radius: 12px;
-  box-shadow: 4px 4px 0 rgba($stardew-wood-dark, 0.2);
+  box-shadow: 0 4px 12px rgba(93, 173, 226, 0.15);
 
   :global {
     .ant-card-body {
@@ -60,11 +68,11 @@
   gap: 8px;
   font-size: 16px;
   font-weight: bold;
-  color: $stardew-text-primary;
+  color: $winter-wood;
   font-family: 'PixelFont', monospace;
 
   svg {
-    color: $stardew-wood-dark;
+    color: $winter-sky-deep;
   }
 }
 
@@ -76,7 +84,7 @@
   text-align: center;
   margin-top: 8px;
   font-size: 14px;
-  color: $stardew-text-secondary;
+  color: #7f8c8d;
   font-family: 'PixelFont', monospace;
 }
 
@@ -89,14 +97,14 @@
 .statItem {
   text-align: center;
   padding: 12px;
-  background: rgba($stardew-parchment, 0.5);
+  background: rgba($winter-ice, 0.3);
   border-radius: 8px;
-  border: 1px solid rgba($stardew-wood-dark, 0.2);
+  border: 1px solid $winter-ice;
 }
 
 .statLabel {
   font-size: 12px;
-  color: $stardew-text-secondary;
+  color: #7f8c8d;
   margin-bottom: 4px;
   font-family: 'PixelFont', monospace;
 }
@@ -104,25 +112,25 @@
 .statValue {
   font-size: 16px;
   font-weight: bold;
-  color: $stardew-text-primary;
+  color: $winter-wood;
   font-family: 'PixelFont', monospace;
 
   &.expense {
-    color: $stardew-danger;
+    color: #c45c48;
   }
 
   &.remaining {
-    color: $stardew-success;
+    color: #4a9c3d;
   }
 }
 
 // 空状态卡片
 .emptyCard {
   margin-bottom: 16px;
-  background: rgba(white, 0.9);
-  border: 2px solid $stardew-wood-dark;
+  background: linear-gradient(135deg, $winter-snow-light 0%, $winter-snow 100%);
+  border: 2px solid $winter-ice;
   border-radius: 12px;
-  box-shadow: 4px 4px 0 rgba($stardew-wood-dark, 0.2);
+  box-shadow: 0 4px 12px rgba(93, 173, 226, 0.15);
 
   :global {
     .ant-card-body {
@@ -134,29 +142,30 @@
 
 .setBudgetBtn {
   margin-top: 16px;
-  background: $stardew-wood-dark;
-  border-color: $stardew-wood-dark;
+  background: linear-gradient(135deg, $winter-sky 0%, $winter-sky-deep 100%);
+  border-color: $winter-sky-deep;
   font-family: 'PixelFont', monospace;
 
   &:hover {
-    background: $stardew-wood-deep;
-    border-color: $stardew-wood-deep;
+    background: linear-gradient(135deg, $winter-sky-deep 0%, $winter-sky 100%);
+    border-color: $winter-sky;
   }
 }
 
 // 统计卡片
 .statsCard {
   margin-bottom: 16px;
-  background: rgba(white, 0.9);
-  border: 2px solid $stardew-wood-dark;
+  background: linear-gradient(135deg, $winter-snow-light 0%, $winter-snow 100%);
+  border: 2px solid $winter-ice;
   border-radius: 12px;
-  box-shadow: 4px 4px 0 rgba($stardew-wood-dark, 0.2);
+  box-shadow: 0 4px 12px rgba(93, 173, 226, 0.15);
 
   :global {
     .ant-card-head {
       background: transparent;
-      border-bottom: 1px solid rgba($stardew-wood-dark, 0.2);
+      border-bottom: 1px solid $winter-ice;
       font-family: 'PixelFont', monospace;
+      color: $winter-wood;
     }
 
     .ant-card-body {
@@ -174,14 +183,14 @@
 .compareItem {
   text-align: center;
   padding: 16px;
-  background: rgba($stardew-parchment, 0.5);
+  background: rgba($winter-ice, 0.3);
   border-radius: 8px;
-  border: 1px solid rgba($stardew-wood-dark, 0.2);
+  border: 1px solid $winter-ice;
 }
 
 .compareLabel {
   font-size: 12px;
-  color: $stardew-text-secondary;
+  color: #7f8c8d;
   margin-bottom: 8px;
   font-family: 'PixelFont', monospace;
 }
@@ -189,22 +198,23 @@
 .compareValue {
   font-size: 20px;
   font-weight: bold;
-  color: $stardew-text-primary;
+  color: $winter-wood;
   font-family: 'PixelFont', monospace;
 }
 
 // 历史预算卡片
 .historyCard {
-  background: rgba(white, 0.9);
-  border: 2px solid $stardew-wood-dark;
+  background: linear-gradient(135deg, $winter-snow-light 0%, $winter-snow 100%);
+  border: 2px solid $winter-ice;
   border-radius: 12px;
-  box-shadow: 4px 4px 0 rgba($stardew-wood-dark, 0.2);
+  box-shadow: 0 4px 12px rgba(93, 173, 226, 0.15);
 
   :global {
     .ant-card-head {
       background: transparent;
-      border-bottom: 1px solid rgba($stardew-wood-dark, 0.2);
+      border-bottom: 1px solid $winter-ice;
       font-family: 'PixelFont', monospace;
+      color: $winter-wood;
     }
 
     .ant-card-body {
@@ -215,7 +225,7 @@
 
 .budgetListItem {
   padding: 12px 16px;
-  border-bottom: 1px solid rgba($stardew-wood-dark, 0.1);
+  border-bottom: 1px solid $winter-ice;
 
   &:last-child {
     border-bottom: none;
@@ -227,6 +237,7 @@
   align-items: center;
   gap: 8px;
   font-family: 'PixelFont', monospace;
+  color: $winter-wood;
 }
 
 .budgetItemDesc {
@@ -244,7 +255,7 @@
 
 .budgetItemStats {
   font-size: 12px;
-  color: $stardew-text-secondary;
+  color: #7f8c8d;
   white-space: nowrap;
   font-family: 'PixelFont', monospace;
 }
@@ -261,7 +272,7 @@
     display: block;
     margin-bottom: 8px;
     font-size: 14px;
-    color: $stardew-text-primary;
+    color: $winter-wood;
     font-family: 'PixelFont', monospace;
   }
 }

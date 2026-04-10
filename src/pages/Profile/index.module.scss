@@ -1,17 +1,27 @@
 @use "../../styles/stardew-theme.scss" as *;
 
+// 冬季雪景配色
+$winter-sky: #87ceeb;
+$winter-sky-deep: #5dade2;
+$winter-snow: #f0f8ff;
+$winter-snow-light: #ffffff;
+$winter-ice: #b8d4e3;
+$winter-wood: #6b4423;
+$winter-wood-light: #8b5a2b;
+
 @mixin card-shadow {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 8px rgba(93, 173, 226, 0.15);
 }
 
 @mixin gradient-bg {
-  background: $primary-color;
+  background: linear-gradient(135deg, $winter-sky 0%, $winter-sky-deep 100%);
 }
-// 主容器
+
+// 主容器 - 冬季雪景背景
 .pageContainer {
   width: 100%;
   min-height: 100vh;
-  background-color: $bg-color;
+  background: linear-gradient(180deg, $winter-snow 0%, $winter-ice 100%);
   display: flex;
   flex-direction: column;
   overflow-y: auto;
@@ -23,26 +33,28 @@
   }
 }
 
-// 顶部背景
+// 顶部背景 - 冬季天空
 .profileHeader {
   padding: 16px;
-  background: $primary-color;
+  background: linear-gradient(135deg, $winter-sky 0%, $winter-sky-deep 100%);
   flex-shrink: 0;
 }
 
 .headerTitle {
   font-size: 17px;
   font-weight: 600;
-  color: $text-primary;
+  color: #ffffff;
   text-align: center;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
-// 用户信息卡片
+// 用户信息卡片 - 雪地风格
 .userCard {
   margin: -10px 16px 12px;
   padding: 20px;
-  background-color: $white;
+  background: linear-gradient(135deg, $winter-snow-light 0%, $winter-snow 100%);
   border-radius: 12px;
+  border: 2px solid $winter-ice;
   @include card-shadow;
   flex-shrink: 0;
 }
@@ -55,8 +67,9 @@
 }
 
 .userAvatar {
-  background-color: $primary-color;
+  background: linear-gradient(135deg, $winter-sky 0%, $winter-sky-deep 100%);
   flex-shrink: 0;
+  border: 2px solid $winter-ice;
 }
 
 .userDetails {
@@ -99,12 +112,13 @@
   }
 }
 
-// 同步设置
+// 同步设置 - 雪地风格
 .syncSection {
   margin: 0 16px 12px;
   padding: 16px;
-  background-color: $white;
+  background: linear-gradient(135deg, $winter-snow-light 0%, $winter-snow 100%);
   border-radius: 12px;
+  border: 2px solid $winter-ice;
   flex-shrink: 0;
 }
 
@@ -120,18 +134,18 @@
 
 .syncIcon {
   font-size: 24px;
-  color: $primary-color;
+  color: $winter-sky-deep;
 }
 
 .syncTitle {
   font-size: 15px;
-  color: $text-primary;
+  color: $winter-wood;
   font-weight: 500;
 }
 
 .syncDesc {
   font-size: 12px;
-  color: $text-tertiary;
+  color: #7f8c8d;
   margin-top: 2px;
 }
 
@@ -150,26 +164,26 @@
   align-items: center;
   justify-content: center;
   aspect-ratio: 1;
-  background-color: $white;
+  background: linear-gradient(135deg, $winter-snow-light 0%, $winter-snow 100%);
   border-radius: 16px;
   cursor: pointer;
   @include transition;
   @include card-shadow;
-  border: 2px solid transparent;
+  border: 2px solid $winter-ice;
 
   &:active {
-    background-color: $bg-color;
+    background: linear-gradient(135deg, $winter-ice 0%, $winter-snow 100%);
     transform: scale(0.95);
   }
 
   &:hover {
-    border-color: $primary-color;
+    border-color: $winter-sky;
   }
 }
 
 .menuTitle {
   font-size: 13px;
-  color: $text-primary;
+  color: $winter-wood;
   margin-bottom: 8px;
   font-weight: 500;
   text-align: center;
@@ -177,7 +191,7 @@
 
 .menuIcon {
   font-size: 28px;
-  color: $primary-color;
+  color: $winter-sky-deep;
 }
 
 // 导入弹窗
