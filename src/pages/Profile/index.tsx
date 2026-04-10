@@ -100,6 +100,11 @@ const Profile = () => {
     navigate('/recurring');
   };
 
+  // 打开攒钱计划管理页面
+  const handleOpenSavings = () => {
+    navigate('/savings');
+  };
+
   // 切换语言
   const handleLanguageChange = (checked: boolean) => {
     const newLang = checked ? 'en-US' : 'zh-CN';
@@ -355,6 +360,11 @@ const Profile = () => {
       icon: <ClockCircleOutlined />,
       onClick: handleOpenRecurring,
     }] : []),
+    {
+      title: '攒钱计划',
+      icon: <WalletOutlined />,
+      onClick: handleOpenSavings,
+    },
     {
       title: t('profile.dataManagement'),
       icon: <DatabaseOutlined />,

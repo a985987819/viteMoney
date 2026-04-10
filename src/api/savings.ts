@@ -48,6 +48,47 @@ export interface SavingsSummary {
   inProgressGoals: number;
 }
 
+export interface SavingsPlan {
+  id: string;
+  name: string;
+  targetAmount: number;
+  savedAmount: number;
+  startDate: string;
+  endDate: string;
+  dailyAverage: number;
+  percentage?: number;
+  status: 'active' | 'completed' | 'failed';
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateSavingsPlanParams {
+  name: string;
+  targetAmount: number;
+  endDate: string;
+}
+
+export interface UpdateSavingsPlanParams {
+  name?: string;
+  targetAmount?: number;
+  endDate?: string;
+}
+
+export interface SavingsDeposit {
+  id: string;
+  planId: string;
+  amount: number;
+  type: 'average' | 'random' | 'manual';
+  remark?: string;
+  createdAt: string;
+}
+
+export interface CreateDepositParams {
+  amount: number;
+  type: 'average' | 'random' | 'manual';
+  remark?: string;
+}
+
 const api = createApiService<SavingsGoal, CreateSavingsGoalParams, UpdateSavingsGoalParams>('/savings/goals');
 
 // 获取所有储蓄目标
@@ -72,4 +113,65 @@ export const withdrawFromGoal = (id: string, data: WithdrawParams): Promise<{ go
 // 获取储蓄统计
 export const getSavingsSummary = (): Promise<SavingsSummary> => {
   return http.get('/savings/summary');
+};
+
+// 攒钱计划相关 API
+export const createSavingsPlan = (data: CreateSavingsPlanParams): Promise<SavingsPlan> => {
+  return http.post('/savings/plans', data);
+};
+
+export const getSavingsPlans = (): Promise<SavingsPlan[]> => {
+  return http.get('/savings/plans');
+};
+
+export const updateSavingsPlan = (id: string, data: UpdateSavingsPlanParams): Promise<SavingsPlan> => {
+  return http.put(`/savings/plans/${id}`, data);
+};
+
+export const deleteSavingsPlan = (id: string): Promise<void> => {
+  return http.delete(`/savings/plans/${id}`);
+};
+
+// 攒钱存款 API
+export const makeDeposit = (planId: string, data: CreateDepositParams): Promise<SavingsDeposit> => {
+  return http.post(`/savings/plans/${planId}/deposit`, data);
+};
+
+export const getDeposits = (planId: string): Promise<SavingsDeposit[]> => {
+  return http.get(`/savings/plans/${planId}/deposits`);
+};
+
+// 本地存储相关函数
+const STORAGE_KEY = 'savings_plans';
+const DEPOSITS_KEY = 'savings_deposits';
+
+export const getLocalSavingsPlans = (): SavingsPlan[] => {
+  const data = localStorage.getItem(STORAGE_KEY);
+  return data ? JSON.parse(data) : [];
+};
+
+export const saveLocalSavingsPlans = (plans: SavingsPlan[]) => {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(plans));
+};
+
+export const getLocalDeposits = (planId?: string): SavingsDeposit[] => {
+  const data = localStorage.getItem(DEPOSITS_KEY);
+  const allDeposits = data ? JSON.parse(data) : [];
+  return planId ? allDeposits.filter((d: SavingsDeposit) => d.planId === planId) : allDeposits;
+};
+
+export const saveLocalDeposit = (deposit: SavingsDeposit) => {
+  const deposits = getLocalDeposits();
+  deposits.push(deposit);
+  localStorage.setItem(DEPOSITS_KEY, JSON.stringify(deposits));
+
+  // 更新计划的已存金额
+  const plans = getLocalSavingsPlans();
+  const plan = plans.find(p => p.id === deposit.planId);
+  if (plan) {
+    plan.savedAmount += deposit.amount;
+    plan.percentage = Math.min(100, (plan.savedAmount / plan.targetAmount) * 100);
+    plan.updatedAt = new Date().toISOString();
+    saveLocalSavingsPlans(plans);
+  }
 };
