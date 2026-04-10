@@ -13,11 +13,7 @@ $autumn-wheat: #f5deb3;
   display: flex;
   flex-direction: column;
   height: 100vh;
-  background: linear-gradient(
-    180deg,
-    $autumn-cream 0%,
-    $autumn-wheat 100%
-  );
+  background: linear-gradient(180deg, $autumn-cream 0%, $autumn-wheat 100%);
 }
 
 .tabHeader {

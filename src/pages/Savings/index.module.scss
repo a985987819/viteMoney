@@ -1,10 +1,35 @@
+@use "sass:color";
 @use "../../styles/stardew-theme.scss" as *;
+
+// 秋季丰收主题配色 - 基于星露谷秋季截图
+$autumn-soil: #c4a35a;           // 土黄色地面
+$autumn-soil-dark: #a88b4a;      // 深土色
+$autumn-wood: #8b5a2b;           // 深棕色木质
+$autumn-wood-light: #a67c52;     // 浅木色
+$autumn-wood-dark: #5d3a1a;      // 深木色
+$autumn-purple: #8b4a6b;         // 紫红色树木
+$autumn-purple-light: #b06b8a;   // 浅紫色
+$autumn-gold: #d4a574;           // 金黄色
+$autumn-orange: #c17f59;         // 橙褐色
+$autumn-cream: #f5e6c8;          // 米黄色背景
+$autumn-wheat: #e8d4a8;          // 麦色
+$autumn-leaf: #8b4513;           // 秋叶棕
+$text-primary: #5d3a1a;          // 主文字色（深木色）
+$text-secondary: #8b5a2b;        // 次要文字色
+$text-tertiary: #a67c52;         // 第三文字色
+$bg-color: #f5e6c8;              // 背景色
+$bg-light: #e8d4a8;              // 浅背景色
+$white: #fffaf0;                 // 暖白色
+$border-color: #d4a574;          // 边框色
 
 .savingsPage {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background: $stardew-panel-bg;
+  background-color: $autumn-soil;
+  background-image:
+    radial-gradient(circle at 20% 50%, rgba(139, 74, 107, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(196, 163, 90, 0.3) 0%, transparent 50%);
   position: relative;
   overflow-y: auto;
   overflow-x: hidden;
@@ -16,22 +41,18 @@
 .summarySection {
   padding: 16px;
   padding-top: calc(16px + env(safe-area-inset-top, 0));
-  background: linear-gradient(
-    135deg,
-    $stardew-wood-light 0%,
-    $stardew-wood-mid 100%
-  );
-  border-bottom: 3px solid $stardew-wood-deep;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  background: linear-gradient(180deg, $autumn-wood 0%, $autumn-wood-dark 100%);
+  border-bottom: 3px solid $autumn-wood-dark;
+  box-shadow: 0 4px 12px rgba(93, 58, 26, 0.3);
 }
 
 .summaryCard {
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba($autumn-cream, 0.98);
   border-radius: 12px;
   padding: 20px;
   text-align: center;
-  border: 2px solid $stardew-wood-mid;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 3px solid $autumn-wood;
+  box-shadow: 0 4px 12px rgba(93, 58, 26, 0.2);
 
   :global {
     .ant-card-body {
@@ -42,7 +63,7 @@
 
 .summaryTitle {
   font-size: 14px;
-  color: #666;
+  color: $autumn-wood;
   margin-bottom: 8px;
   font-weight: 500;
 }
@@ -50,17 +71,17 @@
 .summaryAmount {
   font-size: 36px;
   font-weight: bold;
-  color: $stardew-wood-deep;
+  color: $autumn-wood-dark;
   margin-bottom: 8px;
   font-family: "PixelFont", monospace;
 }
 
 .summarySub {
   font-size: 13px;
-  color: #888;
+  color: $autumn-wood;
 
   span:last-child {
-    color: $stardew-wood-deep;
+    color: $autumn-wood-dark;
     font-weight: 600;
   }
 }
@@ -81,7 +102,7 @@
 .sectionTitle {
   font-size: 18px;
   font-weight: bold;
-  color: $stardew-wood-deep;
+  color: $autumn-wood-dark;
   margin: 0;
 }
 
@@ -93,14 +114,14 @@
   justify-content: center;
   padding: 60px 20px;
   text-align: center;
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba($autumn-cream, 0.8);
   border-radius: 12px;
-  border: 2px dashed $stardew-wood-mid;
+  border: 2px dashed $autumn-wood-light;
 
   p {
     margin: 16px 0 24px;
     font-size: 16px;
-    color: #999;
+    color: $autumn-wood;
   }
 }
 
@@ -112,10 +133,10 @@
 }
 
 .planCard {
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba($autumn-cream, 0.98);
   border-radius: 12px;
-  border: 2px solid $stardew-wood-mid;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 3px solid $autumn-wood;
+  box-shadow: 0 4px 12px rgba(93, 58, 26, 0.15);
   overflow: hidden;
 
   :global {
@@ -135,7 +156,7 @@
 .planName {
   font-size: 16px;
   font-weight: bold;
-  color: $stardew-wood-deep;
+  color: $autumn-wood-dark;
   margin: 0;
   flex: 1;
 }
@@ -157,17 +178,13 @@
   justify-content: center;
   padding: 8px 4px;
   border-radius: 8px;
-  border: 2px solid $stardew-wood-light;
-  background: linear-gradient(
-    135deg,
-    $stardew-parchment-light 0%,
-    $stardew-parchment 100%
-  );
+  border: 2px solid $autumn-wood-light;
+  background: linear-gradient(135deg, $autumn-wheat 0%, $autumn-cream 100%);
   transition: all 0.3s ease;
 
   &:hover {
-    border-color: $stardew-wood-mid;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    border-color: $autumn-wood;
+    box-shadow: 0 2px 8px rgba(93, 58, 26, 0.2);
     transform: translateY(-2px);
   }
 
@@ -186,13 +203,13 @@
 .actionAmount {
   font-size: 14px;
   font-weight: bold;
-  color: $stardew-wood-deep;
+  color: $autumn-wood-dark;
   font-family: "PixelFont", monospace;
 }
 
 .actionHint {
   font-size: 12px;
-  color: #999;
+  color: $autumn-wood;
 }
 
 .planFooter {
@@ -206,12 +223,13 @@
     .ant-progress {
       .ant-progress-bg {
         border-radius: 4px;
+        background-color: $autumn-purple;
       }
 
       .ant-progress-text {
         font-size: 12px;
         font-weight: 600;
-        color: $stardew-wood-deep;
+        color: $autumn-wood-dark;
       }
     }
   }
@@ -222,7 +240,7 @@
   grid-template-columns: repeat(4, 1fr);
   gap: 4px;
   padding: 8px;
-  background: rgba($stardew-wood-light, 0.2);
+  background: rgba($autumn-wood-light, 0.3);
   border-radius: 6px;
 }
 
@@ -233,29 +251,29 @@
 
 .planStatLabel {
   font-size: 10px;
-  color: #888;
+  color: $autumn-wood;
   margin-bottom: 2px;
 }
 
 .planStatValue {
   font-size: 12px;
   font-weight: bold;
-  color: $stardew-wood-deep;
+  color: $autumn-wood-dark;
   font-family: "PixelFont", monospace;
 }
 
 .planDelete {
   text-align: right;
   padding-top: 8px;
-  border-top: 1px solid $stardew-wood-light;
+  border-top: 1px solid $autumn-wood-light;
 }
 
 // 攒钱方式描述
 .depositTypeDesc {
   padding: 16px;
-  background: $stardew-parchment-light;
+  background: $autumn-wheat;
   border-radius: 8px;
-  border: 2px solid $stardew-wood-light;
+  border: 2px solid $autumn-wood-light;
   text-align: center;
   margin-bottom: 12px;
 }
@@ -263,7 +281,7 @@
 .amountHint {
   font-size: 24px;
   font-weight: bold;
-  color: $stardew-wood-deep;
+  color: $autumn-wood-dark;
   margin-top: 8px;
   font-family: "PixelFont", monospace;
 }

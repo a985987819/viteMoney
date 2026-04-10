@@ -1,4 +1,4 @@
-@use '../../styles/stardew-theme.scss' as *;
+@use "../../styles/stardew-theme.scss" as *;
 
 // 冬季雪景配色
 $winter-sky: #87ceeb;
@@ -26,7 +26,7 @@ $winter-wood: #6b4423;
 .addBtn {
   background: linear-gradient(135deg, $winter-sky 0%, $winter-sky-deep 100%);
   border-color: $winter-sky-deep;
-  font-family: 'PixelFont', monospace;
+  font-family: "PixelFont", monospace;
 
   &:hover {
     background: linear-gradient(135deg, $winter-sky-deep 0%, $winter-sky 100%);
@@ -69,7 +69,7 @@ $winter-wood: #6b4423;
   font-size: 16px;
   font-weight: bold;
   color: $winter-wood;
-  font-family: 'PixelFont', monospace;
+  font-family: "PixelFont", monospace;
 
   svg {
     color: $winter-sky-deep;
@@ -85,7 +85,7 @@ $winter-wood: #6b4423;
   margin-top: 8px;
   font-size: 14px;
   color: #7f8c8d;
-  font-family: 'PixelFont', monospace;
+  font-family: "PixelFont", monospace;
 }
 
 .budgetStats {
@@ -106,14 +106,14 @@ $winter-wood: #6b4423;
   font-size: 12px;
   color: #7f8c8d;
   margin-bottom: 4px;
-  font-family: 'PixelFont', monospace;
+  font-family: "PixelFont", monospace;
 }
 
 .statValue {
   font-size: 16px;
   font-weight: bold;
   color: $winter-wood;
-  font-family: 'PixelFont', monospace;
+  font-family: "PixelFont", monospace;
 
   &.expense {
     color: #c45c48;
@@ -144,7 +144,7 @@ $winter-wood: #6b4423;
   margin-top: 16px;
   background: linear-gradient(135deg, $winter-sky 0%, $winter-sky-deep 100%);
   border-color: $winter-sky-deep;
-  font-family: 'PixelFont', monospace;
+  font-family: "PixelFont", monospace;
 
   &:hover {
     background: linear-gradient(135deg, $winter-sky-deep 0%, $winter-sky 100%);
@@ -164,7 +164,7 @@ $winter-wood: #6b4423;
     .ant-card-head {
       background: transparent;
       border-bottom: 1px solid $winter-ice;
-      font-family: 'PixelFont', monospace;
+      font-family: "PixelFont", monospace;
       color: $winter-wood;
     }
 
@@ -192,14 +192,14 @@ $winter-wood: #6b4423;
   font-size: 12px;
   color: #7f8c8d;
   margin-bottom: 8px;
-  font-family: 'PixelFont', monospace;
+  font-family: "PixelFont", monospace;
 }
 
 .compareValue {
   font-size: 20px;
   font-weight: bold;
   color: $winter-wood;
-  font-family: 'PixelFont', monospace;
+  font-family: "PixelFont", monospace;
 }
 
 // 历史预算卡片
@@ -213,7 +213,7 @@ $winter-wood: #6b4423;
     .ant-card-head {
       background: transparent;
       border-bottom: 1px solid $winter-ice;
-      font-family: 'PixelFont', monospace;
+      font-family: "PixelFont", monospace;
       color: $winter-wood;
     }
 
@@ -236,7 +236,7 @@ $winter-wood: #6b4423;
   display: flex;
   align-items: center;
   gap: 8px;
-  font-family: 'PixelFont', monospace;
+  font-family: "PixelFont", monospace;
   color: $winter-wood;
 }
 
@@ -257,7 +257,7 @@ $winter-wood: #6b4423;
   font-size: 12px;
   color: #7f8c8d;
   white-space: nowrap;
-  font-family: 'PixelFont', monospace;
+  font-family: "PixelFont", monospace;
 }
 
 // 弹窗样式
@@ -273,7 +273,7 @@ $winter-wood: #6b4423;
     margin-bottom: 8px;
     font-size: 14px;
     color: $winter-wood;
-    font-family: 'PixelFont', monospace;
+    font-family: "PixelFont", monospace;
   }
 }
 

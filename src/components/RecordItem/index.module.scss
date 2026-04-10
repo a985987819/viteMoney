@@ -1,4 +1,4 @@
-@use '@/styles/stardew-theme.scss' as *;
+@use "@/styles/stardew-theme.scss" as *;
 
 $expense-color: #ff6b6b;
 $income-color: #51cf66;
@@ -18,7 +18,7 @@ $content-bg: #fed284;
   background-color: $content-bg;
   // border-bottom: 1px solid $content-bg;
   cursor: pointer;
-  font-family: 'PixelFont', monospace;
+  font-family: "PixelFont", monospace;
 
   @include transition;
 
