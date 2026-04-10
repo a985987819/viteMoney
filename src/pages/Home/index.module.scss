@@ -21,6 +21,7 @@ $content-bg-url: "#{$cdn-base-url}/homePageBg.png";
   display: flex;
   flex-direction: column;
   position: relative;
+  padding-bottom: 70px; // 避让底部导航
 }
 
 .homeBottom {
@@ -168,7 +169,6 @@ $content-bg-url: "#{$cdn-base-url}/homePageBg.png";
   flex-direction: column;
   min-height: 0;
   padding: 0 16px;
-  padding-bottom: calc(70px + env(safe-area-inset-bottom, 0));
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
@@ -177,7 +177,10 @@ $content-bg-url: "#{$cdn-base-url}/homePageBg.png";
 .recordsList {
   display: flex;
   flex-direction: column;
+  justify-content: center; // 内容少时居中
+  flex: 1; // 撑满可用高度
   gap: 12px;
+  min-height: min-content; // 内容多时自动扩展
 }
 
 .loadingMore,

@@ -19,6 +19,7 @@ const SwipeableRecordItem = memo(({ record, onEdit, onDelete, isLastItem }: Swip
   const diffXRef = useRef(0);
   const buttonWidth = 120;
   const contentRef = useRef<HTMLDivElement>(null);
+  const touchStartYRef = useRef(0);
 
   useEffect(() => {
     if (contentRef.current) {
@@ -26,43 +27,63 @@ const SwipeableRecordItem = memo(({ record, onEdit, onDelete, isLastItem }: Swip
     }
   }, [translateX]);
 
-  const handleTouchStart = useCallback((e: React.TouchEvent) => {
-    e.stopPropagation();
-    e.preventDefault();
-    const touch = e.touches[0];
-    startXRef.current = touch.clientX;
-    currentXRef.current = touch.clientX;
-    diffXRef.current = 0;
-    setIsDragging(true);
-  }, []);
+  // 使用原生事件监听，设置 passive: false
+  useEffect(() => {
+    const element = contentRef.current;
+    if (!element) return;
 
-  const handleTouchMove = useCallback((e: React.TouchEvent) => {
-    if (!isDragging) return;
+    const handleTouchStartNative = (e: TouchEvent) => {
+      const touch = e.touches[0];
+      startXRef.current = touch.clientX;
+      currentXRef.current = touch.clientX;
+      touchStartYRef.current = touch.clientY;
+      diffXRef.current = 0;
+      setIsDragging(true);
+    };
 
-    e.preventDefault();
-    e.stopPropagation();
+    const handleTouchMoveNative = (e: TouchEvent) => {
+      if (!isDragging) return;
 
-    const touch = e.touches[0];
-    currentXRef.current = touch.clientX;
-    diffXRef.current = currentXRef.current - startXRef.current;
+      const touch = e.touches[0];
+      const diffX = touch.clientX - startXRef.current;
+      const diffY = touch.clientY - touchStartYRef.current;
 
-    if (diffXRef.current < 0) {
-      setTranslateX(Math.max(diffXRef.current, -buttonWidth));
-    } else {
-      setTranslateX(0);
-    }
+      // 水平滑动距离大于垂直滑动距离时才阻止默认行为
+      // 同时检查事件是否可取消，避免浏览器滚动时的报错
+      if (Math.abs(diffX) > Math.abs(diffY) && e.cancelable) {
+        e.preventDefault();
+      }
+
+      currentXRef.current = touch.clientX;
+      diffXRef.current = diffX;
+
+      if (diffXRef.current < 0) {
+        setTranslateX(Math.max(diffXRef.current, -buttonWidth));
+      } else {
+        setTranslateX(0);
+      }
+    };
+
+    const handleTouchEndNative = () => {
+      setIsDragging(false);
+
+      if (diffXRef.current < -buttonWidth / 2) {
+        setTranslateX(-buttonWidth);
+      } else {
+        setTranslateX(0);
+      }
+    };
+
+    element.addEventListener('touchstart', handleTouchStartNative, { passive: true });
+    element.addEventListener('touchmove', handleTouchMoveNative, { passive: false });
+    element.addEventListener('touchend', handleTouchEndNative, { passive: true });
+
+    return () => {
+      element.removeEventListener('touchstart', handleTouchStartNative);
+      element.removeEventListener('touchmove', handleTouchMoveNative);
+      element.removeEventListener('touchend', handleTouchEndNative);
+    };
   }, [isDragging]);
-
-  const handleTouchEnd = useCallback((e: React.TouchEvent) => {
-    e.stopPropagation();
-    setIsDragging(false);
-
-    if (diffXRef.current < -buttonWidth / 2) {
-      setTranslateX(-buttonWidth);
-    } else {
-      setTranslateX(0);
-    }
-  }, []);
 
   const handleEdit = () => {
     setTranslateX(0);
@@ -96,9 +117,6 @@ const SwipeableRecordItem = memo(({ record, onEdit, onDelete, isLastItem }: Swip
       <div
         ref={contentRef}
         className={styles.swipeableContent}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
       >
         <RecordItemComponent record={record} />
       </div>

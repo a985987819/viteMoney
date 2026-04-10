@@ -3,9 +3,8 @@
 .emptyState {
   @include flex-center;
   flex-direction: column;
-  padding: 40px 20px;
+  padding: 20px;
   text-align: center;
-  min-height: 300px;
   animation: fadeInUp 0.5s ease-out;
 }
 
