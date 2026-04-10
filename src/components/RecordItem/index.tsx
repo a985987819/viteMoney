@@ -1,7 +1,7 @@
 import { memo, useMemo } from 'react';
 import type { RecordItem as RecordItemType } from '../../api/record';
 import { getTimestamp } from '../../utils/importExport';
-import { getCategoryIcon } from '../../constants/categoryIconMapping';
+import { getCategoryEmoji } from '../../utils/spriteIcons';
 import styles from './index.module.scss';
 
 interface RecordItemProps {
@@ -21,14 +21,12 @@ const RecordItem = memo(({
     onClick?.(record);
   };
 
-  // 获取图标 - 使用映射文件的图标
+  // 获取图标 - 优先使用categoryIcon字段获取Emoji
   const icon = useMemo(() => {
-    // 如果有categoryIcon字段，直接使用
     if (record.categoryIcon) {
-      return record.categoryIcon;
+      return getCategoryEmoji(record.categoryIcon);
     }
-    // 使用映射文件获取图标
-    return getCategoryIcon(record.category);
+    return getCategoryEmoji(record.category);
   }, [record.category, record.categoryIcon]);
 
   return (

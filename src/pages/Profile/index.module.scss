@@ -29,10 +29,10 @@ $border-color: #d4a574;
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
-  
-.page-container{
-  height: 100%;
-}
+
+  .page-container {
+    height: 100%;
+  }
 }
 
 // 顶部背景
@@ -538,4 +538,65 @@ $border-color: #d4a574;
   100% {
     transform: scale(1);
   }
+}
+
+.quickRecordManage {
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.quickRecordForm {
+  padding-bottom: 16px;
+  border-bottom: 1px solid $border-color;
+  margin-bottom: 16px;
+}
+
+.quickRecordList {
+  max-height: 30vh;
+  overflow-y: auto;
+}
+
+.quickRecordListTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: $text-primary;
+  margin-bottom: 12px;
+}
+
+.quickRecordEmpty {
+  text-align: center;
+  color: $text-tertiary;
+  padding: 20px;
+  font-size: 13px;
+}
+
+.quickRecordItem {
+  display: flex;
+  align-items: center;
+  padding: 10px 12px;
+  background-color: rgba($bg-color, 0.5);
+  border-radius: 8px;
+  margin-bottom: 8px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.quickRecordIcon {
+  font-size: 20px;
+  margin-right: 10px;
+}
+
+.quickRecordName {
+  flex: 1;
+  font-size: 14px;
+  color: $text-primary;
+}
+
+.quickRecordAmount {
+  font-size: 14px;
+  color: $text-secondary;
+  margin-right: 12px;
+  font-family: "PixelFont", monospace;
 }

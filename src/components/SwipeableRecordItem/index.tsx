@@ -28,6 +28,7 @@ const SwipeableRecordItem = memo(({ record, onEdit, onDelete, isLastItem }: Swip
 
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
     e.stopPropagation();
+    e.preventDefault();
     const touch = e.touches[0];
     startXRef.current = touch.clientX;
     currentXRef.current = touch.clientX;
@@ -37,6 +38,9 @@ const SwipeableRecordItem = memo(({ record, onEdit, onDelete, isLastItem }: Swip
 
   const handleTouchMove = useCallback((e: React.TouchEvent) => {
     if (!isDragging) return;
+
+    e.preventDefault();
+    e.stopPropagation();
 
     const touch = e.touches[0];
     currentXRef.current = touch.clientX;
@@ -49,7 +53,8 @@ const SwipeableRecordItem = memo(({ record, onEdit, onDelete, isLastItem }: Swip
     }
   }, [isDragging]);
 
-  const handleTouchEnd = useCallback(() => {
+  const handleTouchEnd = useCallback((e: React.TouchEvent) => {
+    e.stopPropagation();
     setIsDragging(false);
 
     if (diffXRef.current < -buttonWidth / 2) {

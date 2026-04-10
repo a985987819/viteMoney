@@ -1,0 +1,319 @@
+@use "../../styles/stardew-theme.scss" as *;
+
+$primary-color: #d4a574;
+$danger-color: #e74c3c;
+$success-color: #51cf66;
+$text-primary: #5d4037;
+$text-secondary: #8d6e63;
+$text-tertiary: #a1887f;
+$bg-color: #f4d03f;
+$white: #fff;
+$border-color: #d4a574;
+$content-bg: #fed284;
+
+@mixin card-shadow {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.pageContainer {
+  width: 100%;
+  min-height: 100vh;
+  background-color: $bg-color;
+  display: flex;
+  flex-direction: column;
+}
+
+.headerSection {
+  background: $primary-color;
+  padding: 16px 20px;
+  padding-top: calc(16px + env(safe-area-inset-top, 0));
+}
+
+.headerTop {
+  @include flex-between;
+  margin-bottom: 16px;
+}
+
+.backBtn {
+  font-size: 20px;
+  color: $stardew-text-primary;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  @include flex-center;
+}
+
+.headerTitle {
+  font-size: 18px;
+  font-weight: bold;
+  color: $stardew-text-primary;
+  font-family: "PixelFont", monospace;
+}
+
+.contentSection {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.typeTabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+
+  .typeTab {
+    flex: 1;
+    padding: 10px 16px;
+    border: 2px solid $border-color;
+    border-radius: 8px;
+    background-color: rgba($white, 0.5);
+    color: $text-secondary;
+    font-family: "PixelFont", monospace;
+    font-size: 14px;
+    cursor: pointer;
+    @include transition;
+
+    &.active {
+      background-color: $primary-color;
+      border-color: $primary-color;
+      color: $white;
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+}
+
+.quickRecordForm {
+  background-color: $white;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  @include card-shadow;
+}
+
+.formTitle {
+  font-size: 15px;
+  font-weight: 600;
+  color: $text-primary;
+  margin-bottom: 16px;
+  font-family: "PixelFont", monospace;
+}
+
+.formRow {
+  margin-bottom: 12px;
+}
+
+.formLabel {
+  font-size: 13px;
+  color: $text-secondary;
+  margin-bottom: 6px;
+  font-family: "PixelFont", monospace;
+}
+
+.categoryGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.categoryItem {
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba($bg-color, 0.3);
+  border: 2px solid transparent;
+  border-radius: 10px;
+  cursor: pointer;
+  @include transition;
+  padding: 4px;
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  &.selected {
+    border-color: $primary-color;
+    background-color: rgba($primary-color, 0.15);
+  }
+
+  &.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+}
+
+.categoryIcon {
+  font-size: 20px;
+  margin-bottom: 2px;
+}
+
+.categoryName {
+  font-size: 10px;
+  color: $text-primary;
+  text-align: center;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.subCategorySection {
+  margin-top: 12px;
+}
+
+.subCategoryGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.subCategoryItem {
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba($bg-color, 0.3);
+  border: 2px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  @include transition;
+  font-size: 12px;
+  color: $text-primary;
+  font-family: "PixelFont", monospace;
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  &.selected {
+    border-color: $primary-color;
+    background-color: rgba($primary-color, 0.15);
+  }
+}
+
+.amountInput {
+  width: 100%;
+  height: 44px;
+  border: 2px solid $border-color;
+  border-radius: 8px;
+  padding: 0 12px;
+  font-size: 18px;
+  font-family: "PixelFont", monospace;
+  color: $text-primary;
+  background-color: rgba($white, 0.8);
+
+  &:focus {
+    outline: none;
+    border-color: $primary-color;
+  }
+}
+
+.submitBtn {
+  width: 100%;
+  height: 48px;
+  margin-top: 16px;
+  background: $primary-color;
+  border: 3px solid $stardew-wood-dark;
+  border-radius: 8px;
+  color: $stardew-text-primary;
+  font-family: "PixelFont", monospace;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  @include transition;
+
+  &:active {
+    transform: scale(0.98);
+    background-color: #b8936a;
+  }
+
+  &.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.quickRecordList {
+  background-color: $white;
+  border-radius: 12px;
+  padding: 16px;
+  @include card-shadow;
+}
+
+.listTitle {
+  font-size: 15px;
+  font-weight: 600;
+  color: $text-primary;
+  margin-bottom: 12px;
+  font-family: "PixelFont", monospace;
+}
+
+.listEmpty {
+  text-align: center;
+  color: $text-tertiary;
+  padding: 24px;
+  font-size: 13px;
+}
+
+.quickRecordItem {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background-color: rgba($bg-color, 0.3);
+  border-radius: 8px;
+  margin-bottom: 8px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.recordIcon {
+  font-size: 24px;
+  margin-right: 10px;
+}
+
+.recordInfo {
+  flex: 1;
+}
+
+.recordCategory {
+  font-size: 14px;
+  color: $text-primary;
+  font-weight: 500;
+}
+
+.recordSubCategory {
+  font-size: 12px;
+  color: $text-tertiary;
+  margin-top: 2px;
+}
+
+.recordAmount {
+  font-size: 16px;
+  color: $danger-color;
+  font-family: "PixelFont", monospace;
+  font-weight: bold;
+  margin-right: 12px;
+
+  &.income {
+    color: $success-color;
+  }
+}
+
+.deleteBtn {
+  padding: 6px 10px;
+  background-color: transparent;
+  border: none;
+  color: $danger-color;
+  font-size: 12px;
+  cursor: pointer;
+
+  &:active {
+    opacity: 0.7;
+  }
+}

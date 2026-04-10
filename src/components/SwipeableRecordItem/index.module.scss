@@ -84,7 +84,6 @@ $content-bg: #fed284;
 // 内容区域
 .swipeableContent {
   @include flex-between;
-  // padding: 4px 16px;
   background-color: $content-bg;
   @include transition(transform);
   padding: 0 4px;
@@ -96,8 +95,8 @@ $content-bg: #fed284;
   right: 0;
   bottom: 0;
   z-index: 2;
-  // padding: 2px;
-  // border:2px solid #6F3F1F;
+  touch-action: pan-y;
+  -webkit-touch-callout: none;
 
   &:active {
     cursor: grabbing;

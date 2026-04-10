@@ -8,7 +8,11 @@ export interface Category {
   icon: string;
   type: CategoryType;
   color?: string;
-  subCategories?: string[];
+  subCategories?: Array<{
+    id: string;
+    name: string;
+    icon: string;
+  }>;
 }
 
 export interface SubCategory {

@@ -12,12 +12,10 @@ import {
 } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import { createRecord, updateRecord, type RecordItem } from '../../api/record';
-import { getLocalRecords, saveLocalRecords } from '../../utils/storage';
+import { getLocalRecords, saveLocalRecords, getExpenseCategoriesForSelect, getIncomeCategoriesForSelect } from '../../utils/storage';
 import { useAuth } from '../../hooks/useAuth';
 import useCalculator from '../../hooks/useCalculator';
 import { useTranslation } from 'react-i18next';
-import { expenseCategories, incomeCategories, type MainCategory, type SubCategory } from '../../constants/categories';
-import { getCategoryIcon } from '../../constants/categoryIconMapping';
 import SubCategoryModal from '../../components/SubCategoryModal';
 import SpriteIcon from '../../components/SpriteIcon';
 import KeyboardAvoidingView from '../../components/KeyboardAvoidingView';
@@ -27,9 +25,22 @@ type RecordType = 'expense' | 'income';
 type Operator = '+' | '-';
 type DatePickerMode = 'date' | 'month' | 'year';
 
+interface CategoryForSelect {
+  id: string;
+  name: string;
+  icon: string;
+  subCategories: Array<{ id: string; name: string; icon: string }>;
+}
+
+interface SubCategoryForSelect {
+  id: string;
+  name: string;
+  icon: string;
+}
+
 interface SelectedCategory {
-  mainCategory: MainCategory;
-  subCategory: SubCategory | null;
+  mainCategory: CategoryForSelect;
+  subCategory: SubCategoryForSelect | null;
 }
 
 interface RecordData {
@@ -55,7 +66,7 @@ const buildRecordData = (params: {
   type: params.activeType,
   category: params.selectedCategory.mainCategory.name,
   subCategory: params.selectedCategory.subCategory?.name,
-  categoryIcon: getCategoryIcon(params.selectedCategory.mainCategory.name) || '',
+  categoryIcon: params.selectedCategory.subCategory?.icon || params.selectedCategory.mainCategory.icon,
   amount: parseFloat(params.finalAmount),
   remark: params.remark,
   date: params.selectedDate.valueOf(),
@@ -81,7 +92,7 @@ const AddRecord = () => {
   const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
   const [datePickerMode, setDatePickerMode] = useState<DatePickerMode>('date');
   const [isSubCategoryModalVisible, setIsSubCategoryModalVisible] = useState(false);
-  const [currentExpandCategory, setCurrentExpandCategory] = useState<MainCategory | null>(null);
+  const [currentExpandCategory, setCurrentExpandCategory] = useState<CategoryForSelect | null>(null);
 
   // 计算器逻辑
   const { amount, canCalculate, handleNumberClick, handleDelete, handleOperatorClick, handleCalculate, calculate, reset: resetCalculator, setAmount } = useCalculator('');
@@ -95,7 +106,7 @@ const AddRecord = () => {
       setSelectedDate(dayjs(editingRecord.date));
 
       // 查找并设置分类
-      const allCategories = activeType === 'expense' ? expenseCategories : incomeCategories;
+      const allCategories = activeType === 'expense' ? getExpenseCategoriesForSelect() : getIncomeCategoriesForSelect();
       const mainCat = allCategories.find(c => c.name === editingRecord.category);
       if (mainCat) {
         const subCat = mainCat.subCategories.find(s => s.name === editingRecord.subCategory);
@@ -109,11 +120,11 @@ const AddRecord = () => {
 
   // 获取当前类型的分类列表
   const currentCategories = useMemo(() => {
-    return activeType === 'expense' ? expenseCategories : incomeCategories;
+    return activeType === 'expense' ? getExpenseCategoriesForSelect() : getIncomeCategoriesForSelect();
   }, [activeType]);
 
   // 处理分类点击（直接选择主分类）
-  const handleCategoryClick = (category: MainCategory) => {
+  const handleCategoryClick = (category: CategoryForSelect) => {
     setSelectedCategory({
       mainCategory: category,
       subCategory: null,
@@ -121,14 +132,14 @@ const AddRecord = () => {
   };
 
   // 处理展开子分类
-  const handleExpandSubCategories = (e: React.MouseEvent, category: MainCategory) => {
+  const handleExpandSubCategories = (e: React.MouseEvent, category: CategoryForSelect) => {
     e.stopPropagation();
     setCurrentExpandCategory(category);
     setIsSubCategoryModalVisible(true);
   };
 
   // 处理子分类选择
-  const handleSubCategorySelect = (subCategory: SubCategory | null) => {
+  const handleSubCategorySelect = (subCategory: SubCategoryForSelect | null) => {
     if (currentExpandCategory) {
       setSelectedCategory({
         mainCategory: currentExpandCategory,
@@ -265,7 +276,7 @@ const AddRecord = () => {
         if (scrollContainer) {
           const containerRect = scrollContainer.getBoundingClientRect();
           const relativeTop = rect.top - containerRect.top;
-          
+
           // 如果输入框被键盘遮挡，滚动到可见位置
           const visibleHeight = window.innerHeight - (window.innerHeight - containerRect.height > 150 ? window.innerHeight - containerRect.height : 0);
           if (relativeTop > visibleHeight - 150) {

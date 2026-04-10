@@ -9,131 +9,106 @@ import { categoryIconMapping } from '../constants/categoryIconMapping';
 const CATEGORY_EMOJI_MAP: Record<string, string> = {
   // 餐饮
   'food': '🍜',
-  'food_1': '🥬',
-  'food_2': '🍽️',
-  'food_3': '🍔',
-  'food_4': '🧋',
-  'food_5': '☕',
-  'food_6': '🍿',
-  'food_7': '🍪',
-  'food_8': '📦',
-
-  // 住房
-  'housing': '🏠',
-  'housing_1': '🏡',
-  'housing_2': '🔑',
-  'housing_3': '💡',
-  'housing_4': '🏢',
-  'housing_5': '📹',
-  'housing_6': '📶',
-  'housing_7': '🔧',
-  'housing_8': '🚪',
+  'breakfast': '🍳',
+  'lunch': '🍱',
+  'dinner': '🍽️',
+  'drink': '🧋',
+  'snack': '🍿',
 
   // 交通
   'transport': '🚗',
-  'transport_1': '🚂',
-  'transport_2': '🚌',
-  'transport_3': '🚕',
-  'transport_4': '⛽',
-  'transport_5': '🅿️',
-  'transport_6': '🔩',
-  'transport_7': '🛠️',
+  'subway': '🚇',
+  'bus': '🚌',
+  'taxi': '🚕',
+  'parking': '🅿️',
+  'gas': '⛽',
 
-  // 服饰
-  'clothing': '👗',
-  'clothing_1': '👔',
-  'clothing_2': '👕',
-  'clothing_3': '🧴',
-  'clothing_4': '💍',
-  'clothing_5': '👔',
+  // 购物
+  'shopping': '🛍️',
+  'daily': '🧴',
+  'clothes': '👔',
+  'digital': '📱',
+  'beauty': '💄',
 
-  // 医疗
-  'medical': '🏥',
-  'medical_1': '🏥',
-  'medical_2': '🩺',
-  'medical_3': '💊',
-  'medical_4': '📊',
-  'medical_5': '💉',
-
-  // 教育
-  'education': '📚',
-  'education_1': '📚',
-  'education_2': '🎓',
-  'education_3': '📖',
-  'education_4': '✏️',
-  'education_5': '💻',
+  // 居住
+  'home': '🏠',
+  'rent': '🏠',
+  'utility': '💡',
+  'property': '🏢',
 
   // 娱乐
   'entertainment': '🎮',
-  'entertainment_1': '🍿',
-  'entertainment_2': '🎮',
-  'entertainment_3': '🎉',
-  'entertainment_4': '🎨',
-  'entertainment_5': '🎭',
+  'movie': '🎬',
+  'game': '🎮',
 
-  // 旅行
-  'travel': '✈️',
-  'travel_1': '✈️',
-  'travel_2': '🛂',
-  'travel_3': '🎫',
-  'travel_4': '🍜',
-  'travel_5': '🧭',
+  // 医疗
+  'medical': '🏥',
+  'medicine': '💊',
+  'clinic': '🏥',
+  'checkup': '🩺',
+
+  // 教育
+  'education': '📚',
+  'tuition': '🎓',
+  'book': '📖',
+  'training': '📝',
 
   // 人情
-  'social': '📱',
-  'social_1': '📈',
-  'social_2': '💻',
-  'social_3': '💻',
-  'social_4': '🎧',
-  'social_5': '🔄',
-
-  // 数码
-  'digital': '🎁',
-  'digital_1': '📄',
-  'digital_2': '📱',
-  'digital_3': '🗺️',
-  'digital_4': '📋',
-  'digital_5': '🔑',
-
-  // 家居
-  'home': '🌍',
-  'home_1': '📊',
-  'home_2': '💻',
-  'home_3': '🧻',
-  'home_4': '🎫',
-  'home_5': '📄',
-
-  // 育儿
-  'parenting': '🎁',
-  'parenting_1': '✉️',
-  'parenting_2': '🎁',
-  'parenting_3': '🎁',
-  'parenting_4': '🍳',
-  'parenting_5': '📈',
-
-  // 金融
-  'finance': '👶',
-  'finance_1': '📞',
-  'finance_2': '💵',
-  'finance_3': '🎒',
-  'finance_4': '❤️',
-  'finance_5': '❤️',
+  'gift': '🎁',
+  'present': '🎁',
+  'treat': '🍽️',
 
   // 收入
   'salary': '💰',
   'parttime': '💵',
+  'invest': '📈',
   'investment': '📈',
-  'secondhand': '💻',
-  'bonus': '🎧',
-  'other_income': '🔨',
+  'freelance': '💼',
+  'bonus': '🎁',
+  'allowance': '💵',
+  'redpacket': '🧧',
+  'base_salary': '💰',
 
-  // 其他支出
-  'other_expense': '🛋️',
-  'other_expense_2': '🪣',
-  'other_expense_3': '🪴',
-  'other_expense_4': '🧻',
-  'other_expense_5': '🍽️',
-  'other_expense_6': '💡',
+  // 微信/支付宝
+  'wechat_red': '🧧',
+  'alipay_red': '🧧',
+
+  // 股票/基金
+  'stock': '📈',
+  'fund': '📊',
+  'interest': '💵',
+
+  // 转让
+  'transfer': '🔄',
+  'repay': '💳',
+
+  // 借贷
+  'borrow_in': '📥',
+  'borrow_out': '📤',
+  'repayment': '✅',
+
+  // 报销
+  'reimburse': '📋',
+
+  // 住房
+  'housing': '🏠',
+
+  // 服饰
+  'clothing': '👗',
+
+  // 旅行
+  'travel': '✈️',
+
+  // 育儿
+  'parenting': '👶',
+
+  // 金融
+  'finance': '💰',
+
+  // 其他
+  'other_expense': '📦',
+  'other_income': '💰',
+  'secondhand': '💻',
 };
 
 /**

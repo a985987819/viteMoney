@@ -144,7 +144,7 @@ export const useCategories = () => {
     if (apiCategories) {
       [...apiCategories.expense, ...apiCategories.income].forEach(cat => {
         if (cat.subCategories && cat.subCategories.length > 0) {
-          map[cat.name] = cat.subCategories;
+          map[cat.name] = cat.subCategories.map((s: { id: string; name: string; icon: string }) => s.name);
         }
       });
     }

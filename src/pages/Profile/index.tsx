@@ -6,6 +6,8 @@ import {
   Modal,
   Form,
   Input,
+  InputNumber,
+  Select,
   message,
   Upload,
   Switch,
@@ -38,6 +40,7 @@ import {
   MoonOutlined,
   DesktopOutlined,
   ClockCircleOutlined,
+  ThunderboltOutlined,
   DownloadOutlined,
 } from '@ant-design/icons';
 import { useAuth } from '../../hooks/useAuth';
@@ -79,6 +82,11 @@ const Profile = () => {
     });
     return unsubscribe;
   }, []);
+
+  // 打开快捷记账管理页面
+  const handleOpenQuickRecord = () => {
+    navigate('/quick-record-manage');
+  };
 
   // 切换主题
   const handleThemeChange = (newTheme: ThemeType) => {
@@ -336,6 +344,11 @@ const Profile = () => {
       icon: <WalletOutlined />,
       onClick: () => navigate('/budget'),
     },
+    {
+      title: '快捷记账',
+      icon: <ThunderboltOutlined />,
+      onClick: handleOpenQuickRecord,
+    },
     // 定时记账需要登录才能使用
     ...(isLoggedIn ? [{
       title: '定时记账',
@@ -362,7 +375,7 @@ const Profile = () => {
   ];
 
   return (
-    <div className={styles.pageContainer }>
+    <div className={styles.pageContainer}>
       {/* 顶部背景 */}
       <div className={styles.profileHeader}>
         <div className={styles.headerTitle}>{t('profile.title')}</div>

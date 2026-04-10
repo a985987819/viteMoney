@@ -20,6 +20,7 @@ import ScrollContainer from '../../components/ScrollContainer';
 import AnimatedWrapper from '../../components/AnimatedWrapper';
 import PageContainer from '../../components/PageContainer';
 import ShareReceipt from '../../components/ShareReceipt';
+import QuickRecordPanel from '../../components/QuickRecordPanel';
 import styles from './index.module.scss';
 import StardewPanel from '../../components/StardewPanel';
 
@@ -201,6 +202,7 @@ const Home = () => {
 
   return (
     <PageContainer withSafeArea withBottomNav>
+      <QuickRecordPanel onRecorded={() => loadRecords(true)} />
       <div className={styles.homeContainer}>
         <AnimatedWrapper animation="fadeInDown" className={styles.headerSection}>
           <div className={styles.statsSection}>

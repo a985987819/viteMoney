@@ -1,13 +1,25 @@
 import { useState } from 'react';
 import { Modal, Radio } from 'antd';
 import { UnorderedListOutlined, AppstoreOutlined } from '@ant-design/icons';
-import type { MainCategory, SubCategory } from '../../constants/categories';
 import SpriteIcon from '../SpriteIcon';
 import styles from './index.module.scss';
 
+interface SubCategory {
+  id: string;
+  name: string;
+  icon: string;
+}
+
+interface Category {
+  id: string;
+  name: string;
+  icon: string;
+  subCategories: SubCategory[];
+}
+
 interface SubCategoryModalProps {
   visible: boolean;
-  category: MainCategory | null;
+  category: Category | null;
   onClose: () => void;
   onSelect: (subCategory: SubCategory | null) => void;
   selectedSubCategoryId?: string;
@@ -30,7 +42,6 @@ const SubCategoryModal = ({
   };
 
   const handleSelectMainCategory = () => {
-    // 选择主分类（子分类为空）
     onSelect(null);
     onClose();
   };
@@ -60,39 +71,28 @@ const SubCategoryModal = ({
       open={visible}
       onCancel={onClose}
       footer={null}
-      width={360}
-      className={styles.subCategoryModal}
+      width={320}
+      bodyStyle={{ maxHeight: 400, overflow: 'auto' }}
     >
-      <div className={`${styles.content} ${styles[viewMode]}`}>
-        {/* 选择主分类本身 */}
+      <div className={`${styles.content} ${viewMode === 'grid' ? styles.grid : styles.list}`}>
         <div
-          className={`${styles.mainCategoryItem} ${!selectedSubCategoryId ? styles.selected : ''}`}
+          className={`${styles.item} ${!selectedSubCategoryId ? styles.selected : ''}`}
           onClick={handleSelectMainCategory}
         >
-          <div className={styles.iconWrapper}>
-            <SpriteIcon iconId={category.icon} size={32} />
-          </div>
-          <span className={styles.name}>仅{category.name}</span>
+          <SpriteIcon iconId={category.icon} size={32} />
+          <span className={styles.name}>{category.name}</span>
         </div>
 
-        {/* 分隔线 */}
-        {category.subCategories.length > 0 && (
-          <div className={styles.divider}>
-            <span>选择子分类</span>
-          </div>
-        )}
+        <div className={styles.divider} />
 
-        {/* 子分类列表 */}
         <div className={styles.subCategoryList}>
           {category.subCategories.map((sub) => (
             <div
               key={sub.id}
-              className={`${styles.subCategoryItem} ${selectedSubCategoryId === sub.id ? styles.selected : ''}`}
+              className={`${styles.item} ${selectedSubCategoryId === sub.id ? styles.selected : ''}`}
               onClick={() => handleSelect(sub)}
             >
-              <div className={styles.iconWrapper}>
-                <SpriteIcon iconId={sub.icon} size={32} />
-              </div>
+              <SpriteIcon iconId={sub.icon} size={32} />
               <span className={styles.name}>{sub.name}</span>
             </div>
           ))}

@@ -24,9 +24,19 @@ import ScrollContainer from '../../components/ScrollContainer';
 import type { Category } from '../../api/category';
 import SwipeableRecordItem from '../../components/SwipeableRecordItem';
 import DatePicker, { type DateMode } from '../../components/DatePicker';
+import { getLocalCategories } from '../../utils/storage';
 import styles from './index.module.scss';
 
-// 默认分类
+// 从本地存储获取所有分类
+const getAllCategoriesFromStorage = (): Category[] => {
+  const stored = getLocalCategories();
+  if (stored) {
+    return [...(stored.expense || []), ...(stored.income || [])];
+  }
+  return [];
+};
+
+// 默认分类（仅当本地存储没有数据时使用）
 const defaultCategories: Record<string, Category[]> = {
   expense: [
     { id: '1', name: '餐饮', icon: '🍜', type: 'expense' },
@@ -237,7 +247,7 @@ const Bill = () => {
     console.log('[Bill Chart] chartRef.current:', !!chartRef.current);
     console.log('[Bill Chart] chartCollapsed:', chartCollapsed);
     console.log('[Bill Chart] stats.dailyStats.length:', stats.dailyStats.length);
-    
+
     if (!chartRef.current || chartCollapsed || stats.dailyStats.length === 0) {
       console.log('[Bill Chart] Cleanup - conditions not met');
       chartInstance.current?.dispose();
@@ -509,7 +519,8 @@ const Bill = () => {
 
   // 获取所有分类
   const allCategories = useMemo<Category[]>(() => {
-    return Object.values(defaultCategories).flat();
+    const storedCategories = getAllCategoriesFromStorage();
+    return storedCategories.length > 0 ? storedCategories : Object.values(defaultCategories).flat();
   }, []);
 
   // 打开日期选择器
@@ -654,80 +665,80 @@ const Bill = () => {
             <>
               {/* 按时间排序时按日期分组显示 */}
               {sortType === 'time' && Object.entries(groupedRecords).map(([date, dayRecords]) => {
-              const { expense, income } = getDayTotal(dayRecords);
-              const dayjsDate = dayjs(date);
-              const weekDay = ['日', '一', '二', '三', '四', '五', '六'][dayjsDate.day()];
-              const isToday = date === dayjs().format('YYYY-MM-DD');
-              const isYesterday = date === dayjs().subtract(1, 'day').format('YYYY-MM-DD');
-              const dayLabel = dayjsDate.format('M月D日');
-              let dayDesc = '';
-              if (isToday) dayDesc = '今天';
-              else if (isYesterday) dayDesc = '昨天';
+                const { expense, income } = getDayTotal(dayRecords);
+                const dayjsDate = dayjs(date);
+                const weekDay = ['日', '一', '二', '三', '四', '五', '六'][dayjsDate.day()];
+                const isToday = date === dayjs().format('YYYY-MM-DD');
+                const isYesterday = date === dayjs().subtract(1, 'day').format('YYYY-MM-DD');
+                const dayLabel = dayjsDate.format('M月D日');
+                let dayDesc = '';
+                if (isToday) dayDesc = '今天';
+                else if (isYesterday) dayDesc = '昨天';
 
-              return (
-                <div key={date} className={styles.billDayGroup}>
-                  <div className={styles.billDayHeader}>
-                    <div className={styles.dayInfo}>
-                      <span className={styles.dayLabel}>{dayLabel}</span>
-                      {dayDesc && <span className={styles.dayDesc}>{dayDesc}</span>}
-                      <span className={styles.weekDay}>星期{weekDay}</span>
+                return (
+                  <div key={date} className={styles.billDayGroup}>
+                    <div className={styles.billDayHeader}>
+                      <div className={styles.dayInfo}>
+                        <span className={styles.dayLabel}>{dayLabel}</span>
+                        {dayDesc && <span className={styles.dayDesc}>{dayDesc}</span>}
+                        <span className={styles.weekDay}>星期{weekDay}</span>
+                      </div>
+                      <div className={styles.dayTotal}>
+                        {expense > 0 && <span className="expense">支:{expense.toFixed(2)}</span>}
+                        {income > 0 && <span className="income">收:{income.toFixed(2)}</span>}
+                      </div>
                     </div>
-                    <div className={styles.dayTotal}>
-                      {expense > 0 && <span className="expense">支:{expense.toFixed(2)}</span>}
-                      {income > 0 && <span className="income">收:{income.toFixed(2)}</span>}
-                    </div>
+                    <List
+                      dataSource={dayRecords}
+                      style={{ borderRadius: '8px', overflow: 'hidden' }}
+                      renderItem={(record, index) => (
+                        <SwipeableRecordItem
+                          record={record}
+                          onEdit={handleEditRecord}
+                          onDelete={handleDeleteRecord}
+                          isLastItem={index === dayRecords.length - 1}
+                        />
+                      )}
+                    />
                   </div>
-                  <List
-                    dataSource={dayRecords}
-                    style={{ borderRadius: '8px', overflow: 'hidden' }}
-                    renderItem={(record, index) => (
-                      <SwipeableRecordItem
-                        record={record}
-                        onEdit={handleEditRecord}
-                        onDelete={handleDeleteRecord}
-                        isLastItem={index === dayRecords.length - 1}
-                      />
-                    )}
-                  />
+                );
+              })}
+
+              {/* 按金额排序时平铺显示 */}
+              {sortType === 'amount' && (
+                <List
+                  dataSource={records}
+                  renderItem={(record, index) => (
+                    <SwipeableRecordItem
+                      record={record}
+                      onEdit={handleEditRecord}
+                      onDelete={handleDeleteRecord}
+                      isLastItem={index === records.length - 1}
+                    />
+                  )}
+                />
+              )}
+
+              {loading && (
+                <div className={styles.loadingMore}>
+                  <Spin size="small" />
+                  <span>加载中...</span>
                 </div>
-              );
-            })}
+              )}
 
-            {/* 按金额排序时平铺显示 */}
-            {sortType === 'amount' && (
-              <List
-                dataSource={records}
-                renderItem={(record, index) => (
-                  <SwipeableRecordItem
-                    record={record}
-                    onEdit={handleEditRecord}
-                    onDelete={handleDeleteRecord}
-                    isLastItem={index === records.length - 1}
-                  />
-                )}
-              />
-            )}
+              {/* 加载提示 */}
+              {showLoadHint && !loading && hasMore && (
+                <div className="load-hint" onClick={loadPrevMonth}>
+                  <span>继续上滑加载上个月的数据</span>
+                  <UpOutlined />
+                </div>
+              )}
 
-            {loading && (
-              <div className={styles.loadingMore}>
-                <Spin size="small" />
-                <span>加载中...</span>
-              </div>
-            )}
-
-            {/* 加载提示 */}
-            {showLoadHint && !loading && hasMore && (
-              <div className="load-hint" onClick={loadPrevMonth}>
-                <span>继续上滑加载上个月的数据</span>
-                <UpOutlined />
-              </div>
-            )}
-
-            {!hasMore && records.length > 0 && (
-              <div className={styles.noMore}>没有更多了</div>
-            )}
-          </>
-        )}
+              {!hasMore && records.length > 0 && (
+                <div className={styles.noMore}>没有更多了</div>
+              )}
+            </>
+          )}
         </Spin>
       </ScrollContainer>
 

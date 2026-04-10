@@ -17,6 +17,7 @@ const Changelog = lazy(() => import('../pages/Changelog'));
 const Features = lazy(() => import('../pages/Features'));
 const About = lazy(() => import('../pages/About'));
 const Recurring = lazy(() => import('../pages/Recurring'));
+const QuickRecordManage = lazy(() => import('../pages/QuickRecordManage'));
 
 // 加载中组件
 const PageLoading = () => (
@@ -97,6 +98,11 @@ const router = createBrowserRouter([
   {
     path: '/recurring',
     element: <LazyWrapper><Recurring /></LazyWrapper>,
+    errorElement: <RouteError />,
+  },
+  {
+    path: '/quick-record-manage',
+    element: <LazyWrapper><QuickRecordManage /></LazyWrapper>,
     errorElement: <RouteError />,
   },
   {

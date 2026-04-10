@@ -19,7 +19,17 @@ import type { Category } from '../../api/category';
 import SwipeableRecordItem from '../../components/SwipeableRecordItem';
 import DatePicker, { type DateMode } from '../../components/DatePicker';
 import ShareReceipt from '../../components/ShareReceipt';
+import { getLocalCategories } from '../../utils/storage';
 import styles from './BillContent.module.scss';
+
+// 从本地存储获取所有分类
+const getAllCategoriesFromStorage = (): Category[] => {
+  const stored = getLocalCategories();
+  if (stored) {
+    return [...(stored.expense || []), ...(stored.income || [])];
+  }
+  return [];
+};
 
 // 默认分类
 const defaultCategories: Record<string, Category[]> = {
@@ -450,7 +460,8 @@ const BillContent = () => {
 
   // 获取所有分类
   const allCategories = useMemo<Category[]>(() => {
-    return Object.values(defaultCategories).flat();
+    const storedCategories = getAllCategoriesFromStorage();
+    return storedCategories.length > 0 ? storedCategories : Object.values(defaultCategories).flat();
   }, []);
 
   // 确认日期选择
