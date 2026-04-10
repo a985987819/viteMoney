@@ -9,6 +9,15 @@ $content-bg-url: "#{$cdn-base-url}/homePageBg.png";
   flex-direction: column;
 }
 
+// 页面容器 - 与其他页面保持一致
+.homePage {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: #f4d03f;
+  overflow: hidden;
+}
+
 // 主容器
 .homeContainer {
   width: 100%;
@@ -22,6 +31,7 @@ $content-bg-url: "#{$cdn-base-url}/homePageBg.png";
   flex-direction: column;
   position: relative;
   padding-bottom: 70px; // 避让底部导航
+  // 不再需要 padding-bottom，由 PageContainer 的 withBottomNav 处理
 }
 
 .homeBottom {
@@ -145,7 +155,7 @@ $content-bg-url: "#{$cdn-base-url}/homePageBg.png";
 // 添加按钮区域
 .addButtonSection {
   flex-shrink: 0;
-  padding: 16px 20px;
+  padding: 10 20px;
   display: flex;
   justify-content: center;
 }

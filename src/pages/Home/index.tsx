@@ -18,7 +18,6 @@ import SwipeableRecordItem from '../../components/SwipeableRecordItem';
 import EmptyState from '../../components/EmptyState';
 import ScrollContainer from '../../components/ScrollContainer';
 import AnimatedWrapper from '../../components/AnimatedWrapper';
-import PageContainer from '../../components/PageContainer';
 import ShareReceipt from '../../components/ShareReceipt';
 import QuickRecordPanel from '../../components/QuickRecordPanel';
 import styles from './index.module.scss';
@@ -201,7 +200,7 @@ const Home = () => {
   };
 
   return (
-    <PageContainer withSafeArea withBottomNav>
+    <div className={styles.homePage}>
       <QuickRecordPanel onRecorded={() => loadRecords(true)} />
       <div className={styles.homeContainer}>
         <AnimatedWrapper animation="fadeInDown" className={styles.headerSection}>
@@ -311,7 +310,7 @@ const Home = () => {
         <img src={homeBottomImg} alt={t('homeBottomImg')} className={styles.homeBottom} />
         <BottomNav />
       </div>
-    </PageContainer>
+    </div>
   );
 };
 
