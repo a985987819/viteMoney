@@ -5,6 +5,7 @@ import { LeftOutlined } from '@ant-design/icons';
 import { getQuickRecords, addQuickRecord, deleteQuickRecord, type QuickRecord } from '../../utils/storage';
 import { getLocalCategories } from '../../utils/storage';
 import type { Category } from '../../api/category';
+import SpriteIcon from '../../components/SpriteIcon';
 import styles from './index.module.scss';
 
 const QuickRecordManagePage = () => {
@@ -47,16 +48,27 @@ const QuickRecordManagePage = () => {
   }, [selectedCategory]);
 
   const handleSelectCategory = (category: Category) => {
-    setSelectedCategory(category);
-    setSelectedSubCategory(null);
+    // 如果点击已选中的分类，则取消选择
+    if (selectedCategory?.id === category.id) {
+      setSelectedCategory(null);
+      setSelectedSubCategory(null);
+    } else {
+      setSelectedCategory(category);
+      setSelectedSubCategory(null);
+    }
   };
 
   const handleSelectSubCategory = (subCategoryId: string) => {
-    setSelectedSubCategory(subCategoryId);
+    // 如果点击已选中的子分类，则取消选择
+    if (selectedSubCategory === subCategoryId) {
+      setSelectedSubCategory(null);
+    } else {
+      setSelectedSubCategory(subCategoryId);
+    }
   };
 
   const handleSubmit = () => {
-    if (!selectedCategory || !selectedSubCategory || !amount) {
+    if (!selectedCategory || !amount) {
       message.warning('请选择分类和输入金额');
       return;
     }
@@ -67,9 +79,14 @@ const QuickRecordManagePage = () => {
       return;
     }
 
+    // 如果没有选择子分类但有子分类可选，默认使用第一个子分类
+    // 如果没有子分类，则使用主分类ID作为子分类ID
+    const finalSubCategoryId = selectedSubCategory ||
+      (subCategories.length > 0 ? subCategories[0].id : selectedCategory.id);
+
     addQuickRecord({
       categoryId: selectedCategory.id,
-      subCategoryId: selectedSubCategory,
+      subCategoryId: finalSubCategoryId,
       amount: numAmount,
       type: activeType,
     });
@@ -139,7 +156,7 @@ const QuickRecordManagePage = () => {
                   className={`${styles.categoryItem} ${selectedCategory?.id === category.id ? styles.selected : ''}`}
                   onClick={() => handleSelectCategory(category)}
                 >
-                  <span className={styles.categoryIcon}>{category.icon}</span>
+                  <SpriteIcon iconId={category.icon} size={24} className={styles.categoryIcon} />
                   <span className={styles.categoryName}>{category.name}</span>
                 </div>
               ))}
@@ -156,7 +173,8 @@ const QuickRecordManagePage = () => {
                     className={`${styles.subCategoryItem} ${selectedSubCategory === subCategory.id ? styles.selected : ''}`}
                     onClick={() => handleSelectSubCategory(subCategory.id)}
                   >
-                    {subCategory.icon} {subCategory.name}
+                    <SpriteIcon iconId={subCategory.icon} size={16} />
+                    <span style={{ marginLeft: 4 }}>{subCategory.name}</span>
                   </div>
                 ))}
               </div>
@@ -175,9 +193,9 @@ const QuickRecordManagePage = () => {
           </div>
 
           <button
-            className={`${styles.submitBtn} ${(!selectedCategory || !selectedSubCategory || !amount) ? styles.disabled : ''}`}
+            className={`${styles.submitBtn} ${(!selectedCategory || !amount) ? styles.disabled : ''}`}
             onClick={handleSubmit}
-            disabled={!selectedCategory || !selectedSubCategory || !amount}
+            disabled={!selectedCategory || !amount}
           >
             添加
           </button>
@@ -194,7 +212,7 @@ const QuickRecordManagePage = () => {
                 const info = getCategoryName(qr.categoryId, qr.subCategoryId);
                 return (
                   <div key={qr.id} className={styles.quickRecordItem}>
-                    <span className={styles.recordIcon}>{info.icon}</span>
+                    <SpriteIcon iconId={info.icon} size={28} className={styles.recordIcon} />
                     <div className={styles.recordInfo}>
                       <div className={styles.recordCategory}>{info.category}</div>
                       <div className={styles.recordSubCategory}>{info.subCategory}</div>

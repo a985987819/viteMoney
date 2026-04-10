@@ -37,7 +37,12 @@ const SubCategoryModal = ({
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
 
   const handleSelect = (subCategory: SubCategory | null) => {
-    onSelect(subCategory);
+    // 如果点击已选中的子分类，则取消选择（选择主分类）
+    if (subCategory && selectedSubCategoryId === subCategory.id) {
+      onSelect(null);
+    } else {
+      onSelect(subCategory);
+    }
     onClose();
   };
 

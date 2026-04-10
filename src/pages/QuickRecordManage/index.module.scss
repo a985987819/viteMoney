@@ -6,13 +6,16 @@
 
 .pageContainer {
   width: 100%;
-  min-height: 100vh;
+  height: 100vh;
+  height: 100dvh;
   background-color: $bg-color;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .headerSection {
+  flex-shrink: 0;
   background: $primary-color;
   padding: 16px 20px;
   padding-top: calc(16px + env(safe-area-inset-top, 0));
@@ -43,6 +46,10 @@
   flex: 1;
   padding: 16px;
   overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  box-sizing: border-box;
+  min-height: 0;
 }
 
 .typeTabs {
@@ -103,8 +110,8 @@
 
 .categoryGrid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
 }
 
 .categoryItem {
@@ -115,10 +122,11 @@
   justify-content: center;
   background-color: rgba($bg-color, 0.3);
   border: 2px solid transparent;
-  border-radius: 10px;
+  border-radius: 8px;
   cursor: pointer;
   @include transition;
-  padding: 4px;
+  padding: 2px;
+  min-height: 60px;
 
   &:active {
     transform: scale(0.95);
@@ -136,18 +144,19 @@
 }
 
 .categoryIcon {
-  font-size: 20px;
+  flex-shrink: 0;
   margin-bottom: 2px;
 }
 
 .categoryName {
-  font-size: 10px;
+  font-size: 9px;
   color: $text-primary;
   text-align: center;
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  line-height: 1.2;
 }
 
 .subCategorySection {

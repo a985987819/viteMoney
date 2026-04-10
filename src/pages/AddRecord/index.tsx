@@ -123,12 +123,17 @@ const AddRecord = () => {
     return activeType === 'expense' ? getExpenseCategoriesForSelect() : getIncomeCategoriesForSelect();
   }, [activeType]);
 
-  // 处理分类点击（直接选择主分类）
+  // 处理分类点击（直接选择主分类，再次点击取消）
   const handleCategoryClick = (category: CategoryForSelect) => {
-    setSelectedCategory({
-      mainCategory: category,
-      subCategory: null,
-    });
+    // 如果点击已选中的分类，则取消选择
+    if (selectedCategory?.mainCategory.id === category.id) {
+      setSelectedCategory(null);
+    } else {
+      setSelectedCategory({
+        mainCategory: category,
+        subCategory: null,
+      });
+    }
   };
 
   // 处理展开子分类

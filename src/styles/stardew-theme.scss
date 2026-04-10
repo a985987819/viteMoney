@@ -17,11 +17,11 @@ $stardew-earth-light: #f7b327;
 $stardew-earth-solid: #d4a53a;
 
 // ==================== 木质元素（核心主题色） ====================
-$stardew-wood-dark: #8B5A2B;
-$stardew-wood-deep: #6F3F1F;
+$stardew-wood-dark: #8b5a2b;
+$stardew-wood-deep: #6f3f1f;
 $stardew-wood-darkest: #3c2f1f;
 $stardew-wood-light: #d4b48c;
-$stardew-wood-mid: #A67C52;
+$stardew-wood-mid: #a67c52;
 $stardew-wood-solid: #9c6b3f;
 
 // ==================== 面板与背景 ====================
@@ -32,7 +32,7 @@ $stardew-parchment-light: #faf3e0;
 
 // ==================== 文字颜色 ====================
 $stardew-text-primary: #3c2f1f;
-$stardew-text-secondary: #6F3F1F;
+$stardew-text-secondary: #6f3f1f;
 $stardew-text-light: #f0d9b0;
 $stardew-text-highlight: #e8c070;
 
@@ -80,15 +80,15 @@ $stardew-shadow-pixel: 4px 4px 0 $stardew-wood-darkest;
   border-radius: 8px;
 }
 
-$btn-border-mainColor:#9c521d;
-$btn-text-color:#7d290b;
+$btn-border-mainColor: #9c521d;
+$btn-text-color: #7d290b;
 $btn-border-dark: #451d00;
 
 // CDN 基础地址
-$cdn-base-url: 'https://vercel-icons.vercel.app';
+$cdn-base-url: "https://vercel-icons.vercel.app";
 
 @mixin stardew-wood-button {
-  background: url('#{$cdn-base-url}/midBtn.png') no-repeat center center;
+  background: url("#{$cdn-base-url}/midBtn.png") no-repeat center center;
   background-size: 100% 100%;
   border: none;
   color: $btn-text-color !important;
@@ -118,7 +118,7 @@ $cdn-base-url: 'https://vercel-icons.vercel.app';
 }
 
 @mixin stardew-pixel-text {
-  font-family: 'PixelFont', monospace;
+  font-family: "PixelFont", monospace;
   color: $stardew-text-primary;
   text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
   letter-spacing: 0.5px;
@@ -145,7 +145,7 @@ $text-secondary: $stardew-text-secondary;
 $text-tertiary: $stardew-wood-mid;
 
 // 背景颜色
-$bg-color: $stardew-earth-light;
+$bg-color: $content-bg;
 $bg-light: $stardew-earth-solid;
 $panel-bg: $stardew-parchment;
 $content-bg: #fed284;

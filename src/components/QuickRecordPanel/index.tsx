@@ -4,6 +4,7 @@ import { message } from 'antd';
 import { getQuickRecords, type QuickRecord, addLocalRecord, getLocalCategories } from '../../utils/storage';
 import type { RecordItem } from '../../api/record';
 import type { Category } from '../../api/category';
+import SpriteIcon from '../SpriteIcon';
 import styles from './index.module.scss';
 
 interface QuickRecordPanelProps {
@@ -95,7 +96,7 @@ const QuickRecordPanel = memo(({ onRecorded }: QuickRecordPanelProps) => {
                   onClick={() => handleQuickRecord(item)}
                   title={`${info.name}: ¥${item.amount.toFixed(2)}`}
                 >
-                  <span className={styles.quickRecordIcon}>{info.icon}</span>
+                  <SpriteIcon iconId={info.icon} size={20} className={styles.quickRecordIcon} />
                   <span className={styles.quickRecordName}>{info.name}</span>
                   <span className={styles.quickRecordAmount}>¥{item.amount.toFixed(2)}</span>
                 </div>
