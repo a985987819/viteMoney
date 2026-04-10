@@ -1,17 +1,5 @@
 @use "../../styles/stardew-theme.scss" as *;
 
-$primary-color: #d4a574;
-$primary-light: #e8c9a0;
-$primary-dark: #8b5a2b;
-$success-color: #51cf66;
-$danger-color: #e74c3c;
-$text-primary: #5d4037;
-$text-secondary: #8d6e63;
-$text-tertiary: #a1887f;
-$bg-color: #f4d03f;
-$white: #fff;
-$border-color: #d4a574;
-
 @mixin card-shadow {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }

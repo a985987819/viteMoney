@@ -1,17 +1,5 @@
 @use "../../styles/stardew-theme.scss" as *;
 
-$primary-color: #d4a574;
-$danger-color: #e74c3c;
-$success-color: #51cf66;
-$text-primary: #5d4037;
-$text-secondary: #8d6e63;
-$text-tertiary: #a1887f;
-$bg-color: #f4d03f;
-$white: #fff;
-$border-color: #d4a574;
-$panel-bg: #ffc675;
-$content-bg: #fed284;
-
 .quickRecordPanel {
   position: fixed;
   left: 0;

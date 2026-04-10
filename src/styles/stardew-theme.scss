@@ -130,3 +130,37 @@ $stardew-farm-bg: #8bcba0;
 @mixin stardew-farm-bg-mixin {
   background-color: #8bcba0;
 }
+
+// ==================== 组件通用变量别名 ====================
+// 这些变量名用于兼容各组件的历史命名，统一使用 stardew-theme 中的颜色值
+
+// 主色调
+$primary-color: $stardew-wood-light;
+$primary-light: $stardew-panel-alt;
+$primary-dark: $stardew-wood-dark;
+
+// 文字颜色
+$text-primary: $stardew-text-primary;
+$text-secondary: $stardew-text-secondary;
+$text-tertiary: $stardew-wood-mid;
+
+// 背景颜色
+$bg-color: $stardew-earth-light;
+$bg-light: $stardew-earth-solid;
+$panel-bg: $stardew-parchment;
+$content-bg: #fed284;
+
+// 边框颜色
+$border-color: $stardew-wood-light;
+
+// 功能色
+$success-color: $stardew-success;
+$danger-color: $stardew-danger;
+$warning-color: $stardew-warning;
+
+// 选中状态
+$selected-bg: $stardew-panel-alt;
+$selected-border: $stardew-wood-dark;
+
+// 通用颜色
+$white: #fff;

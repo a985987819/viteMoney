@@ -1,15 +1,4 @@
-// 星露谷主题配色
-$primary-color: #d4a574;
-$primary-light: #e8c9a0;
-$primary-dark: #8b5a2b;
-$text-primary: #5d4037;
-$text-secondary: #8d6e63;
-$bg-color: #f4d03f;
-$bg-light: #f7dc6f;
-$white: #fff;
-$border-color: #d4a574;
-$selected-bg: #e8c9a0;
-$selected-border: #8b5a2b;
+@use "../../styles/stardew-theme.scss" as *;
 
 .subCategoryModal {
   :global {
