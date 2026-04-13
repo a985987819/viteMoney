@@ -444,23 +444,24 @@ const Profile = () => {
         )}
       </div>
 
-      {/* 云同步开关 */}
-      <div className={styles.syncSection}>
-        <div className={styles.syncItem}>
-          <div className={styles.syncInfo}>
-            <CloudSyncOutlined className={styles.syncIcon} />
-            <div>
-              <div className={styles.syncTitle}>自动同步</div>
-              <div className={styles.syncDesc}>开启后自动同步数据到云端</div>
+      {/* 云同步开关 - 仅在登录后显示 */}
+      {isLoggedIn && (
+        <div className={styles.syncSection}>
+          <div className={styles.syncItem}>
+            <div className={styles.syncInfo}>
+              <CloudSyncOutlined className={styles.syncIcon} />
+              <div>
+                <div className={styles.syncTitle}>自动同步</div>
+                <div className={styles.syncDesc}>开启后自动同步数据到云端</div>
+              </div>
             </div>
+            <Switch
+              checked={syncEnabled}
+              onChange={setSyncEnabled}
+            />
           </div>
-          <Switch
-            checked={syncEnabled}
-            onChange={setSyncEnabled}
-            disabled={!isLoggedIn}
-          />
         </div>
-      </div>
+      )}
 
       {/* 功能菜单 */}
       <div className={styles.menuSection}>
@@ -773,25 +774,27 @@ const Profile = () => {
           </div>
         </div>
 
-        {/* 删除导入记录 */}
-        <div className="data-manage-section danger-section">
-          <div className={styles.sectionTitle}>
-            <DeleteOutlined /> 导入记录管理
+        {/* 删除导入记录 - 仅登录用户可见 */}
+        {isLoggedIn && (
+          <div className="data-manage-section danger-section">
+            <div className={styles.sectionTitle}>
+              <DeleteOutlined /> 导入记录管理
+            </div>
+            <div className={styles.sectionContent}>
+              <Button
+                danger
+                icon={<DeleteOutlined />}
+                onClick={() => {
+                  setDataManageModalVisible(false);
+                  handleDeleteImported();
+                }}
+              >
+                删除所有导入记录
+              </Button>
+              <div className={styles.sectionDesc}>删除所有通过导入功能添加的记录</div>
+            </div>
           </div>
-          <div className={styles.sectionContent}>
-            <Button
-              danger
-              icon={<DeleteOutlined />}
-              onClick={() => {
-                setDataManageModalVisible(false);
-                handleDeleteImported();
-              }}
-            >
-              删除所有导入记录
-            </Button>
-            <div className={styles.sectionDesc}>删除所有通过导入功能添加的记录</div>
-          </div>
-        </div>
+        )}
 
         {/* 清空本地数据 */}
         <div className="data-manage-section danger-section">
