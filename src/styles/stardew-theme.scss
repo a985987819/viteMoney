@@ -84,11 +84,9 @@ $btn-border-mainColor: #9c521d;
 $btn-text-color: #7d290b;
 $btn-border-dark: #451d00;
 
-// CDN 基础地址
-$cdn-base-url: "https://vercel-icons.vercel.app";
-
 @mixin stardew-wood-button {
-  background: url("#{$cdn-base-url}/midBtn.png") no-repeat center center;
+  background: url("https://vercel-icons.vercel.app/midBtn.png") no-repeat center
+    center;
   background-size: 100% 100%;
   border: none;
   color: $btn-text-color !important;

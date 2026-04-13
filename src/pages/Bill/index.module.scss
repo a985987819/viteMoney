@@ -13,9 +13,6 @@ $summer-bg-dark: #FFE4E1;
 $summer-green: #27AE60;
 $summer-ocean: #3498DB;
 
-// CDN 基础地址
-$cdn-base-url: 'https://vercel-icons.vercel.app';
-
 // 主容器
 .billContainer {
   min-height: 100vh;
@@ -26,7 +23,7 @@ $cdn-base-url: 'https://vercel-icons.vercel.app';
 
 // 顶部图表区域
 .chartSection {
-  background: url('#{$cdn-base-url}/summerChartBg.png') no-repeat center top;
+  background: url('https://vercel-icons.vercel.app/summerChartBg.png') no-repeat center top;
   background-size: cover;
   padding: 20px 16px;
   margin-bottom: 16px;

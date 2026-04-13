@@ -1,8 +1,7 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { CDN_BASE_URL } from '../../constants/cdn';
 import styles from './index.module.scss';
-
-export const CDN_BASE_URL = 'https://vercel-icons.vercel.app';
 
 const profileImg = `${CDN_BASE_URL}/profile.png`;
 const reportImg = `${CDN_BASE_URL}/report.png`;

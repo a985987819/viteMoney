@@ -1,8 +1,8 @@
 // 导入星露谷物语主题
 @use "../../styles/stardew-theme.scss" as *;
 
-$header-bg-url: "#{$cdn-base-url}/homePageHead.png";
-$content-bg-url: "#{$cdn-base-url}/homePageBg.png";
+$header-bg-url: "https://vercel-icons.vercel.app/homePageHead.png";
+$content-bg-url: "https://vercel-icons.vercel.app/homePageBg.png";
 
 @mixin flex-column {
   display: flex;

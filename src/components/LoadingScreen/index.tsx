@@ -1,14 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { resourceLoader, type LoadProgress } from '../../utils/resourceLoader';
+import { CDN_BASE_URL } from '../../constants/cdn';
 import styles from './index.module.scss';
 
 interface LoadingScreenProps {
   onComplete?: () => void;
 }
-
-// CDN 基础地址
-const CDN_BASE_URL = 'https://vercel-icons.vercel.app';
 
 /**
  * 资源加载页面

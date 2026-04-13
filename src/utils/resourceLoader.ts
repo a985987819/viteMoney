@@ -4,6 +4,8 @@
  * 支持缓存机制，避免重复加载
  */
 
+import { CDN_BASE_URL } from '../constants/cdn';
+
 export interface ResourceItem {
   name: string;
   type: 'font' | 'image' | 'other';
@@ -75,76 +77,73 @@ class ResourceLoader {
   private isLoading = false;
   private hasLoaded = false; // 标记是否已经加载过
 
-  // CDN 基础地址
-  private static readonly CDN_BASE_URL = 'https://vercel-icons.vercel.app';
-
   // 默认资源列表 - 使用CDN
   private defaultResources: ResourceItem[] = [
     // 字体
     {
       name: 'mainFont',
       type: 'font',
-      url: `${ResourceLoader.CDN_BASE_URL}/fonts/Cubic_11.ttf`,
+      url: `${CDN_BASE_URL}/fonts/Cubic_11.ttf`,
     },
     // 加载页背景
     {
       name: 'loadingBg',
       type: 'image',
-      url: `${ResourceLoader.CDN_BASE_URL}/loadingBg.png`,
+      url: `${CDN_BASE_URL}/loadingBg.png`,
     },
     // UI 背景图
     {
       name: 'dialogBg',
       type: 'image',
-      url: `${ResourceLoader.CDN_BASE_URL}/dialogBg.png`,
+      url: `${CDN_BASE_URL}/dialogBg.png`,
     },
     // 按钮背景
     {
       name: 'shortBtn',
       type: 'image',
-      url: `${ResourceLoader.CDN_BASE_URL}/shortBtn.png`,
+      url: `${CDN_BASE_URL}/shortBtn.png`,
     },
     {
       name: 'midBtn',
       type: 'image',
-      url: `${ResourceLoader.CDN_BASE_URL}/midBtn.png`,
+      url: `${CDN_BASE_URL}/midBtn.png`,
     },
     // 角色/头像图片
     {
       name: 'fallInFaint',
       type: 'image',
-      url: `${ResourceLoader.CDN_BASE_URL}/fall in faint.png`,
+      url: `${CDN_BASE_URL}/fall in faint.png`,
     },
     {
       name: 'profile',
       type: 'image',
-      url: `${ResourceLoader.CDN_BASE_URL}/profile.png`,
+      url: `${CDN_BASE_URL}/profile.png`,
     },
     {
       name: 'hero',
       type: 'image',
-      url: `${ResourceLoader.CDN_BASE_URL}/hero.png`,
+      url: `${CDN_BASE_URL}/hero.png`,
     },
     // 导航图标
     {
       name: 'bill',
       type: 'image',
-      url: `${ResourceLoader.CDN_BASE_URL}/bill.png`,
+      url: `${CDN_BASE_URL}/bill.png`,
     },
     {
       name: 'report',
       type: 'image',
-      url: `${ResourceLoader.CDN_BASE_URL}/report.png`,
+      url: `${CDN_BASE_URL}/report.png`,
     },
     {
       name: 'stardewvalley',
       type: 'image',
-      url: `${ResourceLoader.CDN_BASE_URL}/stardewvalley.png`,
+      url: `${CDN_BASE_URL}/stardewvalley.png`,
     },
     {
       name: 'icon',
       type: 'image',
-      url: `${ResourceLoader.CDN_BASE_URL}/icon.png`,
+      url: `${CDN_BASE_URL}/icon.png`,
     },
   ];
 

@@ -20,12 +20,12 @@ import ScrollContainer from '../../components/ScrollContainer';
 import AnimatedWrapper from '../../components/AnimatedWrapper';
 import ShareReceipt from '../../components/ShareReceipt';
 import QuickRecordPanel from '../../components/QuickRecordPanel';
+import { CDN_BASE_URL, CDN_IMAGES } from '../../constants/cdn';
 import styles from './index.module.scss';
 import StardewPanel from '../../components/StardewPanel';
 
 const DATE_COUNT = 10;
-const CDN_BASE_URL = 'https://vercel-icons.vercel.app';
-const homeBottomImg = `${CDN_BASE_URL}/homeBottom.png`;
+const homeBottomImg = CDN_IMAGES.homeBottom;
 
 const Home = () => {
   const { t } = useTranslation();

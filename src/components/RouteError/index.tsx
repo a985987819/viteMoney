@@ -1,10 +1,8 @@
 import { useRouteError, isRouteErrorResponse } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import StardewDialog from '../StardewDialog';
+import { CDN_BASE_URL } from '../../constants/cdn';
 import styles from './index.module.scss';
-
-// CDN 基础地址
-const CDN_BASE_URL = 'https://vercel-icons.vercel.app';
 
 /**
  * 路由错误处理组件

@@ -1,13 +1,11 @@
 // 导入星露谷物语主题
-@use './styles/stardew-theme.scss' as *;
-@use 'sass:color';
+@use "./styles/stardew-theme.scss" as *;
+@use "sass:color";
 
 // 变量定义
 $bg-color: $stardew-panel-bg;
 $scrollbar-color: $stardew-wood-mid;
 $scrollbar-hover: $stardew-wood-dark;
-
-$cdn-base-url: 'https://vercel-icons.vercel.app';
 /* 全局样式重置 */
 :global {
   * {
@@ -20,8 +18,18 @@ $cdn-base-url: 'https://vercel-icons.vercel.app';
 
   html,
   body {
-    font-family: 'PixelFont', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB',
-      'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family:
+      "PixelFont",
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      "PingFang SC",
+      "Hiragino Sans GB",
+      "Microsoft YaHei",
+      "Helvetica Neue",
+      Helvetica,
+      Arial,
+      sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     height: 100%;
@@ -51,7 +59,8 @@ $cdn-base-url: 'https://vercel-icons.vercel.app';
   }
 
   /* 输入框聚焦时的样式优化 */
-  input, textarea {
+  input,
+  textarea {
     /* 防止 iOS 自动缩放 */
     font-size: 16px;
     /* 移除 iOS 默认样式 */
@@ -97,24 +106,25 @@ $cdn-base-url: 'https://vercel-icons.vercel.app';
     margin: 0;
   }
 
-  input[type='number'] {
+  input[type="number"] {
     -moz-appearance: textfield;
   }
 
   /* 全局按钮样式 - 木质风格 */
   button {
-    font-family: 'PixelFont', monospace;
+    font-family: "PixelFont", monospace;
   }
   /* Ant Design 组件覆盖 */
-  .ant-btn-sm{
+  .ant-btn-sm {
     @include stardew-wood-button;
     padding: 0 12px !important;
-  background: url('#{$cdn-base-url}/shortBtn.png') no-repeat center center !important;
-  background-size: cover !important;
+    background: url("https://vercel-icons.vercel.app/shortBtn.png") no-repeat
+      center center !important;
+    background-size: cover !important;
   }
   .ant-btn {
     @include stardew-wood-button;
-    font-family: 'PixelFont', monospace;
+    font-family: "PixelFont", monospace;
     font-weight: 2000;
 
     &-primary {
@@ -129,7 +139,8 @@ $cdn-base-url: 'https://vercel-icons.vercel.app';
   }
 
   .ant-modal-close {
-    background: url('#{$cdn-base-url}/closeBtn.png') no-repeat center 2px !important;
+    background: url("https://vercel-icons.vercel.app/closeBtn.png") no-repeat
+      center 2px !important;
     background-size: 100% 99% !important;
     border-radius: 0 !important;
   }
@@ -144,7 +155,8 @@ $cdn-base-url: 'https://vercel-icons.vercel.app';
   }
 
   .backTopBtn {
-    background: url('#{$cdn-base-url}/backTop.png') no-repeat center !important;
+    background: url("https://vercel-icons.vercel.app/backTop.png") no-repeat
+      center !important;
     height: 40px !important;
     width: 40px !important;
     z-index: 1000;
@@ -158,14 +170,14 @@ $cdn-base-url: 'https://vercel-icons.vercel.app';
   }
   .ant-modal-title {
     color: $stardew-text-primary;
-    font-family: 'PixelFont', monospace !important;
-    background: #e4e1d8 ;
+    font-family: "PixelFont", monospace !important;
+    background: #e4e1d8;
   }
   .ant-input {
     background-color: $stardew-parchment-light;
     border: 2px solid $stardew-wood-mid;
     color: $stardew-text-primary;
-    font-family: 'PixelFont', monospace;
+    font-family: "PixelFont", monospace;
 
     &:focus {
       border-color: $stardew-wood-dark;
@@ -179,7 +191,7 @@ $cdn-base-url: 'https://vercel-icons.vercel.app';
 
     .ant-picker-input > input {
       color: $stardew-text-primary;
-      font-family: 'PixelFont', monospace;
+      font-family: "PixelFont", monospace;
     }
   }
 }

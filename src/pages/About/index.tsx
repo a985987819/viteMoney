@@ -2,10 +2,8 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { LeftOutlined, GithubOutlined, MailOutlined, HeartOutlined } from '@ant-design/icons';
 import { Button, Tag } from 'antd';
+import { CDN_BASE_URL } from '../../constants/cdn';
 import styles from './index.module.scss';
-
-// CDN 基础地址
-const CDN_BASE_URL = 'https://vercel-icons.vercel.app';
 
 /**
  * 关于我页面

@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { Button } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
+import { CDN_BASE_URL } from '../../constants/cdn';
 import styles from './index.module.scss';
 
 interface EmptyStateProps {
@@ -11,8 +12,6 @@ interface EmptyStateProps {
   onAction?: () => void;
   showAction?: boolean;
 }
-
-const CDN_BASE_URL = 'https://vercel-icons.vercel.app';
 
 export const EmptyState = ({
   icon = `${CDN_BASE_URL}/fall in faint.png`,

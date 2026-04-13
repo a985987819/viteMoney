@@ -1,5 +1,13 @@
 @use "../../styles/stardew-theme.scss" as *;
 
+// CDN 基础地址
+$cdn-base-url: "https://vercel-icons.vercel.app";
+
+// CDN 图片资源
+$winter-bg-url: "#{$cdn-base-url}/winterBg.png";
+$snow-top-url: "#{$cdn-base-url}/snowTop.png";
+$mine-btn-bg-url: "#{$cdn-base-url}/mineBtnBg.png";
+
 // 冬季雪景配色
 $winter-sky: #87ceeb;
 $winter-sky-deep: #5dade2;
@@ -8,6 +16,8 @@ $winter-snow-light: #ffffff;
 $winter-ice: #b8d4e3;
 $winter-wood: #6b4423;
 $winter-wood-light: #8b5a2b;
+$winter-blue: #4a90e2;
+$winter-blue-light: #7ab8e8;
 
 @mixin card-shadow {
   box-shadow: 0 2px 8px rgba(93, 173, 226, 0.15);
@@ -21,7 +31,9 @@ $winter-wood-light: #8b5a2b;
 .pageContainer {
   width: 100%;
   min-height: 100vh;
-  background: linear-gradient(180deg, $winter-snow 0%, $winter-ice 100%);
+  background: url($winter-bg-url) no-repeat center top;
+  background-size: cover;
+  background-attachment: fixed;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
@@ -33,11 +45,14 @@ $winter-wood-light: #8b5a2b;
   }
 }
 
-// 顶部背景 - 冬季天空
+// 顶部背景 - 带雪顶装饰
 .profileHeader {
+  position: relative;
   padding: 16px;
+  padding-top: calc(16px + env(safe-area-inset-top, 0));
   background: linear-gradient(135deg, $winter-sky 0%, $winter-sky-deep 100%);
   flex-shrink: 0;
+
 }
 
 .headerTitle {
@@ -48,15 +63,30 @@ $winter-wood-light: #8b5a2b;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
-// 用户信息卡片 - 雪地风格
+// 用户信息卡片 - 雪地风格带雪顶
 .userCard {
-  margin: -10px 16px 12px;
+  position: relative;
+  margin: 0 16px 12px;
   padding: 20px;
+  padding-top: 30px;
   background: linear-gradient(135deg, $winter-snow-light 0%, $winter-snow 100%);
   border-radius: 12px;
-  border: 2px solid $winter-ice;
+  border: 3px solid $winter-blue;
   @include card-shadow;
   flex-shrink: 0;
+
+  // 雪顶装饰
+  &::before {
+    content: "";
+    position: absolute;
+    top: -10px;
+    left: -3px;
+    right: -3px;
+    height: 20px;
+    background: url($snow-top-url) repeat-x center top;
+    background-size: auto 100%;
+    border-radius: 12px 12px 0 0;
+  }
 }
 
 .userInfo {
@@ -69,7 +99,8 @@ $winter-wood-light: #8b5a2b;
 .userAvatar {
   background: linear-gradient(135deg, $winter-sky 0%, $winter-sky-deep 100%);
   flex-shrink: 0;
-  border: 2px solid $winter-ice;
+  border: 3px solid $winter-blue;
+  box-shadow: 0 2px 8px rgba(74, 144, 226, 0.3);
 }
 
 .userDetails {
@@ -80,7 +111,7 @@ $winter-wood-light: #8b5a2b;
 .userName {
   font-size: 18px;
   font-weight: 600;
-  color: $text-primary;
+  color: $winter-wood;
   margin-bottom: 4px;
 }
 
@@ -93,7 +124,7 @@ $winter-wood-light: #8b5a2b;
 }
 
 .statusOffline {
-  color: $text-tertiary;
+  color: $winter-blue;
 }
 
 .authButtons {
@@ -103,23 +134,47 @@ $winter-wood-light: #8b5a2b;
 }
 
 .authBtn {
-  // flex: 1;
   height: 40px;
+  border-radius: 8px;
+  border: 2px solid $winter-wood;
+  background: linear-gradient(135deg, #d4a574 0%, #c17f59 100%);
+  color: $winter-wood;
+  font-weight: 600;
 
   &[type="primary"] {
-    @include gradient-bg;
-    border: none;
+    background: linear-gradient(135deg, #d4a574 0%, #c17f59 100%);
+    border: 2px solid $winter-wood;
+  }
+
+  &:hover {
+    background: linear-gradient(135deg, #e8b888 0%, #d4916a 100%);
+    border-color: $winter-wood;
   }
 }
 
-// 同步设置 - 雪地风格
+// 同步设置 - 雪地风格带雪顶
 .syncSection {
+  position: relative;
   margin: 0 16px 12px;
   padding: 16px;
+  padding-top: 26px;
   background: linear-gradient(135deg, $winter-snow-light 0%, $winter-snow 100%);
   border-radius: 12px;
-  border: 2px solid $winter-ice;
+  border: 3px solid $winter-blue;
   flex-shrink: 0;
+
+  // 雪顶装饰
+  &::before {
+    content: "";
+    position: absolute;
+    top: -10px;
+    left: -3px;
+    right: -3px;
+    height: 20px;
+    background: url($snow-top-url) repeat-x center top;
+    background-size: auto 100%;
+    border-radius: 12px 12px 0 0;
+  }
 }
 
 .syncItem {
@@ -145,7 +200,7 @@ $winter-wood-light: #8b5a2b;
 
 .syncDesc {
   font-size: 12px;
-  color: #7f8c8d;
+  color: $winter-blue;
   margin-top: 2px;
 }
 
@@ -158,26 +213,28 @@ $winter-wood-light: #8b5a2b;
   padding-bottom: 80px;
 }
 
+// 菜单按钮 - 使用雪块背景图
 .menuButton {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   aspect-ratio: 1;
-  background: linear-gradient(135deg, $winter-snow-light 0%, $winter-snow 100%);
-  border-radius: 16px;
+  background: url($mine-btn-bg-url) no-repeat center center;
+  background-size: 100% 100%;
+  border-radius: 12px;
   cursor: pointer;
   @include transition;
-  @include card-shadow;
-  border: 2px solid $winter-ice;
+  border: none;
+  padding-top: 10px;
 
   &:active {
-    background: linear-gradient(135deg, $winter-ice 0%, $winter-snow 100%);
     transform: scale(0.95);
   }
 
   &:hover {
-    border-color: $winter-sky;
+    filter: brightness(1.05);
   }
 }
 
@@ -185,13 +242,24 @@ $winter-wood-light: #8b5a2b;
   font-size: 13px;
   color: $winter-wood;
   margin-bottom: 8px;
-  font-weight: 500;
+  font-weight: 600;
   text-align: center;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
 }
 
 .menuIcon {
   font-size: 28px;
-  color: $winter-sky-deep;
+  color: $winter-blue;
+}
+
+// 安装应用按钮特殊样式
+.installMenuItem {
+  background: linear-gradient(135deg, #e8f4f8 0%, #d0e8f0 100%);
+  border-color: $winter-sky;
+
+  .menuIcon {
+    color: $winter-sky-deep;
+  }
 }
 
 // 导入弹窗
@@ -300,63 +368,52 @@ $winter-wood-light: #8b5a2b;
   }
 }
 
-.sectionContent {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
+.dataManageItem {
+  @include flex-between;
+  padding: 12px 0;
+  cursor: pointer;
+  @include transition;
 
-.importOptionsInline,
-.exportOptionsInline {
-  display: flex;
-  gap: 12px;
-
-  :global(.ant-btn) {
-    flex: 1;
-    height: 40px;
-    border-radius: 8px;
+  &:hover {
+    background-color: rgba($primary-color, 0.05);
+    margin: 0 -16px;
+    padding: 12px 16px;
   }
 }
 
-.sectionDesc {
+.itemInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.itemIcon {
+  font-size: 20px;
+  color: $primary-color;
+}
+
+.itemTitle {
+  font-size: 14px;
+  color: $text-primary;
+}
+
+.itemDesc {
   font-size: 12px;
   color: $text-tertiary;
-}
-
-// 导入 loading 样式
-.importLoading {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 80px;
-  padding: 20px;
-
-  :global {
-    .ant-spin {
-      color: $primary-color;
-    }
-
-    .ant-spin-text {
-      color: $text-secondary;
-      font-size: 14px;
-      margin-top: 12px;
-    }
-  }
+  margin-top: 2px;
 }
 
 // 设置弹窗样式
 .settingsSection {
-  padding: 8px 0;
+  margin-bottom: 16px;
 
-  &:not(:last-child) {
-    border-bottom: 2px dashed rgba($stardew-wood-mid, 0.3);
-    margin-bottom: 8px;
+  &:last-child {
+    margin-bottom: 0;
   }
 }
 
 .sectionLabel {
-  font-family: "PixelFont", monospace;
-  font-size: 12px;
+  font-size: 13px;
   color: $text-tertiary;
   margin-bottom: 8px;
   padding-left: 4px;
@@ -364,13 +421,18 @@ $winter-wood-light: #8b5a2b;
 
 .settingsItem {
   @include flex-between;
-  padding: 12px;
-  border-radius: 8px;
+  padding: 12px 0;
   cursor: pointer;
-  transition: all 0.3s ease;
+  border-bottom: 1px solid $border-color;
+
+  &:last-child {
+    border-bottom: none;
+  }
 
   &:hover {
-    background: rgba($stardew-wood-light, 0.3);
+    background-color: rgba($primary-color, 0.05);
+    margin: 0 -16px;
+    padding: 12px 16px;
   }
 }
 
@@ -381,26 +443,19 @@ $winter-wood-light: #8b5a2b;
 }
 
 .settingsIcon {
-  font-size: 22px;
-  color: $primary-color;
-  width: 36px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba($stardew-wood-light, 0.5);
-  border-radius: 8px;
+  font-size: 20px;
+  color: $winter-blue;
 }
 
 .settingsTitle {
-  font-size: 15px;
-  color: $text-primary;
+  font-size: 14px;
+  color: $winter-wood;
   font-weight: 500;
 }
 
 .settingsDesc {
   font-size: 12px;
-  color: $text-tertiary;
+  color: $winter-blue;
   margin-top: 2px;
 }
 
@@ -409,15 +464,15 @@ $winter-wood-light: #8b5a2b;
   color: $text-tertiary;
 }
 
+// 语言切换
 .languageSwitch {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
 
   span {
-    font-size: 14px;
+    font-size: 13px;
     color: $text-tertiary;
-    transition: color 0.3s ease;
 
     &.active {
       color: $primary-color;
@@ -426,168 +481,69 @@ $winter-wood-light: #8b5a2b;
   }
 }
 
-// 主题切换样式
+// 主题单选组
 .themeRadioGroup {
   :global {
     .ant-radio-button-wrapper {
-      padding: 0 12px;
-      height: 32px;
-      line-height: 30px;
-      font-size: 13px;
-      border-color: $stardew-wood-mid;
-      color: $text-secondary;
-      background: rgba(255, 255, 255, 0.8);
-
-      &:first-child {
-        border-radius: 6px 0 0 6px;
-      }
-
-      &:last-child {
-        border-radius: 0 6px 6px 0;
-      }
+      border-color: $winter-ice;
+      color: $winter-blue;
 
       &:hover {
-        color: $primary-color;
+        color: $winter-sky-deep;
       }
 
       &.ant-radio-button-wrapper-checked {
-        background: $primary-color;
-        border-color: $primary-color;
-        color: white;
-
-        &:hover {
-          color: white;
-        }
-      }
-
-      .anticon {
-        margin-right: 4px;
-        font-size: 12px;
+        border-color: $winter-blue;
+        color: $winter-blue;
+        background: rgba($winter-blue, 0.1);
       }
     }
   }
 }
 
-// 弹窗样式
-:global {
-  .ant-modal {
-    position: absolute !important;
-  }
-
-  .ant-modal-wrap {
-    position: absolute;
-    @include flex-center;
-  }
-
-  .ant-modal-content {
-    border-radius: 12px;
-    position: absolute;
-  }
-
-  .ant-modal-header {
-    border-radius: 12px 12px 0 0;
-  }
-
-  .ant-form-item-label {
-    font-weight: 500;
-  }
-
-  .ant-input,
-  .ant-input-password {
-    border-radius: 8px;
-  }
-
-  .ant-btn-primary {
-    @include gradient-bg;
-    border: none;
-    border-radius: 8px;
-
-    &:hover {
-      background-color: $primary-dark !important;
-    }
-  }
-
-  .ant-switch-checked {
-    background-color: $primary-color;
-  }
-}
-
-.installMenuItem {
-  background: linear-gradient(
-    135deg,
-    rgba($primary-color, 0.1) 0%,
-    rgba($primary-dark, 0.15) 100%
-  );
-  border-color: $primary-color;
-
-  .menuTitle {
-    color: $primary-dark;
-    font-weight: 600;
-  }
-
-  .menuIcon {
-    animation: pulse 2s infinite;
-  }
-}
-
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.1);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-.quickRecordManage {
-  max-height: 60vh;
-  overflow-y: auto;
-}
-
-.quickRecordForm {
-  padding-bottom: 16px;
-  border-bottom: 1px solid $border-color;
+// 快捷记账管理
+.quickRecordSection {
   margin-bottom: 16px;
 }
 
-.quickRecordList {
-  max-height: 30vh;
-  overflow-y: auto;
-}
-
-.quickRecordListTitle {
-  font-size: 14px;
-  font-weight: 600;
-  color: $text-primary;
+.quickRecordHeader {
+  @include flex-between;
   margin-bottom: 12px;
 }
 
-.quickRecordEmpty {
-  text-align: center;
-  color: $text-tertiary;
-  padding: 20px;
-  font-size: 13px;
+.quickRecordTitle {
+  font-size: 15px;
+  font-weight: 600;
+  color: $text-primary;
+}
+
+.quickRecordList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .quickRecordItem {
+  @include flex-between;
+  padding: 12px;
+  background-color: $bg-color;
+  border-radius: 8px;
+  cursor: pointer;
+  @include transition;
+
+  &:hover {
+    background-color: rgba($primary-color, 0.1);
+  }
+}
+
+.quickRecordInfo {
   display: flex;
   align-items: center;
-  padding: 10px 12px;
-  background-color: rgba($bg-color, 0.5);
-  border-radius: 8px;
-  margin-bottom: 8px;
-
-  &:last-child {
-    margin-bottom: 0;
-  }
+  gap: 10px;
 }
 
 .quickRecordIcon {
   font-size: 20px;
-  margin-right: 10px;
 }
 
 .quickRecordName {
@@ -601,4 +557,23 @@ $winter-wood-light: #8b5a2b;
   color: $text-secondary;
   margin-right: 12px;
   font-family: "PixelFont", monospace;
+}
+
+// 响应式适配
+@media (max-width: 375px) {
+  .menuSection {
+    gap: 10px;
+  }
+
+  .menuButton {
+    border-radius: 14px;
+  }
+
+  .menuTitle {
+    font-size: 12px;
+  }
+
+  .menuIcon {
+    font-size: 24px;
+  }
 }

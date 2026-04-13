@@ -1,6 +1,7 @@
 import { Component, type ErrorInfo, type ReactNode } from 'react';
 import { withTranslation, type WithTranslation } from 'react-i18next';
 import StardewDialog from '../StardewDialog';
+import { CDN_BASE_URL } from '../../constants/cdn';
 import styles from './index.module.scss';
 
 interface Props extends WithTranslation {
@@ -14,9 +15,6 @@ interface State {
   errorInfo: ErrorInfo | null;
   showDialog: boolean;
 }
-
-// CDN 基础地址
-const CDN_BASE_URL = 'https://vercel-icons.vercel.app';
 
 class ErrorBoundary extends Component<Props, State> {
   public state: State = {

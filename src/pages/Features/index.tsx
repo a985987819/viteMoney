@@ -2,10 +2,8 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { LeftOutlined } from '@ant-design/icons';
 import { Collapse } from 'antd';
+import { CDN_BASE_URL } from '../../constants/cdn';
 import styles from './index.module.scss';
-
-// CDN 基础地址
-const CDN_BASE_URL = 'https://vercel-icons.vercel.app';
 
 interface FeatureItem {
   key: string;

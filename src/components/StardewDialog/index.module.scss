@@ -1,10 +1,7 @@
 @use '../../styles/stardew-theme.scss' as *;
 
-// CDN 基础地址
-$cdn-base-url: 'https://vercel-icons.vercel.app';
-
 // 对话框背景图
-$dialog-bg-url: '#{$cdn-base-url}/dialogBg.png';
+$dialog-bg-url: 'https://vercel-icons.vercel.app/dialogBg.png';
 
 .dialogOverlay {
   position: fixed;
