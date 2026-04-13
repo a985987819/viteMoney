@@ -20,6 +20,9 @@ const BottomNav = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // 判断是否在【我的】页面
+  const isProfilePage = location.pathname === '/profile';
+
   const navItems: NavItem[] = [
     {
       key: 'home',
@@ -52,7 +55,7 @@ const BottomNav = () => {
   };
 
   return (
-    <div className={styles.bottomNav}>
+    <div className={`${styles.bottomNav} ${isProfilePage ? styles.winterTheme : ''}`}>
       {navItems.map((item) => {
         const isActive = location.pathname === item.path;
         return (

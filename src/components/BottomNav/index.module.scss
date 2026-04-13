@@ -1,5 +1,12 @@
 // 导入星露谷物语主题
-@use '../../styles/stardew-theme.scss' as *;
+@use "../../styles/stardew-theme.scss" as *;
+
+// CDN 基础地址
+$cdn-base-url: "https://vercel-icons.vercel.app";
+
+// 冬季配色
+$winter-sky: #87ceeb;
+$winter-sky-deep: #5dade2;
 
 // 动画
 @keyframes slideUp {
@@ -14,7 +21,8 @@
 }
 
 @keyframes woodPulse {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow: 0 -4px 0 $stardew-wood-deep;
   }
   50% {
@@ -46,6 +54,48 @@
   min-height: calc(70px + env(safe-area-inset-bottom, 0));
 }
 
+// 【我的】页面冬季主题
+.winterTheme {
+  background: linear-gradient(135deg, $winter-sky 0%, $winter-sky-deep 100%);
+  box-shadow:
+    0 -4px 0 rgba(255, 255, 255, 0.3),
+    inset 0 2px 0 rgba(255, 255, 255, 0.2);
+
+  // 雪顶装饰 - 只在【我的】页面显示
+  &::before {
+    content: "";
+    position: absolute;
+    top: -10px;
+    left: 0;
+    right: 0;
+    height: 20px;
+    background: url("#{$cdn-base-url}/snowTop.png") repeat-x center top;
+    background-size: auto 100%;
+  }
+
+  .navItem {
+    color: #ffffff;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    &.active {
+      color: $winter-sky-deep;
+      background: #ffffff;
+      border: 2px solid rgba(255, 255, 255, 0.8);
+      box-shadow:
+        inset 0 2px 0 rgba(255, 255, 255, 0.5),
+        0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+  }
+
+  .navLabel {
+    color: #ffffff;
+  }
+}
+
 .navItem {
   display: flex;
   flex-direction: column;
@@ -57,7 +107,7 @@
   @include transition;
   padding: 8px 20px;
   border-radius: 12px;
-  font-family: 'PixelFont', monospace;
+  font-family: "PixelFont", monospace;
   text-shadow: 1px 1px 0 $stardew-panel-alt;
 
   &:hover {
@@ -112,6 +162,6 @@
     @include transition;
     font-weight: bold;
     letter-spacing: 0.5px;
-      color: $stardew-wood-darkest;
+    color: $stardew-wood-darkest;
   }
 }
