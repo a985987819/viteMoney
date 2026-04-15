@@ -1,18 +1,14 @@
-@use '../../styles/stardew-theme.scss' as *;
+@use '../../styles/winter-profile-theme.scss' as winter;
 
 .header {
+  @include winter.winter-header;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 16px;
-  padding-top: calc(12px + env(safe-area-inset-top, 0));
-  background-color: $stardew-sky-deep;
-  border-bottom: 4px solid $stardew-wood-mid;
-  flex-shrink: 0;
 }
 
 .backBtn {
-  color: $stardew-text-primary !important;
+  color: #ffffff !important;
   font-size: 18px;
   display: flex;
   align-items: center;
@@ -20,9 +16,10 @@
   width: 40px;
   height: 40px;
   padding: 0;
+  border-radius: 10px;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.2) !important;
+    background: rgba(255, 255, 255, 0.18) !important;
   }
 
   :global(.anticon) {
@@ -31,12 +28,13 @@
 }
 
 .title {
-  font-size: 18px;
-  font-weight: bold;
-  color: $stardew-text-primary;
+  font-size: 17px;
+  font-weight: 600;
+  color: #ffffff;
   font-family: 'PixelFont', monospace;
   text-align: center;
   flex: 1;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .placeholder {

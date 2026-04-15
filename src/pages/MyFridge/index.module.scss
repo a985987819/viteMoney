@@ -1,0 +1,390 @@
+@use "../../styles/stardew-theme.scss" as *;
+
+$cdn-base-url: "https://vercel-icons.vercel.app";
+$winter-bg-url: "#{$cdn-base-url}/winterBg.png";
+$snow-top-url: "#{$cdn-base-url}/snowTop.png";
+
+$winter-sky: #87ceeb;
+$winter-sky-deep: #5dade2;
+$winter-snow: #f0f8ff;
+$winter-snow-light: #ffffff;
+$winter-ice: #b8d4e3;
+$winter-wood: #6b4423;
+$winter-wood-light: #8b5a2b;
+$winter-blue: #4a90e2;
+
+@mixin card-shadow {
+  box-shadow: 0 2px 8px rgba(93, 173, 226, 0.15);
+}
+
+.pageContainer {
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: url($winter-bg-url) no-repeat center top;
+  background-size: cover;
+  background-attachment: fixed;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+.headerSection {
+  position: relative;
+  padding: 16px;
+  padding-top: calc(16px + env(safe-area-inset-top, 0));
+  background: linear-gradient(135deg, $winter-sky 0%, $winter-sky-deep 100%);
+  flex-shrink: 0;
+}
+
+.headerTop {
+  @include flex-between;
+  margin-bottom: 16px;
+}
+
+.backBtn {
+  width: 36px;
+  height: 36px;
+  border: 2px solid rgba(255, 255, 255, 0.45);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+  font-size: 18px;
+  cursor: pointer;
+  @include flex-center;
+  @include transition;
+
+  &:active {
+    transform: scale(0.96);
+  }
+}
+
+.headerTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: #ffffff;
+  text-align: center;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  font-family: "PixelFont", monospace;
+}
+
+.headerPlaceholder {
+  width: 36px;
+  height: 36px;
+}
+
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.summaryCard,
+.formCard,
+.listCard,
+.itemCard {
+  position: relative;
+  background: linear-gradient(135deg, $winter-snow-light 0%, $winter-snow 100%);
+  border-radius: 12px;
+  border: 3px solid $winter-blue;
+  @include card-shadow;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: -10px;
+    left: -3px;
+    right: -3px;
+    height: 20px;
+    background: url($snow-top-url) repeat-x center top;
+    background-size: auto 100%;
+    border-radius: 12px 12px 0 0;
+    pointer-events: none;
+  }
+}
+
+.summaryCard {
+  padding: 24px 10px 14px;
+  text-align: center;
+}
+
+.summaryLabel {
+  font-size: 12px;
+  color: $winter-wood;
+  margin-bottom: 6px;
+}
+
+.summaryValue {
+  font-size: 24px;
+  line-height: 1;
+  color: $winter-blue;
+  font-weight: 700;
+  font-family: "PixelFont", monospace;
+}
+
+.contentSection {
+  padding: 16px;
+  padding-bottom: calc(24px + env(safe-area-inset-bottom, 0));
+  overflow: visible;
+  flex-shrink: 0;
+}
+
+.formCard {
+  padding: 30px 18px 18px;
+  margin-bottom: 16px;
+}
+
+.listCard {
+  padding: 30px 18px 18px;
+}
+
+.sectionTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: $winter-wood;
+  margin-bottom: 16px;
+  font-family: "PixelFont", monospace;
+}
+
+.formGrid {
+  display: grid;
+  gap: 14px;
+}
+
+.fieldBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.fieldLabel {
+  font-size: 13px;
+  color: $winter-wood;
+  font-weight: 600;
+}
+
+.submitWrap {
+  padding-top: 6px;
+}
+
+.addButton {
+  width: 100%;
+  height: 46px;
+  border-radius: 10px;
+  border: 2px solid $winter-wood;
+  background: linear-gradient(135deg, #d4a574 0%, #c17f59 100%);
+  color: $winter-wood;
+  font-weight: 600;
+
+  &:hover {
+    background: linear-gradient(135deg, #e8b888 0%, #d4916a 100%) !important;
+    border-color: $winter-wood !important;
+    color: $winter-wood !important;
+  }
+}
+
+.listToolbar {
+  display: grid;
+  gap: 14px;
+}
+
+.tabGroup {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.tabButton {
+  min-height: 44px;
+  padding: 10px 8px;
+  border: 2px solid $winter-ice;
+  border-radius: 10px;
+  background: rgba($winter-snow-light, 0.88);
+  color: $winter-wood;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  @include transition;
+  @include flex-center;
+  gap: 6px;
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+.activeTab {
+  background: linear-gradient(135deg, rgba($winter-sky, 0.2) 0%, rgba($winter-sky-deep, 0.25) 100%);
+  border-color: $winter-blue;
+  color: $winter-blue;
+}
+
+.tabCount {
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: rgba($winter-blue, 0.12);
+  font-size: 12px;
+  line-height: 20px;
+}
+
+.listHint {
+  margin: 14px 0 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba($winter-blue, 0.08);
+  color: $winter-wood-light;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.emptyWrap {
+  padding: 16px 0 8px;
+}
+
+.itemList {
+  display: grid;
+  gap: 12px;
+}
+
+.itemCard {
+  padding: 24px 14px 14px;
+}
+
+.itemHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.itemName {
+  font-size: 17px;
+  line-height: 1.2;
+  color: $winter-wood;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.itemMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  font-size: 12px;
+  color: $winter-blue;
+}
+
+.itemHeaderRight {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.deleteBtn {
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 10px;
+  background: rgba(196, 92, 72, 0.12);
+  color: #c45c48;
+  cursor: pointer;
+  @include flex-center;
+  @include transition;
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+.progressRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.progressLabel {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  color: $winter-wood;
+  font-size: 13px;
+
+  strong {
+    font-size: 18px;
+    color: $winter-blue;
+    font-family: "PixelFont", monospace;
+  }
+}
+
+.daysOwned {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+:global {
+  .ant-input-affix-wrapper,
+  .ant-picker,
+  .ant-input {
+    border-radius: 10px;
+    border-color: $winter-ice;
+    background: rgba(255, 255, 255, 0.95);
+  }
+
+  .ant-input-affix-wrapper:focus,
+  .ant-input-affix-wrapper-focused,
+  .ant-picker-focused,
+  .ant-input:focus,
+  .ant-input-focused {
+    box-shadow: 0 0 0 3px rgba($winter-blue, 0.14);
+    border-color: $winter-blue;
+  }
+
+  .ant-tag.ant-tag-processing {
+    color: $winter-blue;
+    background: rgba($winter-blue, 0.1);
+    border-color: rgba($winter-blue, 0.22);
+  }
+
+  .ant-tag.ant-tag-success {
+    color: $success-color;
+    background: rgba($success-color, 0.1);
+    border-color: rgba($success-color, 0.22);
+  }
+
+  .ant-slider {
+    margin: 10px 4px 4px;
+  }
+
+  .ant-slider-track {
+    background: linear-gradient(90deg, #79c67c 0%, #f1c24e 58%, #d95e43 100%);
+  }
+
+  .ant-slider-rail {
+    background: rgba($winter-ice, 0.55);
+  }
+
+  .ant-slider-handle::after {
+    box-shadow: 0 0 0 2px $winter-blue;
+  }
+}
+
+@media (max-width: 420px) {
+  .headerTitle {
+    font-size: 17px;
+  }
+
+  .summaryValue {
+    font-size: 22px;
+  }
+
+  .progressRow {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

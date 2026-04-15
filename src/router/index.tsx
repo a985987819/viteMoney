@@ -18,6 +18,7 @@ const Features = lazy(() => import('../pages/Features'));
 const About = lazy(() => import('../pages/About'));
 const Recurring = lazy(() => import('../pages/Recurring'));
 const QuickRecordManage = lazy(() => import('../pages/QuickRecordManage'));
+const MyFridge = lazy(() => import('../pages/MyFridge'));
 
 // 加载中组件
 const PageLoading = () => (
@@ -103,6 +104,11 @@ const router = createBrowserRouter([
   {
     path: '/quick-record-manage',
     element: <LazyWrapper><QuickRecordManage /></LazyWrapper>,
+    errorElement: <RouteError />,
+  },
+  {
+    path: '/my-fridge',
+    element: <LazyWrapper><MyFridge /></LazyWrapper>,
     errorElement: <RouteError />,
   },
   {

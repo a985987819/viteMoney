@@ -106,7 +106,7 @@ const Recurring = () => {
   };
 
   return (
-    <div className="page-container">
+    <div className={styles.pageContainer}>
       {/* 顶部导航 */}
       <PageHeader title="定时记账" />
 

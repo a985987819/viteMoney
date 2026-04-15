@@ -1,32 +1,20 @@
+@use "../../styles/winter-profile-theme.scss" as winter;
 @use "../../styles/stardew-theme.scss" as *;
-
-// 冬季雪景配色
-$winter-sky: #87ceeb;
-$winter-sky-deep: #5dade2;
-$winter-snow: #f0f8ff;
-$winter-snow-light: #ffffff;
-$winter-ice: #b8d4e3;
-$winter-wood: #6b4423;
-
-@mixin card-shadow {
-  box-shadow: 0 4px 12px rgba(93, 173, 226, 0.15);
-}
 
 .pageContainer {
   width: 100%;
-  height: 100vh;
-  height: 100dvh;
-  background: linear-gradient(180deg, $winter-snow 0%, $winter-ice 100%);
+  min-height: 100vh;
+  min-height: 100dvh;
+  @include winter.winter-page-bg;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
 }
 
 .headerSection {
-  flex-shrink: 0;
-  background: linear-gradient(135deg, $winter-sky 0%, $winter-sky-deep 100%);
-  padding: 16px 20px;
-  padding-top: calc(16px + env(safe-area-inset-top, 0));
+  @include winter.winter-header;
 }
 
 .headerTop {
@@ -35,29 +23,29 @@ $winter-wood: #6b4423;
 }
 
 .backBtn {
-  font-size: 20px;
-  color: $winter-wood;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  color: #ffffff;
   cursor: pointer;
-  width: 32px;
-  height: 32px;
   @include flex-center;
+
+  &:active {
+    transform: scale(0.96);
+  }
 }
 
 .headerTitle {
-  font-size: 18px;
-  font-weight: bold;
-  color: $winter-wood;
+  font-size: 17px;
+  font-weight: 600;
+  color: #ffffff;
   font-family: "PixelFont", monospace;
 }
 
 .contentSection {
   flex: 1;
   padding: 16px;
-  overflow-y: auto;
-  overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
-  box-sizing: border-box;
-  min-height: 0;
+  padding-bottom: calc(24px + env(safe-area-inset-bottom, 0));
 }
 
 .typeTabs {
@@ -68,40 +56,36 @@ $winter-wood: #6b4423;
   .typeTab {
     flex: 1;
     padding: 10px 16px;
-    border: 2px solid $winter-ice;
-    border-radius: 8px;
-    background-color: rgba($winter-snow-light, 0.8);
-    color: #7f8c8d;
+    border: 2px solid winter.$winter-ice;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.92);
+    color: winter.$winter-wood;
     font-family: "PixelFont", monospace;
-    font-size: 14px;
     cursor: pointer;
     @include transition;
 
     &.active {
-      background-color: $winter-sky-deep;
-      border-color: $winter-sky-deep;
-      color: $winter-snow-light;
-    }
-
-    &:active {
-      transform: scale(0.98);
+      background: rgba(winter.$winter-blue, 0.14);
+      border-color: winter.$winter-blue;
+      color: winter.$winter-blue;
     }
   }
 }
 
-.quickRecordForm {
-  background: linear-gradient(135deg, $winter-snow-light 0%, $winter-snow 100%);
-  border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 16px;
-  border: 2px solid $winter-ice;
-  @include card-shadow;
+.quickRecordForm,
+.quickRecordList {
+  @include winter.winter-snow-card(24px 16px 16px);
 }
 
-.formTitle {
+.quickRecordForm {
+  margin-bottom: 16px;
+}
+
+.formTitle,
+.listTitle {
   font-size: 15px;
   font-weight: 600;
-  color: $winter-wood;
+  color: winter.$winter-wood;
   margin-bottom: 16px;
   font-family: "PixelFont", monospace;
 }
@@ -112,7 +96,7 @@ $winter-wood: #6b4423;
 
 .formLabel {
   font-size: 13px;
-  color: #7f8c8d;
+  color: winter.$winter-wood-light;
   margin-bottom: 6px;
   font-family: "PixelFont", monospace;
 }
@@ -123,49 +107,43 @@ $winter-wood: #6b4423;
   gap: 6px;
 }
 
+.categoryItem,
+.subCategoryItem,
+.quickRecordItem {
+  background: rgba(255, 255, 255, 0.88);
+  border: 2px solid winter.$winter-ice;
+  border-radius: 10px;
+}
+
 .categoryItem {
   aspect-ratio: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: rgba($winter-ice, 0.3);
-  border: 2px solid transparent;
-  border-radius: 8px;
   cursor: pointer;
-  @include transition;
   padding: 2px;
   min-height: 60px;
-
-  &:active {
-    transform: scale(0.95);
-  }
+  @include transition;
 
   &.selected {
-    border-color: $winter-sky-deep;
-    background-color: rgba($winter-sky-deep, 0.15);
-  }
-
-  &.disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
+    border-color: winter.$winter-blue;
+    background: rgba(winter.$winter-blue, 0.12);
   }
 }
 
 .categoryIcon {
-  flex-shrink: 0;
   margin-bottom: 2px;
 }
 
 .categoryName {
   font-size: 9px;
-  color: $winter-wood;
+  color: winter.$winter-wood;
   text-align: center;
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  line-height: 1.2;
 }
 
 .subCategorySection {
@@ -183,60 +161,40 @@ $winter-wood: #6b4423;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba($winter-ice, 0.3);
-  border: 2px solid transparent;
-  border-radius: 8px;
   cursor: pointer;
-  @include transition;
-  font-size: 12px;
-  color: $winter-wood;
+  color: winter.$winter-wood;
   font-family: "PixelFont", monospace;
 
-  &:active {
-    transform: scale(0.95);
-  }
-
   &.selected {
-    border-color: $winter-sky-deep;
-    background-color: rgba($winter-sky-deep, 0.15);
+    border-color: winter.$winter-blue;
+    background: rgba(winter.$winter-blue, 0.12);
   }
 }
 
 .amountInput {
   width: 100%;
   height: 44px;
-  border: 2px solid $winter-ice;
-  border-radius: 8px;
+  border: 2px solid winter.$winter-ice;
+  border-radius: 10px;
   padding: 0 12px;
   font-size: 18px;
+  color: winter.$winter-wood;
+  background: rgba(255, 255, 255, 0.95);
   font-family: "PixelFont", monospace;
-  color: $winter-wood;
-  background-color: rgba($winter-snow-light, 0.8);
 
   &:focus {
     outline: none;
-    border-color: $winter-sky-deep;
+    border-color: winter.$winter-blue;
   }
 }
 
 .submitBtn {
   width: 100%;
-  height: 48px;
+  height: 46px;
   margin-top: 16px;
-  background: linear-gradient(135deg, $winter-sky 0%, $winter-sky-deep 100%);
-  border: 3px solid $winter-sky-deep;
-  border-radius: 8px;
-  color: $winter-snow-light;
+  @include winter.winter-primary-button;
   font-family: "PixelFont", monospace;
   font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-  @include transition;
-
-  &:active {
-    transform: scale(0.98);
-    background: linear-gradient(135deg, $winter-sky-deep 0%, $winter-sky 100%);
-  }
 
   &.disabled {
     opacity: 0.5;
@@ -244,25 +202,9 @@ $winter-wood: #6b4423;
   }
 }
 
-.quickRecordList {
-  background: linear-gradient(135deg, $winter-snow-light 0%, $winter-snow 100%);
-  border-radius: 12px;
-  padding: 16px;
-  border: 2px solid $winter-ice;
-  @include card-shadow;
-}
-
-.listTitle {
-  font-size: 15px;
-  font-weight: 600;
-  color: $winter-wood;
-  margin-bottom: 12px;
-  font-family: "PixelFont", monospace;
-}
-
 .listEmpty {
   text-align: center;
-  color: #7f8c8d;
+  color: winter.$winter-wood-light;
   padding: 24px;
   font-size: 13px;
 }
@@ -271,8 +213,6 @@ $winter-wood: #6b4423;
   display: flex;
   align-items: center;
   padding: 10px;
-  background-color: rgba($winter-ice, 0.3);
-  border-radius: 8px;
   margin-bottom: 8px;
 
   &:last-child {
@@ -281,7 +221,6 @@ $winter-wood: #6b4423;
 }
 
 .recordIcon {
-  font-size: 24px;
   margin-right: 10px;
 }
 
@@ -291,13 +230,13 @@ $winter-wood: #6b4423;
 
 .recordCategory {
   font-size: 14px;
-  color: $winter-wood;
+  color: winter.$winter-wood;
   font-weight: 500;
 }
 
 .recordSubCategory {
   font-size: 12px;
-  color: #7f8c8d;
+  color: winter.$winter-wood-light;
   margin-top: 2px;
 }
 
@@ -315,13 +254,8 @@ $winter-wood: #6b4423;
 
 .deleteBtn {
   padding: 6px 10px;
-  background-color: transparent;
-  border: none;
+  border: 0;
+  background: transparent;
   color: #c45c48;
-  font-size: 12px;
   cursor: pointer;
-
-  &:active {
-    opacity: 0.7;
-  }
 }

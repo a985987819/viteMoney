@@ -17,6 +17,7 @@ const STORAGE_KEYS = {
   CATEGORIES: 'money_categories',
   BUDGETS: 'money_budgets',
   QUICK_RECORDS: 'money_quick_records',
+  FRIDGE_ITEMS: 'money_fridge_items',
 };
 
 export interface QuickRecord {
@@ -26,6 +27,17 @@ export interface QuickRecord {
   amount: number;
   type: 'expense' | 'income';
   order: number;
+}
+
+export interface FridgeItem {
+  id: string;
+  name: string;
+  quantity: string;
+  purchaseDate: string;
+  progress: number;
+  createdAt: string;
+  updatedAt: string;
+  consumedAt?: string;
 }
 
 // 从统一分类源生成默认分类数据
@@ -181,6 +193,7 @@ const ALL_DATA_KEYS = [
   STORAGE_KEYS.ACCESS_TOKEN,
   STORAGE_KEYS.REFRESH_TOKEN,
   STORAGE_KEYS.TOKEN_EXPIRES,
+  STORAGE_KEYS.FRIDGE_ITEMS,
 ];
 
 // 清除所有本地数据
@@ -333,4 +346,58 @@ export const deleteQuickRecord = (id: string): void => {
 export const reorderQuickRecords = (records: QuickRecord[]): void => {
   const reordered = records.map((r, index) => ({ ...r, order: index }));
   saveQuickRecords(reordered);
+};
+
+// 鑾峰彇鎴戠殑鍐扮鍒楄〃
+export const getFridgeItems = (): FridgeItem[] => {
+  const data = localStorage.getItem(STORAGE_KEYS.FRIDGE_ITEMS);
+  return data ? JSON.parse(data) : [];
+};
+
+// 淇濆瓨鎴戠殑鍐扮鍒楄〃
+export const saveFridgeItems = (items: FridgeItem[]): void => {
+  localStorage.setItem(STORAGE_KEYS.FRIDGE_ITEMS, JSON.stringify(items));
+};
+
+// 娣诲姞鍐扮鏉＄洰
+export const addFridgeItem = (
+  item: Omit<FridgeItem, 'id' | 'createdAt' | 'updatedAt'>
+): FridgeItem => {
+  const items = getFridgeItems();
+  const now = new Date().toISOString();
+  const newItem: FridgeItem = {
+    ...item,
+    id: `fridge_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`,
+    createdAt: now,
+    updatedAt: now,
+  };
+
+  items.push(newItem);
+  saveFridgeItems(items);
+  return newItem;
+};
+
+// 鏇存柊鍐扮鏉＄洰
+export const updateFridgeItem = (
+  id: string,
+  data: Partial<Omit<FridgeItem, 'id' | 'createdAt'>>
+): void => {
+  const items = getFridgeItems();
+  const index = items.findIndex((item) => item.id === id);
+
+  if (index !== -1) {
+    items[index] = {
+      ...items[index],
+      ...data,
+      updatedAt: new Date().toISOString(),
+    };
+    saveFridgeItems(items);
+  }
+};
+
+// 鍒犻櫎鍐扮鏉＄洰
+export const deleteFridgeItem = (id: string): void => {
+  const items = getFridgeItems();
+  const filtered = items.filter((item) => item.id !== id);
+  saveFridgeItems(filtered);
 };

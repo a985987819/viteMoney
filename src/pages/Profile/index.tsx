@@ -42,6 +42,7 @@ import {
   ClockCircleOutlined,
   ThunderboltOutlined,
   DownloadOutlined,
+  InboxOutlined,
 } from '@ant-design/icons';
 import { useAuth } from '../../hooks/useAuth';
 import { usePWA } from '../../hooks/usePWA';
@@ -103,6 +104,11 @@ const Profile = () => {
   // 打开攒钱计划管理页面
   const handleOpenSavings = () => {
     navigate('/savings');
+  };
+
+  // 打开我的冰箱页面
+  const handleOpenMyFridge = () => {
+    navigate('/my-fridge');
   };
 
   // 切换语言
@@ -364,6 +370,11 @@ const Profile = () => {
       title: '攒钱计划',
       icon: <WalletOutlined />,
       onClick: handleOpenSavings,
+    },
+    {
+      title: '我的冰箱',
+      icon: <InboxOutlined />,
+      onClick: handleOpenMyFridge,
     },
     {
       title: t('profile.dataManagement'),

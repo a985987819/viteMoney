@@ -15,10 +15,15 @@ import {
   getLocalBudget,
   setLocalBudget,
   deleteLocalBudget,
+  getFridgeItems,
+  saveFridgeItems,
+  addFridgeItem,
+  updateFridgeItem,
+  deleteFridgeItem,
 } from './storage';
 import type { RecordItem } from '../api/record';
 import type { User, Tokens } from '../api/auth';
-import type { LocalBudget } from './storage';
+import type { LocalBudget, FridgeItem } from './storage';
 
 describe('storage utils', () => {
   beforeEach(() => {
@@ -275,6 +280,100 @@ describe('storage utils', () => {
       deleteLocalBudget(2024, 1);
 
       expect(getLocalBudget(2024, 1)).toBeNull();
+    });
+  });
+
+  describe('fridge item storage', () => {
+    it('should return empty array when no fridge items', () => {
+      expect(getFridgeItems()).toEqual([]);
+    });
+
+    it('should save and retrieve fridge items', () => {
+      const mockItems: FridgeItem[] = [
+        {
+          id: 'fridge_1',
+          name: '瑗跨孩鏌?',
+          quantity: '2 鏂?',
+          purchaseDate: '2026-04-15',
+          progress: 35,
+          createdAt: '2026-04-15T08:00:00.000Z',
+          updatedAt: '2026-04-15T08:00:00.000Z',
+        },
+      ];
+
+      saveFridgeItems(mockItems);
+
+      expect(getFridgeItems()).toEqual(mockItems);
+    });
+
+    it('should add fridge item with generated metadata', () => {
+      const created = addFridgeItem({
+        name: '榛勭摐',
+        quantity: '3 鏍?',
+        purchaseDate: '2026-04-15',
+        progress: 0,
+      });
+
+      const items = getFridgeItems();
+      expect(items).toHaveLength(1);
+      expect(items[0].id).toBe(created.id);
+      expect(items[0].name).toBe('榛勭摐');
+      expect(items[0].createdAt).toBeTruthy();
+      expect(items[0].updatedAt).toBeTruthy();
+    });
+
+    it('should update fridge item progress and consumedAt', () => {
+      saveFridgeItems([
+        {
+          id: 'fridge_1',
+          name: '闈掕彍',
+          quantity: '1 鎶?',
+          purchaseDate: '2026-04-14',
+          progress: 20,
+          createdAt: '2026-04-14T08:00:00.000Z',
+          updatedAt: '2026-04-14T08:00:00.000Z',
+        },
+      ]);
+
+      updateFridgeItem('fridge_1', {
+        progress: 100,
+        consumedAt: '2026-04-15T08:00:00.000Z',
+      });
+
+      const [item] = getFridgeItems();
+      expect(item.progress).toBe(100);
+      expect(item.consumedAt).toBe('2026-04-15T08:00:00.000Z');
+      expect(item.updatedAt).not.toBe('2026-04-14T08:00:00.000Z');
+    });
+
+    it('should delete fridge item by id', () => {
+      saveFridgeItems([
+        {
+          id: 'fridge_1',
+          name: '鑺硅彍',
+          quantity: '500g',
+          purchaseDate: '2026-04-13',
+          progress: 0,
+          createdAt: '2026-04-13T08:00:00.000Z',
+          updatedAt: '2026-04-13T08:00:00.000Z',
+        },
+        {
+          id: 'fridge_2',
+          name: '鍦熻眴',
+          quantity: '4 涓?',
+          purchaseDate: '2026-04-12',
+          progress: 100,
+          createdAt: '2026-04-12T08:00:00.000Z',
+          updatedAt: '2026-04-12T08:00:00.000Z',
+          consumedAt: '2026-04-14T08:00:00.000Z',
+        },
+      ]);
+
+      deleteFridgeItem('fridge_1');
+
+      const items = getFridgeItems();
+      expect(items).toHaveLength(1);
+      expect(items[0].id).toBe('fridge_2');
     });
   });
 });

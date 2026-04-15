@@ -1,19 +1,15 @@
-@use "../../styles/stardew-theme.scss" as *;
+@use "../../styles/winter-profile-theme.scss" as winter;
 
 .changelogPage {
   min-height: 100vh;
-  background-color: #c8e6c9;
-  position: relative;
+  min-height: 100dvh;
+  @include winter.winter-page-bg;
   overflow-x: hidden;
 }
 
-// 背景装饰
 .backgroundDecorations {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   pointer-events: none;
   z-index: 0;
 }
@@ -21,51 +17,20 @@
 .cloud1,
 .cloud2 {
   position: absolute;
-  font-size: 40px;
-  opacity: 0.6;
-  animation: float 20s ease-in-out infinite;
+  opacity: 0.8;
 }
 
-.cloud1 {
-  top: 80px;
-  left: 10%;
-  animation-delay: 0s;
-}
+.cloud1 { top: 90px; left: 10%; }
+.cloud2 { top: 140px; right: 15%; }
 
-.cloud2 {
-  top: 120px;
-  right: 15%;
-  animation-delay: -10s;
-}
-
-@keyframes float {
-  0%,
-  100% {
-    transform: translateX(0) translateY(0);
-  }
-  25% {
-    transform: translateX(20px) translateY(-10px);
-  }
-  50% {
-    transform: translateX(-10px) translateY(5px);
-  }
-  75% {
-    transform: translateX(15px) translateY(-5px);
-  }
-}
-
-// 头部导航
 .header {
+  @include winter.winter-header;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 16px;
-  background: rgba($stardew-wood-light, 0.95);
-  border-bottom: 4px solid $stardew-wood-dark;
   position: sticky;
   top: 0;
   z-index: 10;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .backButton {
@@ -74,154 +39,97 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: $stardew-wood-mid;
-  border: 3px solid $stardew-wood-dark;
-  border-radius: 8px;
+  color: #ffffff;
   cursor: pointer;
-  color: $stardew-text-primary;
-  font-size: 18px;
-  box-shadow:
-    inset 0 2px 0 rgba(255, 255, 255, 0.3),
-    0 4px 0 $stardew-wood-deep;
-  @include transition;
-
-  &:hover {
-    transform: translateY(2px);
-    box-shadow:
-      inset 0 2px 0 rgba(255, 255, 255, 0.3),
-      0 2px 0 $stardew-wood-deep;
-  }
-
-  &:active {
-    transform: translateY(4px);
-    box-shadow:
-      inset 0 2px 4px rgba(0, 0, 0, 0.2),
-      0 0 0 $stardew-wood-deep;
-  }
 }
 
 .title {
-  font-family: "PixelFont", monospace;
-  font-size: 20px;
-  font-weight: bold;
-  color: $stardew-text-primary;
   margin: 0;
-  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
+  color: #ffffff;
+  font-family: "PixelFont", monospace;
+  font-size: 18px;
 }
 
 .placeholder {
   width: 40px;
 }
 
-// 内容区域
 .content {
   position: relative;
   z-index: 1;
   padding: 20px 16px 80px;
-  max-width: 600px;
+  max-width: 720px;
   margin: 0 auto;
 }
 
-// 版本列表
-.versionList {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+.illustration,
+.timelineSection,
+.footerNote {
+  @include winter.winter-snow-card(24px 16px 16px);
 }
 
-.versionCard {
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 16px;
-  padding: 20px;
-  border: 4px solid $stardew-wood-mid;
-  box-shadow:
-    inset 0 2px 0 rgba(255, 255, 255, 0.8),
-    0 6px 0 $stardew-wood-dark,
-    0 8px 16px rgba(0, 0, 0, 0.15);
+.illustration {
+  margin-bottom: 20px;
+  text-align: center;
 }
 
-.versionHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 12px;
-  padding-bottom: 12px;
-  border-bottom: 2px dashed $stardew-wood-mid;
+.animalImg {
+  width: min(220px, 100%);
 }
 
-.versionNumber {
+.timelineSection {
+  margin-bottom: 20px;
+}
+
+.timelineLabel {
+  color: winter.$winter-wood;
   font-family: "PixelFont", monospace;
-  font-size: 18px;
-  font-weight: bold;
-  color: $stardew-text-primary;
 }
 
-.versionDate {
+.version {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.date {
+  margin-top: 4px;
   font-size: 12px;
-  color: $stardew-text-secondary;
+  color: winter.$winter-wood-light;
+}
+
+.timelineContent {
+  color: winter.$winter-wood;
+}
+
+.typeTag {
+  margin-bottom: 10px;
+  border-radius: 999px;
   font-family: "PixelFont", monospace;
-}
-
-.versionType {
-  display: inline-block;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 11px;
-  font-weight: bold;
-  font-family: "PixelFont", monospace;
-  margin-left: 8px;
-}
-
-.major {
-  background: $stardew-gold;
-  color: $stardew-text-primary;
-}
-
-.minor {
-  background: $stardew-wood-mid;
-  color: $stardew-text-light;
-}
-
-.patch {
-  background: rgba($stardew-wood-mid, 0.5);
-  color: $stardew-text-primary;
 }
 
 .changeList {
-  list-style: none;
-  padding: 0;
   margin: 0;
+  padding-left: 18px;
 }
 
 .changeItem {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  padding: 8px 0;
-  font-size: 14px;
-  color: $stardew-text-secondary;
-  line-height: 1.5;
-
-  &:before {
-    content: "▸";
-    color: $stardew-gold;
-    font-weight: bold;
-    flex-shrink: 0;
-  }
+  margin-bottom: 8px;
+  color: winter.$winter-wood-light;
+  line-height: 1.6;
 }
 
-// 提示区域
-.tipSection {
-  margin-top: 24px;
-  padding: 16px;
-  background: rgba($stardew-gold, 0.2);
-  border-radius: 12px;
-  border: 2px dashed $stardew-wood-mid;
-}
-
-.tipText {
-  font-size: 13px;
-  color: $stardew-text-secondary;
+.footerNote {
   text-align: center;
-  margin: 0;
+  color: winter.$winter-wood-light;
+}
+
+:global {
+  .ant-timeline-item-head {
+    background: winter.$winter-blue;
+    border-color: winter.$winter-blue;
+  }
+
+  .ant-timeline-item-tail {
+    border-inline-start-color: rgba(184, 212, 227, 0.9);
+  }
 }

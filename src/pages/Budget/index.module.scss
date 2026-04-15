@@ -1,57 +1,63 @@
-@use "../../styles/stardew-theme.scss" as *;
-
-// 冬季雪景配色
-$winter-sky: #87ceeb;
-$winter-sky-deep: #5dade2;
-$winter-snow: #f0f8ff;
-$winter-snow-light: #ffffff;
-$winter-ice: #b8d4e3;
-$winter-wood: #6b4423;
+@use "../../styles/winter-profile-theme.scss" as winter;
 
 .budgetPage {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background: linear-gradient(180deg, $winter-snow 0%, $winter-ice 100%);
+  min-height: 100dvh;
+  @include winter.winter-page-bg;
 }
 
 .loadingContainer {
+  min-height: 100vh;
+  @include winter.winter-page-bg;
   display: flex;
-  justify-content: center;
   align-items: center;
-  height: 100vh;
-  background: linear-gradient(180deg, $winter-snow 0%, $winter-ice 100%);
+  justify-content: center;
 }
 
-.addBtn {
-  background: linear-gradient(135deg, $winter-sky 0%, $winter-sky-deep 100%);
-  border-color: $winter-sky-deep;
+.addBtn,
+.setBudgetBtn {
+  @include winter.winter-primary-button;
   font-family: "PixelFont", monospace;
-
-  &:hover {
-    background: linear-gradient(135deg, $winter-sky-deep 0%, $winter-sky 100%);
-    border-color: $winter-sky;
-  }
 }
 
 .content {
   flex: 1;
   padding: 16px;
+  padding-bottom: calc(24px + env(safe-area-inset-bottom, 0));
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
-// 当前预算卡片
-.currentBudgetCard {
+.currentBudgetCard,
+.emptyCard,
+.statsCard,
+.historyCard {
+  @include winter.winter-snow-card(24px 16px 16px);
   margin-bottom: 16px;
-  background: linear-gradient(135deg, $winter-snow-light 0%, $winter-snow 100%);
-  border: 2px solid $winter-ice;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(93, 173, 226, 0.15);
 
   :global {
-    .ant-card-body {
-      padding: 16px;
+    .ant-card-head {
+      background: transparent;
+      border-bottom: 1px solid winter.$winter-ice;
+      color: winter.$winter-wood;
+      font-family: "PixelFont", monospace;
     }
+  }
+}
+
+.currentBudgetCard,
+.emptyCard,
+.statsCard {
+  :global(.ant-card-body) {
+    padding: 0;
+  }
+}
+
+.historyCard {
+  :global(.ant-card-body) {
+    padding: 0;
   }
 }
 
@@ -59,20 +65,22 @@ $winter-wood: #6b4423;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 8px;
   margin-bottom: 16px;
 }
 
 .budgetTitle {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 8px;
   font-size: 16px;
-  font-weight: bold;
-  color: $winter-wood;
+  font-weight: 600;
+  color: winter.$winter-wood;
   font-family: "PixelFont", monospace;
 
   svg {
-    color: $winter-sky-deep;
+    color: winter.$winter-blue;
   }
 }
 
@@ -81,151 +89,68 @@ $winter-wood: #6b4423;
 }
 
 .progressText {
-  text-align: center;
   margin-top: 8px;
-  font-size: 14px;
-  color: #7f8c8d;
+  text-align: center;
+  color: winter.$winter-wood-light;
+  font-size: 13px;
   font-family: "PixelFont", monospace;
 }
 
-.budgetStats {
+.budgetStats,
+.compareStats {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
   gap: 12px;
 }
 
-.statItem {
-  text-align: center;
-  padding: 12px;
-  background: rgba($winter-ice, 0.3);
-  border-radius: 8px;
-  border: 1px solid $winter-ice;
-}
-
-.statLabel {
-  font-size: 12px;
-  color: #7f8c8d;
-  margin-bottom: 4px;
-  font-family: "PixelFont", monospace;
-}
-
-.statValue {
-  font-size: 16px;
-  font-weight: bold;
-  color: $winter-wood;
-  font-family: "PixelFont", monospace;
-
-  &.expense {
-    color: #c45c48;
-  }
-
-  &.remaining {
-    color: #4a9c3d;
-  }
-}
-
-// 空状态卡片
-.emptyCard {
-  margin-bottom: 16px;
-  background: linear-gradient(135deg, $winter-snow-light 0%, $winter-snow 100%);
-  border: 2px solid $winter-ice;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(93, 173, 226, 0.15);
-
-  :global {
-    .ant-card-body {
-      padding: 32px 16px;
-      text-align: center;
-    }
-  }
-}
-
-.setBudgetBtn {
-  margin-top: 16px;
-  background: linear-gradient(135deg, $winter-sky 0%, $winter-sky-deep 100%);
-  border-color: $winter-sky-deep;
-  font-family: "PixelFont", monospace;
-
-  &:hover {
-    background: linear-gradient(135deg, $winter-sky-deep 0%, $winter-sky 100%);
-    border-color: $winter-sky;
-  }
-}
-
-// 统计卡片
-.statsCard {
-  margin-bottom: 16px;
-  background: linear-gradient(135deg, $winter-snow-light 0%, $winter-snow 100%);
-  border: 2px solid $winter-ice;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(93, 173, 226, 0.15);
-
-  :global {
-    .ant-card-head {
-      background: transparent;
-      border-bottom: 1px solid $winter-ice;
-      font-family: "PixelFont", monospace;
-      color: $winter-wood;
-    }
-
-    .ant-card-body {
-      padding: 16px;
-    }
-  }
+.budgetStats {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .compareStats {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+.statItem,
 .compareItem {
+  padding: 12px;
+  border-radius: 10px;
+  border: 2px solid winter.$winter-ice;
+  background: rgba(255, 255, 255, 0.88);
   text-align: center;
-  padding: 16px;
-  background: rgba($winter-ice, 0.3);
-  border-radius: 8px;
-  border: 1px solid $winter-ice;
 }
 
+.statLabel,
 .compareLabel {
   font-size: 12px;
-  color: #7f8c8d;
-  margin-bottom: 8px;
+  color: winter.$winter-wood-light;
+  margin-bottom: 6px;
   font-family: "PixelFont", monospace;
+}
+
+.statValue,
+.compareValue {
+  font-size: 18px;
+  font-weight: 700;
+  color: winter.$winter-wood;
+  font-family: "PixelFont", monospace;
+}
+
+.statValue.expense {
+  color: #c45c48;
+}
+
+.statValue.remaining {
+  color: #4a9c3d;
 }
 
 .compareValue {
   font-size: 20px;
-  font-weight: bold;
-  color: $winter-wood;
-  font-family: "PixelFont", monospace;
-}
-
-// 历史预算卡片
-.historyCard {
-  background: linear-gradient(135deg, $winter-snow-light 0%, $winter-snow 100%);
-  border: 2px solid $winter-ice;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(93, 173, 226, 0.15);
-
-  :global {
-    .ant-card-head {
-      background: transparent;
-      border-bottom: 1px solid $winter-ice;
-      font-family: "PixelFont", monospace;
-      color: $winter-wood;
-    }
-
-    .ant-card-body {
-      padding: 0;
-    }
-  }
 }
 
 .budgetListItem {
-  padding: 12px 16px;
-  border-bottom: 1px solid $winter-ice;
+  padding: 12px 0;
+  margin: 0 16px;
+  border-bottom: 1px solid winter.$winter-ice;
 
   &:last-child {
     border-bottom: none;
@@ -235,9 +160,10 @@ $winter-wood: #6b4423;
 .budgetItemTitle {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 8px;
   font-family: "PixelFont", monospace;
-  color: $winter-wood;
+  color: winter.$winter-wood;
 }
 
 .budgetItemDesc {
@@ -246,23 +172,20 @@ $winter-wood: #6b4423;
   gap: 12px;
   margin-top: 4px;
 
-  :global {
-    .ant-progress {
-      flex: 1;
-    }
+  :global(.ant-progress) {
+    flex: 1;
   }
 }
 
 .budgetItemStats {
-  font-size: 12px;
-  color: #7f8c8d;
   white-space: nowrap;
+  color: winter.$winter-wood-light;
+  font-size: 12px;
   font-family: "PixelFont", monospace;
 }
 
-// 弹窗样式
 .modalContent {
-  padding: 16px 0;
+  padding: 8px 0;
 }
 
 .formItem {
@@ -271,25 +194,26 @@ $winter-wood: #6b4423;
   label {
     display: block;
     margin-bottom: 8px;
+    color: winter.$winter-wood;
     font-size: 14px;
-    color: $winter-wood;
     font-family: "PixelFont", monospace;
   }
 }
 
-// 响应式适配
-@media (max-width: 480px) {
-  .budgetStats {
-    grid-template-columns: 1fr;
-    gap: 8px;
+:global {
+  .ant-progress-inner {
+    background: rgba(184, 212, 227, 0.55);
   }
 
+  .ant-tag {
+    border-radius: 999px;
+    font-family: "PixelFont", monospace;
+  }
+}
+
+@media (max-width: 480px) {
+  .budgetStats,
   .compareStats {
     grid-template-columns: 1fr;
-  }
-
-  .statItem,
-  .compareItem {
-    padding: 8px;
   }
 }
