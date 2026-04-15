@@ -1,238 +1,114 @@
 @use "../../styles/winter-profile-theme.scss" as winter;
 
-.savingsPage {
-  display: flex;
-  flex-direction: column;
+.pageContainer {
   min-height: 100vh;
   min-height: 100dvh;
   @include winter.winter-page-bg;
+  display: flex;
+  flex-direction: column;
+}
+
+.contentSection {
+  flex: 1;
+  padding: 16px;
+  padding-bottom: calc(28px + env(safe-area-inset-bottom, 0));
   overflow-y: auto;
-  overflow-x: hidden;
-  padding-bottom: calc(72px + env(safe-area-inset-bottom, 0));
-  -webkit-overflow-scrolling: touch;
 }
 
-.summarySection {
-  @include winter.winter-header;
+.headerButton,
+.primaryButton {
+  @include winter.winter-primary-button;
+  font-family: "PixelFont", monospace;
 }
 
-.summaryCard,
+.emptyPanel {
+  @include winter.winter-snow-card(24px 16px 16px);
+  text-align: center;
+}
+
+.planList {
+  display: grid;
+  gap: 16px;
+}
+
 .planCard {
   @include winter.winter-snow-card(24px 16px 16px);
-}
-
-.summaryCard {
-  text-align: center;
 
   :global(.ant-card-body) {
     padding: 0;
   }
 }
 
-.summaryTitle,
-.summarySub,
-.sectionTitle,
-.planStatLabel,
-.actionHint {
-  color: winter.$winter-wood-light;
-}
-
-.summaryTitle {
-  margin-bottom: 8px;
-  font-size: 14px;
-}
-
-.summaryAmount {
-  font-size: 34px;
-  font-weight: 700;
-  color: winter.$winter-wood;
-  font-family: "PixelFont", monospace;
-}
-
-.summarySub {
-  font-size: 13px;
-}
-
-.plansSection {
-  flex: 1;
-  padding: 16px;
-}
-
-.plansHeader {
+.planTop {
   display: flex;
   justify-content: space-between;
-  align-items: center;
   gap: 12px;
-  margin-bottom: 16px;
-
-  :global(.ant-btn) {
-    @include winter.winter-primary-button;
-  }
+  margin-bottom: 12px;
 }
 
-.sectionTitle {
-  margin: 0;
+.planName {
   font-size: 18px;
   font-weight: 600;
   color: winter.$winter-wood;
   font-family: "PixelFont", monospace;
 }
 
-.emptyState {
-  @include winter.winter-snow-card(28px 16px 20px);
-  text-align: center;
-
-  p {
-    margin: 16px 0 24px;
-    color: winter.$winter-wood-light;
-  }
-
-  :global(.ant-btn) {
-    @include winter.winter-primary-button;
-  }
-}
-
-.plansList {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.planCard {
-  :global(.ant-card-body) {
-    padding: 0;
-  }
-}
-
-.planHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 12px;
-}
-
-.planName {
-  margin: 0;
-  flex: 1;
-  font-size: 16px;
-  font-weight: 600;
-  color: winter.$winter-wood;
-}
-
-.planActions {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8px;
-  margin-bottom: 12px;
-}
-
-.actionBtn {
-  min-height: 64px;
-  height: auto;
-  padding: 8px 4px;
-  border-radius: 10px;
-  border: 2px solid winter.$winter-ice;
-  background: rgba(255, 255, 255, 0.92);
-  box-shadow: none;
-
-  &:hover {
-    border-color: winter.$winter-blue !important;
-    color: winter.$winter-blue !important;
-  }
-}
-
-.actionBtnContent {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-}
-
-.actionAmount,
-.planStatValue {
-  color: winter.$winter-wood;
-  font-family: "PixelFont", monospace;
-  font-weight: 700;
-}
-
-.planFooter {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.planProgress {
-  :global {
-    .ant-progress-bg {
-      background: winter.$winter-blue !important;
-    }
-  }
-}
-
-.planStatsCompact {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 6px;
-  padding: 10px;
-  border-radius: 10px;
-  border: 2px solid winter.$winter-ice;
-  background: rgba(255, 255, 255, 0.88);
-}
-
-.planStatCompact {
-  text-align: center;
-}
-
-.planStatLabel {
-  font-size: 11px;
-  margin-bottom: 2px;
-}
-
-.planStatValue {
+.planDate {
+  margin-top: 4px;
+  color: winter.$winter-wood-light;
   font-size: 12px;
 }
 
-.planDelete {
-  text-align: right;
-  padding-top: 8px;
-  border-top: 1px solid winter.$winter-ice;
+.planTags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
 }
 
-.depositTypeDesc {
-  padding: 16px;
+.planStats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.statItem {
+  padding: 12px;
   border-radius: 10px;
   border: 2px solid winter.$winter-ice;
-  background: rgba(255, 255, 255, 0.88);
+  background: rgba(255,255,255,0.88);
   text-align: center;
-}
 
-.amountHint {
-  margin-top: 8px;
-  color: winter.$winter-wood;
-  font-size: 24px;
-  font-family: "PixelFont", monospace;
-}
-
-:global {
-  .ant-tag {
-    border-radius: 999px;
-    font-family: "PixelFont", monospace;
+  span {
+    display: block;
+    color: winter.$winter-wood-light;
+    font-size: 12px;
+    margin-bottom: 4px;
   }
 
-  .ant-form-item-label > label {
+  strong {
     color: winter.$winter-wood;
     font-family: "PixelFont", monospace;
   }
 }
 
-@media (max-width: 375px) {
-  .summaryAmount {
-    font-size: 28px;
+.planActions {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.deleteButton {
+  border-radius: 8px;
+}
+
+@media (max-width: 520px) {
+  .planStats {
+    grid-template-columns: 1fr;
   }
 
-  .planStatsCompact,
   .planActions {
-    grid-template-columns: 1fr;
+    flex-direction: column;
   }
 }

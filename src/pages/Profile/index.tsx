@@ -103,7 +103,7 @@ const Profile = () => {
 
   // 打开攒钱计划管理页面
   const handleOpenSavings = () => {
-    navigate('/savings');
+    navigate('/savings-manage');
   };
 
   // 打开我的冰箱页面

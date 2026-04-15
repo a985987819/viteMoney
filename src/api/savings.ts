@@ -144,14 +144,41 @@ export const getDeposits = (planId: string): Promise<SavingsDeposit[]> => {
 // 本地存储相关函数
 const STORAGE_KEY = 'savings_plans';
 const DEPOSITS_KEY = 'savings_deposits';
+const ACTIVE_PLAN_KEY = 'savings_active_plan_id';
+
+const recalculatePlan = (plan: SavingsPlan): SavingsPlan => {
+  const percentage = plan.targetAmount > 0
+    ? Math.min(100, (plan.savedAmount / plan.targetAmount) * 100)
+    : 0;
+
+  return {
+    ...plan,
+    percentage,
+    status: percentage >= 100 ? 'completed' : plan.status === 'failed' ? 'failed' : 'active',
+  };
+};
 
 export const getLocalSavingsPlans = (): SavingsPlan[] => {
   const data = localStorage.getItem(STORAGE_KEY);
-  return data ? JSON.parse(data) : [];
+  const plans = data ? JSON.parse(data) : [];
+  return Array.isArray(plans) ? plans.map(recalculatePlan) : [];
 };
 
 export const saveLocalSavingsPlans = (plans: SavingsPlan[]) => {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(plans));
+  const normalizedPlans = plans.map(recalculatePlan);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(normalizedPlans));
+
+  const activePlanId = localStorage.getItem(ACTIVE_PLAN_KEY);
+  const hasActivePlan = normalizedPlans.some((plan) => plan.id === activePlanId);
+
+  if (!normalizedPlans.length) {
+    localStorage.removeItem(ACTIVE_PLAN_KEY);
+    return;
+  }
+
+  if (!hasActivePlan) {
+    localStorage.setItem(ACTIVE_PLAN_KEY, normalizedPlans[0].id);
+  }
 };
 
 export const getLocalDeposits = (planId?: string): SavingsDeposit[] => {
@@ -171,7 +198,41 @@ export const saveLocalDeposit = (deposit: SavingsDeposit) => {
   if (plan) {
     plan.savedAmount += deposit.amount;
     plan.percentage = Math.min(100, (plan.savedAmount / plan.targetAmount) * 100);
+    plan.status = plan.percentage >= 100 ? 'completed' : 'active';
     plan.updatedAt = new Date().toISOString();
     saveLocalSavingsPlans(plans);
   }
+};
+
+export const setActiveSavingsPlan = (planId: string) => {
+  localStorage.setItem(ACTIVE_PLAN_KEY, planId);
+};
+
+export const getActiveSavingsPlanId = (): string | null => {
+  return localStorage.getItem(ACTIVE_PLAN_KEY);
+};
+
+export const getActiveSavingsPlan = (): SavingsPlan | null => {
+  const plans = getLocalSavingsPlans();
+  if (!plans.length) {
+    return null;
+  }
+
+  const activePlanId = getActiveSavingsPlanId();
+  if (!activePlanId) {
+    const defaultPlan = plans[0];
+    setActiveSavingsPlan(defaultPlan.id);
+    return defaultPlan;
+  }
+
+  return plans.find((plan) => plan.id === activePlanId) || plans[0] || null;
+};
+
+export const deleteLocalSavingsPlan = (planId: string) => {
+  const plans = getLocalSavingsPlans();
+  const filteredPlans = plans.filter((plan) => plan.id !== planId);
+  saveLocalSavingsPlans(filteredPlans);
+
+  const deposits = getLocalDeposits().filter((deposit) => deposit.planId !== planId);
+  localStorage.setItem(DEPOSITS_KEY, JSON.stringify(deposits));
 };
