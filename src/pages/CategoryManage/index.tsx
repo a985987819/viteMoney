@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Button, Modal, Form, Input, message, Popconfirm } from 'antd';
 import {
@@ -7,29 +7,15 @@ import {
   DeleteOutlined,
   EditOutlined,
 } from '@ant-design/icons';
+import data from '@emoji-mart/data';
+import Picker from '@emoji-mart/react';
 import type { Category, CategoryType } from '../../api/category';
 import PageHeader from '../../components/PageHeader';
 import { expenseCategories, incomeCategories } from '../../constants/categories';
 import { getLocalCategories, saveLocalCategories } from '../../utils/storage';
 import styles from './index.module.scss';
 
-// 常用 emoji 列表（用于自定义图标）
-const commonEmojis = [
-  '🍜', '🛍️', '💄', '🚗', '🏠', '🎮', '❤️', '✈️', '💊', '⚙️',
-  '💰', '🎁', '📈', '💼', '🧧', '🔄', '💳', '📥', '📤', '✅',
-  '📋', '🍔', '🍕', '🍰', '☕', '🍺', '🍷', '🥗', '🍉', '🍎',
-  '👕', '👟', '👜', '💍', '📱', '💻', '📷', '🎧', '🎬', '📚',
-  '🏥', '🏦', '🏪', '🏫', '🏨', '⛽', '🅿️', '🚕', '🚄', '✈️',
-  '🐱', '🐶', '🌸', '🌞', '⭐', '🔥', '💧', '🌈', '🌙', '☀️',
-  '🎂', '🎄', '🎃', '🎁', '🎊', '🎉', '🎈', '🎀', '🎗️', '🎖️',
-  '⚽', '🏀', '🏈', '⚾', '🎾', '🏐', '🏉', '🎱', '🏓', '🏸',
-  '🚲', '🏍️', '🚗', '🚕', '🚙', '🚌', '🚎', '🏎️', '🚓', '🚑',
-  '🏠', '🏡', '🏢', '🏣', '🏤', '🏥', '🏦', '🏨', '🏩', '🏪',
-];
-
-// 从统一分类源生成分类数据
 const generateDefaultCategories = (): Record<CategoryType, Category[]> => {
-  // 转换支出分类
   const expense: Category[] = expenseCategories.map((cat, index) => ({
     id: `expense_${index + 1}`,
     name: cat.name,
@@ -42,7 +28,6 @@ const generateDefaultCategories = (): Record<CategoryType, Category[]> => {
     })),
   }));
 
-  // 转换收入分类
   const income: Category[] = incomeCategories.map((cat, index) => ({
     id: `income_${index + 1}`,
     name: cat.name,
@@ -73,7 +58,6 @@ const generateDefaultCategories = (): Record<CategoryType, Category[]> => {
   };
 };
 
-// 默认分类（使用统一分类源）
 const defaultCategories = generateDefaultCategories();
 
 const typeLabels: Record<CategoryType, string> = {
@@ -91,13 +75,13 @@ const CategoryManage = () => {
   const [activeType, setActiveType] = useState<CategoryType>(typeFromUrl);
   const [categories, setCategories] = useState<Record<CategoryType, Category[]>>(defaultCategories);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isEmojiPickerVisible, setIsEmojiPickerVisible] = useState(false);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [selectedIcon, setSelectedIcon] = useState('');
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [form] = Form.useForm();
+  const emojiInputRef = useRef<HTMLInputElement>(null);
 
-  // 从本地存储加载分类
   useEffect(() => {
     const stored = getLocalCategories();
     if (stored) {
@@ -105,23 +89,19 @@ const CategoryManage = () => {
     }
   }, []);
 
-  // 保存到本地存储
   const saveCategories = (newCategories: Record<CategoryType, Category[]>) => {
     setCategories(newCategories);
     saveLocalCategories(newCategories);
   };
 
-  // 处理拖拽开始
   const handleDragStart = (index: number) => {
     setDraggedIndex(index);
   };
 
-  // 处理拖拽结束
   const handleDragEnd = () => {
     setDraggedIndex(null);
   };
 
-  // 处理拖拽经过
   const handleDragOver = (e: React.DragEvent, index: number) => {
     e.preventDefault();
     if (draggedIndex === null || draggedIndex === index) return;
@@ -138,7 +118,6 @@ const CategoryManage = () => {
     setDraggedIndex(index);
   };
 
-  // 打开新增/编辑弹窗
   const openModal = (category?: Category) => {
     if (category) {
       setEditingCategory(category);
@@ -149,24 +128,34 @@ const CategoryManage = () => {
       setSelectedIcon('');
       form.resetFields();
     }
+    setShowEmojiPicker(false);
     setIsModalVisible(true);
   };
 
-  // 关闭弹窗
   const closeModal = () => {
     setIsModalVisible(false);
     setEditingCategory(null);
     setSelectedIcon('');
+    setShowEmojiPicker(false);
     form.resetFields();
   };
 
-  // 选择emoji
-  const handleEmojiSelect = (emoji: string) => {
+  const handleEmojiSelect = (emojiData: any) => {
+    const emoji = emojiData.native || emojiData.shortcodes || '📦';
     setSelectedIcon(emoji);
-    setIsEmojiPickerVisible(false);
   };
 
-  // 保存分类
+  const handleEmojiInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    if (val) {
+      const lastChar = val.slice(-2);
+      const emojiRegex = /[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA6F}\u{1FA70}-\u{1FAFF}\u{FE00}-\u{FE0F}\u{200D}\u{20E3}\u{E0020}-\u{E007F}]/u;
+      if (emojiRegex.test(lastChar)) {
+        setSelectedIcon(lastChar);
+      }
+    }
+  };
+
   const handleSave = async () => {
     try {
       const values = await form.validateFields();
@@ -177,21 +166,18 @@ const CategoryManage = () => {
         return;
       }
 
-      // 如果没有选择icon，使用第一个字
       const icon = selectedIcon || name.charAt(0);
 
       const newCategories = { ...categories };
       const currentList = [...newCategories[activeType]];
 
       if (editingCategory) {
-        // 编辑
         const index = currentList.findIndex(c => c.id === editingCategory.id);
         if (index !== -1) {
           currentList[index] = { ...editingCategory, name, icon };
           message.success('修改成功');
         }
       } else {
-        // 新增
         const newCategory: Category = {
           id: Date.now().toString(),
           name,
@@ -210,7 +196,6 @@ const CategoryManage = () => {
     }
   };
 
-  // 删除分类
   const handleDelete = (categoryId: string) => {
     const newCategories = { ...categories };
     newCategories[activeType] = newCategories[activeType].filter(c => c.id !== categoryId);
@@ -219,11 +204,9 @@ const CategoryManage = () => {
   };
 
   return (
-    <div className="page-container category-manage-container">
-      {/* 顶部导航 */}
+    <div className={`page-container ${styles.categoryManageContainer}`}>
       <PageHeader title="分类管理" backPath="/add-record" />
 
-      {/* 类型切换 */}
       <div className={styles.typeTabs}>
         {(Object.keys(typeLabels) as CategoryType[]).map((type) => (
           <button
@@ -236,7 +219,6 @@ const CategoryManage = () => {
         ))}
       </div>
 
-      {/* 分类列表 */}
       <div className={styles.categoryList}>
         {categories[activeType].map((category, index) => (
           <div
@@ -271,7 +253,6 @@ const CategoryManage = () => {
         ))}
       </div>
 
-      {/* 添加按钮 */}
       <Button
         type="primary"
         className={styles.addCategoryBtn}
@@ -282,7 +263,6 @@ const CategoryManage = () => {
         添加分类
       </Button>
 
-      {/* 新增/编辑弹窗 */}
       <Modal
         title={editingCategory ? '编辑分类' : '添加分类'}
         open={isModalVisible}
@@ -300,27 +280,39 @@ const CategoryManage = () => {
             <Input placeholder="请输入分类名称" maxLength={10} />
           </Form.Item>
           <Form.Item label="图标">
-            <div className={styles.iconSelector}>
-              <Button onClick={() => setIsEmojiPickerVisible(!isEmojiPickerVisible)}>
-                {selectedIcon || '选择图标'}
+            <div className={styles.emojiInputRow}>
+              <div className={styles.emojiPreview}>
+                {selectedIcon || '?'}
+              </div>
+              <Input
+                ref={emojiInputRef as any}
+                placeholder="可直接输入 emoji 或点击下方选择"
+                value={selectedIcon}
+                onChange={handleEmojiInputChange}
+                maxLength={4}
+              />
+              <Button
+                type={showEmojiPicker ? 'default' : 'primary'}
+                onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+              >
+                {showEmojiPicker ? '收起' : '选择'}
               </Button>
-              <span className={styles.iconTip}>
-                {selectedIcon ? '已选择' : '未选择时将使用名称第一个字'}
-              </span>
             </div>
-            {isEmojiPickerVisible && (
-              <div className="emoji-picker-wrapper">
-                <div className="emoji-grid">
-                  {commonEmojis.map((emoji) => (
-                    <div
-                      key={emoji}
-                      className={`emoji-item ${selectedIcon === emoji ? 'selected' : ''}`}
-                      onClick={() => handleEmojiSelect(emoji)}
-                    >
-                      {emoji}
-                    </div>
-                  ))}
-                </div>
+            {!selectedIcon && (
+              <span className={styles.iconTip}>
+                未选择时将使用名称第一个字
+              </span>
+            )}
+            {showEmojiPicker && (
+              <div className={styles.emojiMartWrapper}>
+                <Picker
+                  data={data}
+                  onEmojiSelect={handleEmojiSelect}
+                  previewPosition="none"
+                  skinTonePosition="search"
+                  perLine={8}
+                  maxFrequentRows={2}
+                />
               </div>
             )}
           </Form.Item>

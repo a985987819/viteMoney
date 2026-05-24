@@ -15,10 +15,12 @@ $summer-ocean: #3498DB;
 
 // 主容器
 .billContainer {
-  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  height: 100dvh;
   background-color: #fff8f0;
-  padding-bottom: 80px;
-  position: relative;
+  overflow: hidden;
 }
 
 // 顶部图表区域
@@ -453,4 +455,8 @@ $summer-ocean: #3498DB;
     height: 36px;
     font-size: 18px;
   }
+}
+
+.billListScroll {
+  padding-bottom: calc(70px + env(safe-area-inset-bottom, 0));
 }

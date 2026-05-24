@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@emoji-mart/data": "^1.2.1",
+    "@emoji-mart/react": "^1.1.1",
     "@tailwindcss/vite": "^4.2.2",
     "@types/papaparse": "^5.5.2",
     "antd": "^6.3.4",
