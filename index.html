@@ -21,8 +21,6 @@
   <meta name="msapplication-TileColor" content="#8B5A2B" />
   <meta name="msapplication-tap-highlight" content="no" />
 
-  <link rel="manifest" href="manifest.json" />
-
   <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32x32.png" />
   <link rel="icon" type="image/png" sizes="16x16" href="icons/icon-16x16.png" />
   <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192x192.png" />
@@ -85,12 +83,9 @@
 <body>
   <script>
     (function() {
-      var l = window.location;
-      if (l.search.indexOf('_spa=1') !== -1) {
-        var search = l.search.replace(/_spa=1&?/, '').replace(/&$/, '');
-        var redirect = l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
-          l.pathname.slice(0, -1) + l.hash +
-          (search ? '?' + search : '');
+      var redirect = sessionStorage.redirect;
+      delete sessionStorage.redirect;
+      if (redirect && redirect !== window.location.href) {
         history.replaceState(null, null, redirect);
       }
     })();

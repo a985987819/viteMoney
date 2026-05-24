@@ -2,6 +2,7 @@ import { useRef, useState, useCallback } from 'react';
 import { Modal, Button, message } from 'antd';
 import { ShareAltOutlined, DownloadOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
+import { DATE_FORMAT, formatTimeOnly } from '../../utils/dateFormats';
 import type { RecordItem } from '../../api/record';
 import styles from './index.module.scss';
 
@@ -68,7 +69,7 @@ const ShareReceipt = ({ date, records, trigger }: ShareReceiptProps) => {
   const generateBarcode = () => {
     const timestamp = Date.now();
     const random = Math.floor(Math.random() * 10000);
-    return `No.${dayjs().format('YYYYMMDD')}${String(random).padStart(4, '0')}`;
+    return `No.${dayjs().format(DATE_FORMAT.RECEIPT_DATE)}${String(random).padStart(4, '0')}`;
   };
 
   // 绘制小票
@@ -136,7 +137,7 @@ const ShareReceipt = ({ date, records, trigger }: ShareReceiptProps) => {
     ctx.textAlign = 'left';
     ctx.fillText('小票日期:', padding, y);
     ctx.textAlign = 'right';
-    ctx.fillText(`${date} ${dayjs().format('HH:mm')}`, width - padding, y);
+    ctx.fillText(`${date} ${formatTimeOnly(dayjs())}`, width - padding, y);
 
     y += 25;
     ctx.textAlign = 'left';

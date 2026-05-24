@@ -8,6 +8,7 @@ import {
 } from '@ant-design/icons';
 import * as echarts from 'echarts';
 import dayjs from 'dayjs';
+import { DATE_FORMAT, formatDateKey, formatDisplayYearMonth, formatDisplayFullDate } from '../../utils/dateFormats';
 import { getCategoryEmoji } from '../../utils/spriteIcons';
 import { getPixelPieOption } from '../../utils/echartsPixelTheme';
 import type { ReportData, CategoryStats, DailyStats, RecordItem } from '../../api/record';
@@ -115,12 +116,12 @@ const ReportContent = () => {
         // 生成每日统计
         const dailyStatsMap = new Map<string, DailyStats>();
         for (let i = 1; i <= currentDate.daysInMonth(); i++) {
-          const dateStr = currentDate.format(`YYYY-MM-${String(i).padStart(2, '0')}`);
+          const dateStr = currentDate.format(`${DATE_FORMAT.MONTH_KEY}-${String(i).padStart(2, '0')}`);
           dailyStatsMap.set(dateStr, { date: dateStr, expense: 0, income: 0 });
         }
 
         monthRecords.forEach(r => {
-          const dateStr = dayjs(r.date).format('YYYY-MM-DD');
+          const dateStr = formatDateKey(r.date);
           const stats = dailyStatsMap.get(dateStr);
           if (stats) {
             if (r.type === 'expense') {
@@ -133,8 +134,8 @@ const ReportContent = () => {
 
         const reportData = {
           period: {
-            startDate: startOfMonth.format('YYYY-MM-DD'),
-            endDate: endOfMonth.format('YYYY-MM-DD'),
+            startDate: startOfMonth.format(DATE_FORMAT.DATE_KEY),
+            endDate: endOfMonth.format(DATE_FORMAT.DATE_KEY),
           },
           summary: {
             totalExpense,
@@ -160,7 +161,7 @@ const ReportContent = () => {
 
     setDailyRecordsLoading(true);
     try {
-      const dateStr = date.format('YYYY-MM-DD');
+      const dateStr = formatDateKey(date);
       let records: RecordItem[] = [];
 
       if (isLoggedIn) {
@@ -170,7 +171,7 @@ const ReportContent = () => {
         });
       } else {
         const allRecords = getLocalRecords();
-        records = allRecords.filter(r => dayjs(r.date).format('YYYY-MM-DD') === dateStr);
+        records = allRecords.filter(r => formatDateKey(r.date) === dateStr);
       }
 
       setDailyRecords(records);
@@ -258,7 +259,7 @@ const ReportContent = () => {
     };
 
     console.log('[ReportContent] dailyCategoryStats computed:', {
-      selectedDate: selectedDate?.format('YYYY-MM-DD'),
+      selectedDate: selectedDate ? formatDateKey(selectedDate) : undefined,
       dailyRecordsLength: dailyRecords.length,
       result: result
     });
@@ -406,7 +407,7 @@ const ReportContent = () => {
 
   // 渲染日历日期单元格
   const dateCellRender = (date: Dayjs) => {
-    const dateStr = date.format('YYYY-MM-DD');
+    const dateStr = formatDateKey(date);
     const dayData = getDailyData.get(dateStr);
 
     if (!dayData) return null;
@@ -446,8 +447,8 @@ const ReportContent = () => {
     // 展开时加载该分类的明细记录
     const startOfMonth = currentDate.startOf('month');
     const endOfMonth = currentDate.endOf('month');
-    const startDate = startOfMonth.format('YYYY-MM-DD');
-    const endDate = endOfMonth.format('YYYY-MM-DD');
+    const startDate = startOfMonth.format(DATE_FORMAT.DATE_KEY);
+    const endDate = endOfMonth.format(DATE_FORMAT.DATE_KEY);
 
     let records: RecordItem[] = [];
     if (isLoggedIn) {
@@ -501,7 +502,7 @@ const ReportContent = () => {
     <div className={styles.reportContent}>
       {/* 月份选择 */}
       <div className={styles.monthSelector} onClick={() => setIsDatePickerVisible(true)}>
-        <span className={styles.monthText}>{currentDate.format('YYYY年M月')}</span>
+        <span className={styles.monthText}>{formatDisplayYearMonth(currentDate)}</span>
         <span className={styles.arrowDown}>▼</span>
       </div>
 
@@ -571,7 +572,7 @@ const ReportContent = () => {
       {/* 选中日期显示 */}
       {selectedDate && (
         <div className={styles.selectedDateBar}>
-          <span className={styles.selectedDateText}>{selectedDate.format('YYYY年M月D日')}数据</span>
+          <span className={styles.selectedDateText}>{formatDisplayFullDate(selectedDate)}数据</span>
           <Button
             type="text"
             size="small"
@@ -686,7 +687,7 @@ const ReportContent = () => {
                           <div key={record.id} className={styles.recordDetailItem}>
                             <div className={styles.recordDetailLeft}>
                               <span className={styles.recordDetailDate}>
-                                {dayjs(record.date).format('MM-DD')}
+                                {dayjs(record.date).format(DATE_FORMAT.DISPLAY_SHORT_DATE)}
                               </span>
                               {record.remark && (
                                 <span className={styles.recordDetailRemark}>{record.remark}</span>

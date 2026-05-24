@@ -11,6 +11,7 @@ import {
   EllipsisOutlined,
 } from '@ant-design/icons';
 import dayjs from 'dayjs';
+import { formatDisplayMonthDay } from '../../utils/dateFormats';
 import { createRecord, updateRecord, type RecordItem } from '../../api/record';
 import { getLocalRecords, saveLocalRecords, getExpenseCategoriesForSelect, getIncomeCategoriesForSelect } from '../../utils/storage';
 import { useAuth } from '../../hooks/useAuth';
@@ -387,7 +388,7 @@ const AddRecord = () => {
               className={`${styles.dateDisplay} ${styles.clickable}`}
               onClick={() => setIsDatePickerVisible(true)}
             >
-              {selectedDate.format('M月D日')}
+              {formatDisplayMonthDay(selectedDate)}
             </span>
             <span className={styles.amountDisplay}>¥{amount || '0.00'}</span>
           </div>

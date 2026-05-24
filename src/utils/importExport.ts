@@ -2,6 +2,7 @@ import * as XLSX from 'xlsx';
 import Papa from 'papaparse';
 import type { RecordItem } from '../api/record';
 import dayjs from 'dayjs';
+import { nowISO, DATE_FORMAT } from './dateFormats';
 import {
   transformImportRecord,
   parseCSVRow,
@@ -14,7 +15,7 @@ import {
 // 构建导出数据结构（复用映射逻辑）
 const buildExportData = (records: RecordItem[]) =>
   records.map(record => ({
-    '日期': dayjs(record.date).format('YYYY-MM-DD HH:mm:ss'),
+    '日期': dayjs(record.date).format(DATE_FORMAT.DATETIME_FULL),
     '类型': record.type === 'expense' ? '支出' : '收入',
     '金额': record.amount,
     '分类': record.category,
@@ -30,7 +31,7 @@ export const exportToCSV = (records: RecordItem[], filename: string = '记账记
   const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
   const link = document.createElement('a');
   link.href = URL.createObjectURL(blob);
-  link.download = `${filename}_${dayjs().format('YYYY-MM-DD')}.csv`;
+  link.download = `${filename}_${dayjs().format(DATE_FORMAT.DATE_KEY)}.csv`;
   link.click();
 };
 
@@ -40,7 +41,7 @@ export const exportToXLSX = (records: RecordItem[], filename: string = '记账�
   const ws = XLSX.utils.json_to_sheet(data);
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, '记账记录');
-  XLSX.writeFile(wb, `${filename}_${dayjs().format('YYYY-MM-DD')}.xlsx`);
+  XLSX.writeFile(wb, `${filename}_${dayjs().format(DATE_FORMAT.DATE_KEY)}.xlsx`);
 };
 
 // ==================== 导入功能 ====================
@@ -215,7 +216,7 @@ function toImportRecord(row: RawImportRow): ImportRecord {
     subCategory: String(row['子分类'] || row['subCategory'] || row['分类小项'] || row['小项'] || ''),
     amount: parseFloat(amountStr) || 0,
     type,
-    date: String(row['日期'] || row['记账日期'] || row['date'] || row['时间'] || new Date().toISOString()),
+    date: String(row['日期'] || row['记账日期'] || row['date'] || row['时间'] || nowISO()),
     remark: String(row['备注'] || row['remark'] || row['说明'] || ''),
     account: String(row['账户'] || row['account'] || row['支付方式'] || ''),
   };

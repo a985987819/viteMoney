@@ -3,6 +3,7 @@ import { Empty, Button, message } from 'antd';
 import { SwapOutlined } from '@ant-design/icons';
 import * as echarts from 'echarts';
 import dayjs from 'dayjs';
+import { DATE_FORMAT, formatDateKey, formatDisplayYearMonth } from '../../utils/dateFormats';
 import { getCategoryEmoji } from '../../utils/spriteIcons';
 import type { ReportData, CategoryStats, RecordItem } from '../../api/record';
 import { getReportData, getRecords } from '../../api/record';
@@ -56,8 +57,8 @@ const CompareContent = () => {
     const month = date.month() + 1;
     const startOfMonth = date.startOf('month');
     const endOfMonth = date.endOf('month');
-    const startDate = startOfMonth.format('YYYY-MM-DD');
-    const endDate = endOfMonth.format('YYYY-MM-DD');
+    const startDate = startOfMonth.format(DATE_FORMAT.DATE_KEY);
+    const endDate = endOfMonth.format(DATE_FORMAT.DATE_KEY);
 
     let reportData: ReportData | null = null;
     let records: RecordItem[] = [];
@@ -122,12 +123,12 @@ const CompareContent = () => {
       // 生成每日统计
       const dailyStatsMap = new Map<string, { date: string; expense: number; income: number }>();
       for (let i = 1; i <= date.daysInMonth(); i++) {
-        const dateStr = date.format(`YYYY-MM-${String(i).padStart(2, '0')}`);
+        const dateStr = date.format(`${DATE_FORMAT.MONTH_KEY}-${String(i).padStart(2, '0')}`);
         dailyStatsMap.set(dateStr, { date: dateStr, expense: 0, income: 0 });
       }
 
       monthRecords.forEach(r => {
-        const dateStr = dayjs(r.date).format('YYYY-MM-DD');
+        const dateStr = formatDateKey(r.date);
         const stats = dailyStatsMap.get(dateStr);
         if (stats) {
           if (r.type === 'expense') {
@@ -140,8 +141,8 @@ const CompareContent = () => {
 
       reportData = {
         period: {
-          startDate: startOfMonth.format('YYYY-MM-DD'),
-          endDate: endOfMonth.format('YYYY-MM-DD'),
+          startDate: startOfMonth.format(DATE_FORMAT.DATE_KEY),
+          endDate: endOfMonth.format(DATE_FORMAT.DATE_KEY),
         },
         summary: {
           totalExpense,
@@ -271,7 +272,7 @@ const CompareContent = () => {
         axisPointer: { type: 'shadow' },
       },
       legend: {
-        data: [baseMonth.format('YYYY年M月'), compareMonth.format('YYYY年M月')],
+        data: [formatDisplayYearMonth(baseMonth), formatDisplayYearMonth(compareMonth)],
         bottom: 0,
         textStyle: {
           fontFamily: 'PixelFont, monospace',
@@ -300,7 +301,7 @@ const CompareContent = () => {
       },
       series: [
         {
-          name: baseMonth.format('YYYY年M月'),
+          name: formatDisplayYearMonth(baseMonth),
           type: 'bar',
           data: [
             compareResult.expense.base,
@@ -310,7 +311,7 @@ const CompareContent = () => {
           itemStyle: { color: '#c45c48' },
         },
         {
-          name: compareMonth.format('YYYY年M月'),
+          name: formatDisplayYearMonth(compareMonth),
           type: 'bar',
           data: [
             compareResult.expense.compare,
@@ -389,7 +390,7 @@ const CompareContent = () => {
           onClick={() => openDatePicker('base')}
         >
           <span className={styles.monthLabel}>基准月</span>
-          <span className={styles.monthValue}>{baseMonth.format('YYYY年M月')}</span>
+          <span className={styles.monthValue}>{formatDisplayYearMonth(baseMonth)}</span>
         </div>
 
         <Button
@@ -404,7 +405,7 @@ const CompareContent = () => {
           onClick={() => openDatePicker('compare')}
         >
           <span className={styles.monthLabel}>对比月</span>
-          <span className={styles.monthValue}>{compareMonth.format('YYYY年M月')}</span>
+          <span className={styles.monthValue}>{formatDisplayYearMonth(compareMonth)}</span>
         </div>
       </div>
 

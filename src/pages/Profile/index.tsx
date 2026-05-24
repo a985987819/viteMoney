@@ -15,6 +15,7 @@ import {
   Radio,
 } from 'antd';
 import dayjs from 'dayjs';
+import { DATE_FORMAT, formatDateKey, formatDateTimeFull } from '../../utils/dateFormats';
 import BottomNav from '../../components/BottomNav';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -234,7 +235,7 @@ const Profile = () => {
         account: r.account || '现金',
       })) as Omit<RecordItem, 'id'>[];
 
-      console.log(`导入数据转换完成:`, validRecords, validRecords.map(r => dayjs(r.date).format('YYYY-MM-DD HH:mm:ss')));
+      console.log(`导入数据转换完成:`, validRecords, validRecords.map(r => formatDateTimeFull(r.date)));
 
       // 显示导入报告
       const report = generateImportReport(stats);
@@ -320,7 +321,7 @@ const Profile = () => {
             const duplicates: RecordItem[] = [];
 
             records.forEach(record => {
-              const dateKey = dayjs(record.date).format('YYYY-MM-DD');
+              const dateKey = formatDateKey(record.date);
               const key = `${dateKey}_${record.amount}_${record.category}_${record.type}`;
 
               if (seen.has(key)) {

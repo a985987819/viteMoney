@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button, Card, DatePicker, Empty, Form, Input, InputNumber, Modal, Progress, Tag, message } from 'antd';
 import { DeleteOutlined, FolderOpenOutlined, PlusOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
+import { nowISO, DATE_FORMAT } from '../../utils/dateFormats';
 import PageHeader from '../../components/PageHeader';
 import type { SavingsPlan } from '../../api/savings';
 import {
@@ -33,8 +34,8 @@ const Savings = () => {
   }, []);
 
   const handleCreatePlan = (values: { name: string; targetAmount: number; endDate: dayjs.Dayjs }) => {
-    const startDate = dayjs().format('YYYY-MM-DD');
-    const endDate = dayjs(values.endDate).format('YYYY-MM-DD');
+    const startDate = dayjs().format(DATE_FORMAT.DATE_KEY);
+    const endDate = dayjs(values.endDate).format(DATE_FORMAT.DATE_KEY);
     const daysDiff = Math.max(dayjs(endDate).diff(dayjs(startDate), 'day'), 1);
 
     const newPlan: SavingsPlan = {
@@ -46,8 +47,8 @@ const Savings = () => {
       endDate,
       dailyAverage: Number((values.targetAmount / daysDiff).toFixed(2)),
       status: 'active',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      createdAt: nowISO(),
+      updatedAt: nowISO(),
     };
 
     saveLocalSavingsPlans([...plans, newPlan]);

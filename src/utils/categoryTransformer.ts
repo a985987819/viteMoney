@@ -9,6 +9,7 @@ import {
   type CategoryMapping,
   type SubCategoryMapping,
 } from '../constants/categoryIconMapping';
+import { nowISO } from './dateFormats';
 
 /**
  * 导入记录的数据结构
@@ -297,7 +298,7 @@ export function parseCSVRow(
     subCategory: row[subCategory]?.trim(),
     amount: parsedAmount,
     type: parsedType,
-    date: row[date]?.trim() || new Date().toISOString(),
+    date: row[date]?.trim() || nowISO(),
     remark: row[remark]?.trim(),
     account: row[account]?.trim(),
   };

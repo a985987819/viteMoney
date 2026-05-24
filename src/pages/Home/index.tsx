@@ -8,6 +8,7 @@ import {
   EyeInvisibleOutlined,
 } from '@ant-design/icons';
 import dayjs from 'dayjs';
+import { isToday, isYesterday, formatDateKey, formatMonthKey, formatDisplayMonthDay, formatDisplayMonth } from '../../utils/dateFormats';
 import type { RecordItem, MonthlyStats, DateGroup } from '../../api/record';
 import { getMonthlyStats, getRecordsByDateGroups, deleteRecord } from '../../api/record';
 import { getLocalRecords, saveLocalRecords, getLocalBudget } from '../../utils/storage';
@@ -54,7 +55,7 @@ const Home = () => {
     try {
       if (isLoggedIn) {
         try {
-          const currentMonth = dayjs().format('YYYY-MM');
+          const currentMonth = formatMonthKey(dayjs());
           const [statsRes, recordsRes] = await Promise.all([
             getMonthlyStats(currentMonth),
             getRecordsByDateGroups({ cursor: isRefresh ? undefined : cursor, limit: DATE_COUNT }),
@@ -85,11 +86,11 @@ const Home = () => {
 
           const localRecords = getLocalRecords();
           const now = dayjs();
-          const currentMonth = now.format('YYYY-MM');
+          const currentMonth = formatMonthKey(now);
           const currentYear = now.year();
           const currentMonthNum = now.month() + 1;
 
-          const monthRecords = localRecords.filter(r => dayjs(r.date).format('YYYY-MM') === currentMonth);
+          const monthRecords = localRecords.filter(r => formatMonthKey(r.date) === currentMonth);
           const totalExpense = monthRecords
             .filter(r => r.type === 'expense')
             .reduce((sum, r) => sum + Number(r.amount), 0);
@@ -103,7 +104,7 @@ const Home = () => {
           setStats({ totalExpense, totalIncome, budget: budgetAmount });
 
           const grouped = localRecords.reduce((acc, record) => {
-            const dateStr = dayjs(getTimestamp(record.date)).format('YYYY-MM-DD');
+            const dateStr = formatDateKey(getTimestamp(record.date));
             if (!acc[dateStr]) {
               acc[dateStr] = [];
             }
@@ -111,7 +112,7 @@ const Home = () => {
             return acc;
           }, {} as Record<string, RecordItem[]>);
 
-          const today = dayjs().format('YYYY-MM-DD');
+          const today = formatDateKey(dayjs());
           const groups: DateGroup[] = Object.entries(grouped)
             .map(([date, records]) => ({
               date,
@@ -142,11 +143,11 @@ const Home = () => {
       } else {
         const localRecords = getLocalRecords();
         const now = dayjs();
-        const currentMonth = now.format('YYYY-MM');
+        const currentMonth = formatMonthKey(now);
         const currentYear = now.year();
         const currentMonthNum = now.month() + 1;
 
-        const monthRecords = localRecords.filter(r => dayjs(r.date).format('YYYY-MM') === currentMonth);
+        const monthRecords = localRecords.filter(r => formatMonthKey(r.date) === currentMonth);
         const totalExpense = monthRecords
           .filter(r => r.type === 'expense')
           .reduce((sum, r) => sum + Number(r.amount), 0);
@@ -160,7 +161,7 @@ const Home = () => {
         setStats({ totalExpense, totalIncome, budget: budgetAmount });
 
         const grouped = localRecords.reduce((acc, record) => {
-          const dateStr = dayjs(getTimestamp(record.date)).format('YYYY-MM-DD');
+          const dateStr = formatDateKey(getTimestamp(record.date));
           if (!acc[dateStr]) {
             acc[dateStr] = [];
           }
@@ -168,7 +169,7 @@ const Home = () => {
           return acc;
         }, {} as Record<string, RecordItem[]>);
 
-        const today = dayjs().format('YYYY-MM-DD');
+        const today = formatDateKey(dayjs());
         const groups: DateGroup[] = Object.entries(grouped)
           .map(([date, records]) => ({
             date,
@@ -245,11 +246,9 @@ const Home = () => {
   const formatBudgetAmount = (amount: number) => showAmount ? Math.round(amount).toString() : '****';
 
   const getDateLabel = (dateStr: string) => {
-    const today = dayjs().format('YYYY-MM-DD');
-    const yesterday = dayjs().subtract(1, 'day').format('YYYY-MM-DD');
-    if (dateStr === today) return t('home.today') || '今天';
-    if (dateStr === yesterday) return t('home.yesterday') || '昨天';
-    return dayjs(dateStr).format('M 月 D 日');
+    if (isToday(dateStr)) return t('home.today') || '今天';
+    if (isYesterday(dateStr)) return t('home.yesterday') || '昨天';
+    return formatDisplayMonthDay(dateStr);
   };
 
   const getDayTotal = (dayRecords: RecordItem[]) => {
@@ -303,7 +302,7 @@ const Home = () => {
         <div className={styles.recordsSection}>
           <div className={styles.recordsHeader}>
             <span className={styles.recordsTitle}>{t('home.recentRecords')}</span>
-            <Tag color="success" className={styles.recordsTag}>{dayjs().format('M 月')}</Tag>
+            <Tag color="success" className={styles.recordsTag}>{formatDisplayMonth(dayjs())}</Tag>
           </div>
 
           <ScrollContainer onScrollEnd={handleScrollEnd}>

@@ -3,6 +3,7 @@ import type { Category } from '../api/category';
 import type { User, Tokens } from '../api/auth';
 import type { BudgetResponse } from '../api/budget';
 import { expenseCategories, incomeCategories } from '../constants/categories';
+import { nowISO } from './dateFormats';
 
 export interface LocalBudget extends Omit<BudgetResponse, 'id' | 'spent' | 'remaining' | 'percentage'> {
   id?: string;
@@ -379,7 +380,7 @@ export const addFridgeItem = (
   item: Omit<FridgeItem, 'id' | 'createdAt' | 'updatedAt'>
 ): FridgeItem => {
   const items = getFridgeItems();
-  const now = new Date().toISOString();
+  const now = nowISO();
   const newItem: FridgeItem = {
     ...item,
     id: `fridge_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`,
@@ -403,7 +404,7 @@ export const updateFridgeItem = (
     items[index] = {
       ...items[index],
       ...data,
-      updatedAt: new Date().toISOString(),
+      updatedAt: nowISO(),
     };
     saveFridgeItems(items);
   }

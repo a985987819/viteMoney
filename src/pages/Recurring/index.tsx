@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Tabs, Button, Form, Input, Select, DatePicker, InputNumber, Radio, message, List, Tag, Empty, Spin, Popconfirm } from 'antd';
 import { PlusOutlined, ClockCircleOutlined, DeleteOutlined, LoginOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
+import { DATE_FORMAT } from '../../utils/dateFormats';
 import { useNavigate } from 'react-router-dom';
 import BottomNav from '../../components/BottomNav';
 import StardewPanel from '../../components/StardewPanel';
@@ -79,7 +80,7 @@ const Recurring = () => {
         remark: values.remark || '',
         account: values.account,
         frequency: values.frequency,
-        startDate: values.startDate.format('YYYY-MM-DD'),
+        startDate: values.startDate.format(DATE_FORMAT.DATE_KEY),
         durationValue: values.durationValue || 1,
         durationUnit: values.durationUnit || 'year',
       };

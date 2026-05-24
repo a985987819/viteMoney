@@ -11,6 +11,7 @@ import {
 } from '@ant-design/icons';
 import * as echarts from 'echarts';
 import dayjs from 'dayjs';
+import { DATE_FORMAT, isToday, isYesterday, formatDateKey, formatMonthKey, formatDisplayMonthDay, formatDisplayFullDate } from '../../utils/dateFormats';
 import { getPixelBarOption } from '../../utils/echartsPixelTheme';
 import type { RecordItem, BillFilterParams, BillListResponse } from '../../api/record';
 import { deleteRecord, getBillsWithFilter } from '../../api/record';
@@ -100,8 +101,8 @@ const Bill = () => {
       if (isLoggedIn) {
         // 使用筛选API
         const params: BillFilterParams = {
-          startDate: sDate.format('YYYY-MM-DD'),
-          endDate: eDate.format('YYYY-MM-DD'),
+          startDate: sDate.format(DATE_FORMAT.DATE_KEY),
+          endDate: eDate.format(DATE_FORMAT.DATE_KEY),
           ...filter,
         };
         try {
@@ -196,7 +197,7 @@ const Bill = () => {
 
     // 按日期统计支出和收入 - 使用时间戳转日期字符串作为key
     const dailyStats = records.reduce((acc, r) => {
-      const dateKey = dayjs(r.date).format('YYYY-MM-DD');
+      const dateKey = formatDateKey(r.date);
       if (!acc[dateKey]) {
         acc[dateKey] = { expense: 0, income: 0 };
       }
@@ -210,7 +211,7 @@ const Bill = () => {
 
     // 获取当前选择月份的所有日期
     const daysInMonth = currentLoadMonth.daysInMonth();
-    const yearMonth = currentLoadMonth.format('YYYY-MM');
+    const yearMonth = formatMonthKey(currentLoadMonth);
     const chartData = [];
 
     for (let i = 1; i <= daysInMonth; i++) {
@@ -455,7 +456,7 @@ const Bill = () => {
       return {};
     }
     const grouped = records.reduce((acc, record) => {
-      const dateKey = dayjs(record.date).format('YYYY-MM-DD');
+      const dateKey = formatDateKey(record.date);
       if (!acc[dateKey]) {
         acc[dateKey] = [];
       }
@@ -486,7 +487,7 @@ const Bill = () => {
 
   // 获取显示文本
   const getDisplayText = () => {
-    return `${startDate.format('YYYY年M月D日')} - ${endDate.format('M月D日')}`;
+    return `${formatDisplayFullDate(startDate)} - ${formatDisplayMonthDay(endDate)}`;
   };
 
   // 应用筛选
@@ -662,12 +663,12 @@ const Bill = () => {
                 const { expense, income } = getDayTotal(dayRecords);
                 const dayjsDate = dayjs(date);
                 const weekDay = ['日', '一', '二', '三', '四', '五', '六'][dayjsDate.day()];
-                const isToday = date === dayjs().format('YYYY-MM-DD');
-                const isYesterday = date === dayjs().subtract(1, 'day').format('YYYY-MM-DD');
-                const dayLabel = dayjsDate.format('M月D日');
+                const todayFlag = isToday(date);
+                const yesterdayFlag = isYesterday(date);
+                const dayLabel = formatDisplayMonthDay(dayjsDate);
                 let dayDesc = '';
-                if (isToday) dayDesc = '今天';
-                else if (isYesterday) dayDesc = '昨天';
+                if (todayFlag) dayDesc = '今天';
+                else if (yesterdayFlag) dayDesc = '昨天';
 
                 return (
                   <div key={date} className={styles.billDayGroup}>

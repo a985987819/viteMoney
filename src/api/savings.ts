@@ -1,4 +1,5 @@
 import { createApiService, http } from '../utils/request';
+import { nowISO } from '../utils/dateFormats';
 
 export interface SavingsGoal {
   id: string;
@@ -209,7 +210,7 @@ export const saveLocalDeposit = (deposit: SavingsDeposit) => {
     plan.savedAmount += deposit.amount;
     plan.percentage = Math.min(100, (plan.savedAmount / plan.targetAmount) * 100);
     plan.status = plan.percentage >= 100 ? 'completed' : 'active';
-    plan.updatedAt = new Date().toISOString();
+    plan.updatedAt = nowISO();
     saveLocalSavingsPlans(plans);
   }
 };

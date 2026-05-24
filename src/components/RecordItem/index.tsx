@@ -1,6 +1,7 @@
 import { memo, useMemo } from 'react';
 import type { RecordItem as RecordItemType } from '../../api/record';
 import { getTimestamp } from '../../utils/importExport';
+import { formatTimeOnly } from '../../utils/dateFormats';
 import { getCategoryEmoji } from '../../utils/spriteIcons';
 import styles from './index.module.scss';
 
@@ -48,7 +49,7 @@ const RecordItem = memo(({
           <div className={styles.recordItemMeta}>
             {showTime && (
               <span className={styles.recordItemTime}>
-                {new Date(getTimestamp(record.date)).toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' })}
+                {formatTimeOnly(getTimestamp(record.date))}
               </span>
             )}
           </div>

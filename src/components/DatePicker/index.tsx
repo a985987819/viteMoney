@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { Modal, Button } from 'antd';
 import { DownOutlined, UpOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
+import { DATE_FORMAT, formatDisplayYearMonth, formatDisplayYear } from '../../utils/dateFormats';
 import styles from './index.module.scss';
 
 export type DateMode = 'month' | 'year';
@@ -110,8 +111,8 @@ const DatePicker = ({
           <div className={styles.dateDisplaySection}>
             <div className={styles.selectedDateDisplay}>
               {tempMode === 'month'
-                ? tempDate.format('YYYY年M月')
-                : tempDate.format('YYYY年')}
+                ? formatDisplayYearMonth(tempDate)
+                : formatDisplayYear(tempDate)}
             </div>
             <div className={styles.yearRangeDisplay}>
               {tempMode === 'month'

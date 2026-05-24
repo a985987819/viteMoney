@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button, Empty, Form, InputNumber, Modal, Progress, Tag, message } from 'antd';
 import { FolderOpenOutlined, ThunderboltOutlined, TeamOutlined, WalletOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
+import { nowISO } from '../../utils/dateFormats';
 import BottomNav from '../../components/BottomNav';
 import type { SavingsPlan } from '../../api/savings';
 import { getActiveSavingsPlan, getLocalDeposits, getLocalSavingsPlans, saveLocalDeposit, type SavingsDeposit } from '../../api/savings';
@@ -54,7 +55,7 @@ const SavingsOperate = () => {
       planId: currentPlan.id,
       amount: Number(finalAmount.toFixed(2)),
       type,
-      createdAt: new Date().toISOString(),
+      createdAt: nowISO(),
     });
 
     loadCurrentPlan();
@@ -145,7 +146,7 @@ const SavingsOperate = () => {
                     <div key={deposit.id} className={styles.historyItem}>
                       <div>
                         <div className={styles.historyType}>{deposit.type === 'average' ? '平均攒钱' : deposit.type === 'random' ? '随机攒钱' : '主动攒钱'}</div>
-                        <div className={styles.historyDate}>{dayjs(deposit.createdAt).format('YYYY-MM-DD HH:mm')}</div>
+                        <div className={styles.historyDate}>{dayjs(deposit.createdAt).format(DATE_FORMAT.DATETIME_SHORT)}</div>
                       </div>
                       <div className={styles.historyAmount}>+￥{deposit.amount.toFixed(2)}</div>
                     </div>

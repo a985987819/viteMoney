@@ -17,6 +17,7 @@ import {
   SearchOutlined,
 } from '@ant-design/icons';
 import dayjs, { type Dayjs } from 'dayjs';
+import { nowISO, DATE_FORMAT } from '../../utils/dateFormats';
 import {
   addFridgeItem,
   deleteFridgeItem,
@@ -110,7 +111,7 @@ const MyFridgePage = () => {
     const created = addFridgeItem({
       name: trimmedName,
       quantity: trimmedQuantity,
-      purchaseDate: selectedDate.format('YYYY-MM-DD'),
+      purchaseDate: selectedDate.format(DATE_FORMAT.DATE_KEY),
       progress: 0,
     });
 
@@ -124,7 +125,7 @@ const MyFridgePage = () => {
   const handleProgressChange = (item: FridgeItem, nextProgress: number) => {
     const normalizedProgress = Math.max(0, Math.min(100, Math.round(nextProgress)));
     const nextConsumedAt = normalizedProgress >= 100
-      ? item.consumedAt || new Date().toISOString()
+      ? item.consumedAt || nowISO()
       : undefined;
 
     updateFridgeItem(item.id, {
@@ -138,7 +139,7 @@ const MyFridgePage = () => {
           ...current,
           progress: normalizedProgress,
           consumedAt: nextConsumedAt,
-          updatedAt: new Date().toISOString(),
+          updatedAt: nowISO(),
         }
         : current
     )));
@@ -303,7 +304,7 @@ const MyFridgePage = () => {
                         <div className={styles.itemName}>{item.name}</div>
                         <div className={styles.itemMeta}>
                           <span>{item.quantity}</span>
-                          <span>记录于 {dayjs(item.purchaseDate).format('YYYY-MM-DD')}</span>
+                          <span>记录于 {dayjs(item.purchaseDate).format(DATE_FORMAT.DATE_KEY)}</span>
                         </div>
                       </div>
 
