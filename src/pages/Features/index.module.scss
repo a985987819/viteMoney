@@ -7,22 +7,6 @@
   overflow-x: hidden;
 }
 
-.backgroundDecorations {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.cloud1,
-.cloud2 {
-  position: absolute;
-  opacity: 0.8;
-}
-
-.cloud1 { top: 90px; left: 10%; }
-.cloud2 { top: 140px; right: 15%; }
-
 .header {
   @include winter.winter-header;
   display: flex;
@@ -47,7 +31,7 @@
   margin: 0;
   color: #ffffff;
   font-family: "PixelFont", monospace;
-  font-size: 18px;
+  font-size: 17px;
 }
 
 .placeholder {
@@ -57,117 +41,276 @@
 .content {
   position: relative;
   z-index: 1;
-  padding: 20px 16px 80px;
+  padding: 16px 16px 80px;
   max-width: 640px;
   margin: 0 auto;
 }
 
-.illustration,
-.welcomeCard,
-.featureCollapse,
-.tipsCard {
-  @include winter.winter-snow-card(24px 16px 16px);
+.introCard,
+.quickStartCard,
+.featureCard,
+.offlineCard,
+.faqCard {
+  @include winter.winter-snow-card(20px 16px 16px);
+  margin-bottom: 16px;
 }
 
-.illustration {
-  margin-bottom: 20px;
+.introCard {
   text-align: center;
 }
 
-.heroImg {
-  width: min(240px, 100%);
-  display: inline-block;
+.introIcon {
+  font-size: 48px;
+  margin-bottom: 8px;
 }
 
-.welcomeCard,
-.featuresSection {
-  margin-bottom: 20px;
-}
-
-.welcomeTitle,
-.sectionTitle,
-.featureTitle,
-.tipsTitle {
+.introTitle {
+  margin: 0 0 8px;
   color: winter.$winter-wood;
+  font-family: "PixelFont", monospace;
+  font-size: 20px;
+}
+
+.introText {
+  margin: 0 0 16px;
+  color: winter.$winter-wood-light;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.introHighlights {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+.highlightTag {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 16px;
+  background: rgba(winter.$winter-blue, 0.1);
+  border: 1px solid rgba(winter.$winter-blue, 0.2);
+  color: winter.$winter-blue;
+  font-size: 12px;
   font-family: "PixelFont", monospace;
 }
 
-.welcomeTitle {
-  margin: 0 0 10px;
-  font-size: 18px;
-}
-
-.welcomeText,
-.featureDesc,
-.detailItem,
-.tipsList li {
-  color: winter.$winter-wood-light;
-}
-
-.sectionTitle {
+.cardTitle {
   margin: 0 0 16px;
-  padding-left: 8px;
-  border-left: 4px solid winter.$winter-blue;
+  color: winter.$winter-wood;
+  font-family: "PixelFont", monospace;
   font-size: 16px;
 }
 
-:global {
-  .ant-collapse {
-    background: transparent;
-    border: none;
-  }
-
-  .ant-collapse-item {
-    border-bottom: 1px solid winter.$winter-ice !important;
-  }
-
-  .ant-collapse-header {
-    padding: 12px 0 !important;
-  }
-
-  .ant-collapse-content {
-    background: transparent;
-    border-top: 0;
-  }
-
-  .ant-collapse-content-box {
-    padding: 0 0 12px !important;
-  }
+.quickSteps {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
-.collapseHeader {
+.quickStep {
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
-.featureIcon {
-  font-size: 24px;
+.stepNumber {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: winter.$winter-blue;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "PixelFont", monospace;
+  font-size: 14px;
+  font-weight: 700;
+  flex-shrink: 0;
 }
 
-.featureTitleSection {
+.stepContent {
+  flex: 1;
+}
+
+.stepTitle {
+  color: winter.$winter-wood;
+  font-weight: 600;
+  font-size: 14px;
+  font-family: "PixelFont", monospace;
+}
+
+.stepDesc {
+  color: winter.$winter-wood-light;
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+.featureHeader {
   display: flex;
-  flex-direction: column;
-  gap: 2px;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.featureIcon {
+  font-size: 28px;
+  flex-shrink: 0;
+  margin-top: 2px;
 }
 
 .featureTitle {
-  font-size: 15px;
-  font-weight: 600;
+  margin: 0;
+  color: winter.$winter-wood;
+  font-family: "PixelFont", monospace;
+  font-size: 16px;
 }
 
 .featureDesc {
-  font-size: 12px;
+  margin: 4px 0 0;
+  color: winter.$winter-wood-light;
+  font-size: 13px;
+  line-height: 1.5;
 }
 
-.featureDetails,
+.guideSection {
+  background: rgba(winter.$winter-blue, 0.04);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.guideLabel {
+  color: winter.$winter-blue;
+  font-family: "PixelFont", monospace;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.guideStep {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.guideStepNum {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(winter.$winter-blue, 0.15);
+  color: winter.$winter-blue;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.guideStepText {
+  color: winter.$winter-wood;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.tipsSection {
+  padding: 8px 12px;
+  border-left: 3px solid rgba(winter.$winter-blue, 0.3);
+  background: rgba(winter.$winter-blue, 0.02);
+  border-radius: 0 8px 8px 0;
+}
+
+.tipsLabel {
+  color: winter.$winter-wood-light;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
 .tipsList {
   margin: 0;
-  padding-left: 18px;
+  padding-left: 16px;
+  color: winter.$winter-wood-light;
+  font-size: 12px;
+  line-height: 1.6;
+
+  li {
+    margin-bottom: 4px;
+  }
 }
 
-.detailItem,
-.tipsList li {
-  margin-bottom: 8px;
+.offlineDesc {
+  color: winter.$winter-wood-light;
+  font-size: 13px;
+  line-height: 1.5;
+  margin: 0 0 12px;
+}
+
+.offlineGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.offlineItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: winter.$winter-wood;
+}
+
+.offlineIcon {
+  flex-shrink: 0;
+  font-size: 14px;
+}
+
+.offlineNote {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 10px 12px;
+  background: rgba(winter.$winter-blue, 0.06);
+  border-radius: 8px;
+  font-size: 12px;
+  color: winter.$winter-wood-light;
+  line-height: 1.6;
+}
+
+.faqList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.faqItem {
+  padding-bottom: 12px;
+  border-bottom: 1px dashed winter.$winter-ice;
+
+  &:last-child {
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+}
+
+.faqQ {
+  color: winter.$winter-wood;
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 4px;
+  font-family: "PixelFont", monospace;
+}
+
+.faqA {
+  color: winter.$winter-wood-light;
+  font-size: 13px;
   line-height: 1.6;
 }

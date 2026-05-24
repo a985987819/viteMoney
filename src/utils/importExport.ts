@@ -175,6 +175,7 @@ export const parseDate = (dateValue: unknown): number => {
 // 比较两个日期值，返回数字（用于排序）
 // 负数表示 a < b，0 表示相等，正数表示 a > b
 export const compareDate = (a: unknown, b: unknown): number => {
+  if (a === b) return 0;
   const dateA = parseDate(a);
   const dateB = parseDate(b);
   return dateA - dateB;
