@@ -158,6 +158,19 @@ $winter-sky-deep: #5dade2;
     }
   }
 
+  .navEmoji {
+    font-size: 24px;
+    line-height: 1;
+    @include transition;
+  }
+
+  &.active {
+    .navEmoji {
+      transform: scale(1.4);
+      filter: drop-shadow(2px 2px 0 rgba(0, 0, 0, 0.1));
+    }
+  }
+
   .navLabel {
     @include transition;
     font-weight: bold;

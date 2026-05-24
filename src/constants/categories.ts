@@ -1,232 +1,225 @@
-/**
- * 新的分类数据结构
- * 使用精灵图图标系统
- */
-
 export interface SubCategory {
   id: string;
   name: string;
-  icon: string; // 精灵图图标ID
+  icon: string;
 }
 
 export interface MainCategory {
   id: string;
   name: string;
-  icon: string; // 精灵图图标ID
+  icon: string;
   subCategories: SubCategory[];
 }
 
-// 支出分类
 export const expenseCategories: MainCategory[] = [
   {
     id: 'food',
     name: '饮食',
-    icon: 'food',
+    icon: '🍜',
     subCategories: [
-      { id: 'food_1', name: '买菜', icon: 'food_1' },
-      { id: 'food_2', name: '外食', icon: 'food_2' },
-      { id: 'food_3', name: '奶茶', icon: 'food_3' },
-      { id: 'food_4', name: '咖啡', icon: 'food_4' },
-      { id: 'food_5', name: '零食', icon: 'food_5' },
-      { id: 'food_6', name: '外卖', icon: 'food_6' },
+      { id: 'food_1', name: '买菜', icon: '🥬' },
+      { id: 'food_2', name: '外食', icon: '🍽️' },
+      { id: 'food_3', name: '奶茶', icon: '🧋' },
+      { id: 'food_4', name: '咖啡', icon: '☕' },
+      { id: 'food_5', name: '零食', icon: '🍪' },
+      { id: 'food_6', name: '外卖', icon: '🛵' },
     ],
   },
   {
     id: 'housing',
     name: '住房',
-    icon: 'housing',
+    icon: '🏠',
     subCategories: [
-      { id: 'housing_1', name: '房租', icon: 'housing_1' },
-      { id: 'housing_2', name: '水电', icon: 'housing_2' },
-      { id: 'housing_3', name: '物业', icon: 'housing_3' },
-      { id: 'housing_4', name: '网费', icon: 'housing_4' },
-      { id: 'housing_5', name: '维修', icon: 'housing_5' },
-      { id: 'housing_6', name: '酒店', icon: 'housing_6' },
+      { id: 'housing_1', name: '房租', icon: '🏠' },
+      { id: 'housing_2', name: '水电', icon: '💡' },
+      { id: 'housing_3', name: '物业', icon: '🏢' },
+      { id: 'housing_4', name: '网费', icon: '📶' },
+      { id: 'housing_5', name: '维修', icon: '🔧' },
+      { id: 'housing_6', name: '酒店', icon: '🏨' },
     ],
   },
   {
     id: 'transport',
     name: '交通',
-    icon: 'transport',
+    icon: '🚗',
     subCategories: [
-      { id: 'transport_1', name: '公交', icon: 'transport_1' },
-      { id: 'transport_2', name: '打车', icon: 'transport_2' },
-      { id: 'transport_3', name: '油费', icon: 'transport_3' },
-      { id: 'transport_4', name: '停车', icon: 'transport_4' },
-      { id: 'transport_5', name: '保养', icon: 'transport_5' },
+      { id: 'transport_1', name: '公交', icon: '🚌' },
+      { id: 'transport_2', name: '打车', icon: '🚕' },
+      { id: 'transport_3', name: '油费', icon: '⛽' },
+      { id: 'transport_4', name: '停车', icon: '🅿️' },
+      { id: 'transport_5', name: '保养', icon: '🔩' },
     ],
   },
   {
     id: 'clothing',
     name: '服饰',
-    icon: 'clothing',
+    icon: '👗',
     subCategories: [
-      { id: 'clothing_1', name: '衣鞋', icon: 'clothing_1' },
-      { id: 'clothing_2', name: '护肤', icon: 'clothing_2' },
-      { id: 'clothing_3', name: '饰品', icon: 'clothing_3' },
-      { id: 'clothing_4', name: '干洗', icon: 'clothing_4' },
+      { id: 'clothing_1', name: '衣鞋', icon: '👟' },
+      { id: 'clothing_2', name: '护肤', icon: '💄' },
+      { id: 'clothing_3', name: '饰品', icon: '💍' },
+      { id: 'clothing_4', name: '干洗', icon: '🧺' },
     ],
   },
   {
     id: 'medical',
     name: '医疗',
-    icon: 'medical',
+    icon: '🏥',
     subCategories: [
-      { id: 'medical_1', name: '门诊', icon: 'medical_1' },
-      { id: 'medical_2', name: '药品', icon: 'medical_2' },
-      { id: 'medical_3', name: '体检', icon: 'medical_3' },
-      { id: 'medical_4', name: '器械', icon: 'medical_4' },
+      { id: 'medical_1', name: '门诊', icon: '🩺' },
+      { id: 'medical_2', name: '药品', icon: '💊' },
+      { id: 'medical_3', name: '体检', icon: '🩻' },
+      { id: 'medical_4', name: '器械', icon: '🦯' },
     ],
   },
   {
     id: 'education',
     name: '教育',
-    icon: 'education',
+    icon: '📚',
     subCategories: [
-      { id: 'education_1', name: '书本', icon: 'education_1' },
-      { id: 'education_2', name: '学费', icon: 'education_2' },
-      { id: 'education_3', name: '网课', icon: 'education_3' },
-      { id: 'education_4', name: '文具', icon: 'education_4' },
-      { id: 'education_5', name: '软件', icon: 'education_5' },
+      { id: 'education_1', name: '书本', icon: '📖' },
+      { id: 'education_2', name: '学费', icon: '🎓' },
+      { id: 'education_3', name: '网课', icon: '💻' },
+      { id: 'education_4', name: '文具', icon: '✏️' },
+      { id: 'education_5', name: '软件', icon: '💿' },
     ],
   },
   {
     id: 'entertainment',
     name: '娱乐',
-    icon: 'entertainment',
+    icon: '🎮',
     subCategories: [
-      { id: 'entertainment_1', name: '电影', icon: 'entertainment_1' },
-      { id: 'entertainment_2', name: '游戏', icon: 'entertainment_2' },
-      { id: 'entertainment_3', name: '聚会', icon: 'entertainment_3' },
-      { id: 'entertainment_4', name: '爱好', icon: 'entertainment_4' },
-      { id: 'entertainment_5', name: '剧场', icon: 'entertainment_5' },
+      { id: 'entertainment_1', name: '电影', icon: '🎬' },
+      { id: 'entertainment_2', name: '游戏', icon: '🎮' },
+      { id: 'entertainment_3', name: '聚会', icon: '🎉' },
+      { id: 'entertainment_4', name: '爱好', icon: '🎨' },
+      { id: 'entertainment_5', name: '剧场', icon: '🎭' },
     ],
   },
   {
     id: 'travel',
     name: '旅行',
-    icon: 'travel',
+    icon: '✈️',
     subCategories: [
-      { id: 'travel_1', name: '机票', icon: 'travel_1' },
-      { id: 'travel_2', name: '住宿', icon: 'travel_2' },
-      { id: 'travel_3', name: '门票', icon: 'travel_3' },
-      { id: 'travel_4', name: '旅餐', icon: 'travel_4' },
-      { id: 'travel_5', name: '纪念', icon: 'travel_5' },
+      { id: 'travel_1', name: '机票', icon: '🎫' },
+      { id: 'travel_2', name: '住宿', icon: '🏨' },
+      { id: 'travel_3', name: '门票', icon: '🎟️' },
+      { id: 'travel_4', name: '旅餐', icon: '🥘' },
+      { id: 'travel_5', name: '纪念', icon: '🎁' },
     ],
   },
   {
     id: 'social',
     name: '人情',
-    icon: 'social',
+    icon: '🧧',
     subCategories: [
-      { id: 'social_1', name: '礼金', icon: 'social_1' },
-      { id: 'social_2', name: '礼品', icon: 'social_2' },
-      { id: 'social_3', name: '聚餐', icon: 'social_3' },
-      { id: 'social_4', name: '送礼', icon: 'social_4' },
-      { id: 'social_5', name: '捐赠', icon: 'social_5' },
+      { id: 'social_1', name: '礼金', icon: '🧧' },
+      { id: 'social_2', name: '礼品', icon: '🎁' },
+      { id: 'social_3', name: '聚餐', icon: '🍽️' },
+      { id: 'social_4', name: '送礼', icon: '🎀' },
+      { id: 'social_5', name: '捐赠', icon: '❤️' },
     ],
   },
   {
     id: 'digital',
     name: '数码',
-    icon: 'digital',
+    icon: '📱',
     subCategories: [
-      { id: 'digital_1', name: '话费', icon: 'digital_1' },
-      { id: 'digital_2', name: '设备', icon: 'digital_2' },
-      { id: 'digital_3', name: '配件', icon: 'digital_3' },
-      { id: 'digital_4', name: '订阅', icon: 'digital_4' },
-      { id: 'digital_5', name: '维修', icon: 'digital_5' },
+      { id: 'digital_1', name: '话费', icon: '📞' },
+      { id: 'digital_2', name: '设备', icon: '💻' },
+      { id: 'digital_3', name: '配件', icon: '⌨️' },
+      { id: 'digital_4', name: '订阅', icon: '🔔' },
+      { id: 'digital_5', name: '维修', icon: '🔧' },
     ],
   },
   {
     id: 'home',
     name: '家居',
-    icon: 'home',
+    icon: '🛋️',
     subCategories: [
-      { id: 'home_1', name: '清洁', icon: 'home_1' },
-      { id: 'home_2', name: '纸品', icon: 'home_2' },
-      { id: 'home_3', name: '厨具', icon: 'home_3' },
-      { id: 'home_4', name: '床品', icon: 'home_4' },
-      { id: 'home_5', name: '收纳', icon: 'home_5' },
+      { id: 'home_1', name: '清洁', icon: '🧹' },
+      { id: 'home_2', name: '纸品', icon: '🧻' },
+      { id: 'home_3', name: '厨具', icon: '🍳' },
+      { id: 'home_4', name: '床品', icon: '🛏️' },
+      { id: 'home_5', name: '收纳', icon: '📦' },
     ],
   },
   {
     id: 'parenting',
     name: '育儿',
-    icon: 'parenting',
+    icon: '👶',
     subCategories: [
-      { id: 'parenting_1', name: '奶粉', icon: 'parenting_1' },
-      { id: 'parenting_2', name: '玩具', icon: 'parenting_2' },
-      { id: 'parenting_3', name: '宠物', icon: 'parenting_3' },
-      { id: 'parenting_4', name: '医疗', icon: 'parenting_4' },
-      { id: 'parenting_5', name: '托育', icon: 'parenting_5' },
+      { id: 'parenting_1', name: '奶粉', icon: '🍼' },
+      { id: 'parenting_2', name: '玩具', icon: '🧸' },
+      { id: 'parenting_3', name: '宠物', icon: '🐾' },
+      { id: 'parenting_4', name: '医疗', icon: '💊' },
+      { id: 'parenting_5', name: '托育', icon: '🏫' },
     ],
   },
   {
     id: 'finance',
     name: '金融',
-    icon: 'finance',
+    icon: '🏦',
     subCategories: [
-      { id: 'finance_1', name: '保险', icon: 'finance_1' },
-      { id: 'finance_2', name: '车险', icon: 'finance_2' },
-      { id: 'finance_3', name: '年费', icon: 'finance_3' },
-      { id: 'finance_4', name: '股市', icon: 'finance_4' },
-      { id: 'finance_5', name: '基金', icon: 'finance_5' },
+      { id: 'finance_1', name: '保险', icon: '🛡️' },
+      { id: 'finance_2', name: '车险', icon: '🚘' },
+      { id: 'finance_3', name: '年费', icon: '💳' },
+      { id: 'finance_4', name: '股市', icon: '📈' },
+      { id: 'finance_5', name: '基金', icon: '📊' },
     ],
   },
   {
     id: 'other_expense',
     name: '其他支出',
-    icon: 'other_expense',
+    icon: '📦',
     subCategories: [],
-  },];
+  },
+];
 
-// 收入分类
 export const incomeCategories: MainCategory[] = [
   {
     id: 'salary',
     name: '工资',
-    icon: 'salary',
+    icon: '💰',
     subCategories: [],
   },
   {
     id: 'parttime',
     name: '兼职',
-    icon: 'parttime',
+    icon: '💵',
     subCategories: [],
   },
   {
     id: 'investment',
     name: '理财',
-    icon: 'investment',
+    icon: '📈',
     subCategories: [],
   },
   {
     id: 'secondhand',
     name: '二手',
-    icon: 'secondhand',
+    icon: '♻️',
     subCategories: [],
   },
   {
     id: 'bonus',
     name: '奖金',
-    icon: 'bonus',
+    icon: '🎁',
     subCategories: [],
   },
   {
     id: 'other_income',
     name: '其他收入',
-    icon: 'other_income',
+    icon: '💰',
     subCategories: [],
-  },];
+  },
+];
 
-// 所有分类
 export const allCategories = {
   expense: expenseCategories,
   income: incomeCategories,
 };
 
-// 根据ID查找分类
 export function findCategoryById(id: string): MainCategory | SubCategory | null {
   for (const mainCat of expenseCategories) {
     if (mainCat.id === id) return mainCat;
@@ -243,7 +236,6 @@ export function findCategoryById(id: string): MainCategory | SubCategory | null 
   return null;
 }
 
-// 根据名称查找分类
 export function findCategoryByName(name: string): MainCategory | null {
   for (const mainCat of expenseCategories) {
     if (mainCat.name === name) return mainCat;

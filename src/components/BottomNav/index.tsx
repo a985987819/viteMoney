@@ -5,13 +5,13 @@ import styles from './index.module.scss';
 
 const profileImg = `${CDN_BASE_URL}/profile.png`;
 const reportImg = `${CDN_BASE_URL}/report.png`;
-const stardewvalleyImg = `${CDN_BASE_URL}/stardewvalley.png`;
-const savingsImg = `${CDN_BASE_URL}/icon.png`; // 使用icon作为攒钱图标
+const savingsImg = `${CDN_BASE_URL}/icon.png`;
 
 interface NavItem {
   key: string;
   labelKey: string;
   icon: string;
+  isEmoji?: boolean;
   path: string;
 }
 
@@ -20,14 +20,14 @@ const BottomNav = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // 判断是否在【我的】页面
   const isProfilePage = location.pathname === '/profile';
 
   const navItems: NavItem[] = [
     {
       key: 'home',
       labelKey: 'nav.home',
-      icon: stardewvalleyImg,
+      icon: '🏡',
+      isEmoji: true,
       path: '/',
     },
     {
@@ -64,11 +64,15 @@ const BottomNav = () => {
             className={`${styles.navItem} ${isActive ? styles.active : ''}`}
             onClick={() => handleNavClick(item.path)}
           >
-            <img
-              src={item.icon}
-              alt={t(item.labelKey)}
-              className={styles.navIcon}
-            />
+            {item.isEmoji ? (
+              <span className={styles.navEmoji}>{item.icon}</span>
+            ) : (
+              <img
+                src={item.icon}
+                alt={t(item.labelKey)}
+                className={styles.navIcon}
+              />
+            )}
             <span className={styles.navLabel}>{t(item.labelKey)}</span>
           </div>
         );
