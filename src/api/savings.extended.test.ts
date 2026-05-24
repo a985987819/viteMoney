@@ -36,19 +36,20 @@ describe('savings API - 本地存储边界值和异常处理', () => {
 
     it('应该处理损坏的 JSON', () => {
       localStorage.setItem('savings_plans', 'invalid json');
-      expect(() => getLocalSavingsPlans()).toThrow();
+      const plans = getLocalSavingsPlans();
+      expect(plans).toEqual([]);
     });
 
     it('应该处理 null 值', () => {
       localStorage.setItem('savings_plans', 'null');
       const plans = getLocalSavingsPlans();
-      expect(plans).toBeNull();
+      expect(plans).toEqual([]);
     });
 
     it('应该处理非数组数据', () => {
       localStorage.setItem('savings_plans', '{"id": 1}');
       const plans = getLocalSavingsPlans();
-      expect(plans).toEqual({ id: 1 });
+      expect(plans).toEqual([]);
     });
   });
 
@@ -197,7 +198,8 @@ describe('savings API - 本地存储边界值和异常处理', () => {
 
     it('应该处理损坏的 JSON', () => {
       localStorage.setItem('savings_deposits', 'invalid json');
-      expect(() => getLocalDeposits()).toThrow();
+      const deposits = getLocalDeposits();
+      expect(deposits).toEqual([]);
     });
 
     it('应该处理 null 值', () => {

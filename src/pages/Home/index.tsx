@@ -53,32 +53,92 @@ const Home = () => {
 
     try {
       if (isLoggedIn) {
-        const currentMonth = dayjs().format('YYYY-MM');
-        const [statsRes, recordsRes] = await Promise.all([
-          getMonthlyStats(currentMonth),
-          getRecordsByDateGroups({ cursor: isRefresh ? undefined : cursor, limit: DATE_COUNT }),
-        ]);
-        setStats(statsRes);
+        try {
+          const currentMonth = dayjs().format('YYYY-MM');
+          const [statsRes, recordsRes] = await Promise.all([
+            getMonthlyStats(currentMonth),
+            getRecordsByDateGroups({ cursor: isRefresh ? undefined : cursor, limit: DATE_COUNT }),
+          ]);
+          setStats(statsRes);
 
-        if (isRefresh) {
-          setDateGroups(recordsRes.data);
-        } else {
-          setDateGroups(prev => {
-            const newGroups = [...prev];
-            recordsRes.data.forEach((newGroup: DateGroup) => {
-              const existingIndex = newGroups.findIndex(g => g.date === newGroup.date);
-              if (existingIndex >= 0) {
-                newGroups[existingIndex].records = [...newGroups[existingIndex].records, ...newGroup.records];
-                newGroups[existingIndex].records.sort((a, b) => compareDate(b.date, a.date));
-              } else {
-                newGroups.push(newGroup);
-              }
+          if (isRefresh) {
+            setDateGroups(recordsRes.data);
+          } else {
+            setDateGroups(prev => {
+              const newGroups = [...prev];
+              recordsRes.data.forEach((newGroup: DateGroup) => {
+                const existingIndex = newGroups.findIndex(g => g.date === newGroup.date);
+                if (existingIndex >= 0) {
+                  newGroups[existingIndex].records = [...newGroups[existingIndex].records, ...newGroup.records];
+                  newGroups[existingIndex].records.sort((a, b) => compareDate(b.date, a.date));
+                } else {
+                  newGroups.push(newGroup);
+                }
+              });
+              return newGroups;
             });
-            return newGroups;
-          });
+          }
+          setHasMore(recordsRes.hasMore);
+          setCursor(recordsRes.nextCursor);
+        } catch {
+          message.error(t('common.failed'));
+
+          const localRecords = getLocalRecords();
+          const now = dayjs();
+          const currentMonth = now.format('YYYY-MM');
+          const currentYear = now.year();
+          const currentMonthNum = now.month() + 1;
+
+          const monthRecords = localRecords.filter(r => dayjs(r.date).format('YYYY-MM') === currentMonth);
+          const totalExpense = monthRecords
+            .filter(r => r.type === 'expense')
+            .reduce((sum, r) => sum + Number(r.amount), 0);
+          const totalIncome = monthRecords
+            .filter(r => r.type === 'income')
+            .reduce((sum, r) => sum + Number(r.amount), 0);
+
+          const localBudget = getLocalBudget(currentYear, currentMonthNum);
+          const budgetAmount = localBudget?.amount || 1000;
+
+          setStats({ totalExpense, totalIncome, budget: budgetAmount });
+
+          const grouped = localRecords.reduce((acc, record) => {
+            const dateStr = dayjs(getTimestamp(record.date)).format('YYYY-MM-DD');
+            if (!acc[dateStr]) {
+              acc[dateStr] = [];
+            }
+            acc[dateStr].push(record);
+            return acc;
+          }, {} as Record<string, RecordItem[]>);
+
+          const today = dayjs().format('YYYY-MM-DD');
+          const groups: DateGroup[] = Object.entries(grouped)
+            .map(([date, records]) => ({
+              date,
+              records: records.sort((a, b) => compareDate(b.date, a.date)),
+            }))
+            .filter(group => group.date <= today)
+            .sort((a, b) => compareDate(b.date, a.date));
+
+          const currentCursor = isRefresh ? undefined : cursor;
+          let startIndex = 0;
+          if (currentCursor) {
+            const cursorIndex = groups.findIndex(g => g.date <= currentCursor);
+            startIndex = cursorIndex >= 0 ? cursorIndex + 1 : groups.length;
+          }
+          const endIndex = startIndex + DATE_COUNT;
+          const pageData = groups.slice(startIndex, endIndex);
+
+          if (isRefresh) {
+            setDateGroups(pageData);
+          } else {
+            setDateGroups(prev => [...prev, ...pageData]);
+          }
+          setHasMore(endIndex < groups.length);
+          if (pageData.length > 0) {
+            setCursor(pageData[pageData.length - 1].date);
+          }
         }
-        setHasMore(recordsRes.hasMore);
-        setCursor(recordsRes.nextCursor);
       } else {
         const localRecords = getLocalRecords();
         const now = dayjs();
@@ -138,7 +198,6 @@ const Home = () => {
       }
     } catch (error) {
       message.error(t('common.failed'));
-      console.error('Fetch data error:', error);
     } finally {
       setLoading(false);
     }

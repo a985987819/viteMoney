@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
-import { Radio, List, Drawer, Button, Checkbox, Empty, Calendar, Badge } from 'antd';
+import { Radio, List, Drawer, Button, Checkbox, Empty, Calendar, Badge, message } from 'antd';
 import type { Dayjs } from 'dayjs';
 import {
   FilterOutlined,
@@ -176,6 +176,7 @@ const ReportContent = () => {
       setDailyRecords(records);
     } catch (error) {
       console.error('Failed to load daily records:', error);
+      message.error('加载日记录失败');
       setDailyRecords([]);
     } finally {
       setDailyRecordsLoading(false);

@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Tabs, Button, Form, Input, Select, DatePicker, InputNumber, Radio, message, List, Tag, Empty, Spin, Popconfirm } from 'antd';
-import { PlusOutlined, ClockCircleOutlined, DeleteOutlined } from '@ant-design/icons';
+import { PlusOutlined, ClockCircleOutlined, DeleteOutlined, LoginOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
+import { useNavigate } from 'react-router-dom';
 import BottomNav from '../../components/BottomNav';
 import StardewPanel from '../../components/StardewPanel';
 import PageHeader from '../../components/PageHeader';
 import { createRecurringRecord, getRecurringRecords, deleteRecurringRecord, type RecurringRecord, type FrequencyType } from '../../api/recurring';
 import { useCategories } from '../../hooks/useCategories';
+import { useAuth } from '../../hooks/useAuth';
 import styles from './index.module.scss';
 
 const { Option } = Select;
@@ -25,6 +27,8 @@ const frequencyMap: Record<FrequencyType, string> = {
 };
 
 const Recurring = () => {
+  const navigate = useNavigate();
+  const { isLoggedIn } = useAuth();
   const [activeTab, setActiveTab] = useState('list');
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
@@ -107,10 +111,25 @@ const Recurring = () => {
 
   return (
     <div className={styles.pageContainer}>
-      {/* 顶部导航 */}
       <PageHeader title="定时记账" />
 
-      {/* Tab 切换 */}
+      {!isLoggedIn ? (
+        <div className={styles.offlineHint}>
+          <Empty
+            description="定时记账功能需要登录后使用"
+            image={Empty.PRESENTED_IMAGE_SIMPLE}
+          >
+            <Button
+              type="primary"
+              icon={<LoginOutlined />}
+              onClick={() => navigate('/profile')}
+            >
+              去登录
+            </Button>
+          </Empty>
+        </div>
+      ) : (
+      <>
       <Tabs
         activeKey={activeTab}
         onChange={setActiveTab}
@@ -364,6 +383,8 @@ const Recurring = () => {
           </div>
         </TabPane>
       </Tabs>
+      </>
+      )}
 
       <BottomNav />
     </div>

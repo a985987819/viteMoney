@@ -1,7 +1,6 @@
 import axios, {
   type AxiosInstance,
   type AxiosRequestConfig,
-  type AxiosResponse,
   type Canceler,
   type InternalAxiosRequestConfig,
 } from 'axios';
@@ -127,7 +126,7 @@ request.interceptors.response.use(
           originalRequest.headers.Authorization = `Bearer ${res.tokens.accessToken}`;
         }
         return request(originalRequest);
-      } catch (refreshError) {
+      } catch {
         clearUser();
         window.location.href = '/profile';
         return Promise.reject(new ApiError('登录已过期', 401));

@@ -4,6 +4,7 @@ import { ConfigProvider, App as AntdApp } from 'antd';
 import zhCN from 'antd/locale/zh_CN';
 import { AuthProvider } from './hooks/useAuth';
 import { PWAInstallPrompt } from './components/PWAInstallPrompt';
+import OfflineIndicator from './components/OfflineIndicator';
 import { themeManager } from './utils/theme';
 import ErrorBoundary from './components/ErrorBoundary';
 import LoadingScreen from './components/LoadingScreen';
@@ -59,6 +60,7 @@ function App() {
             <Suspense fallback={<LoadingScreen />}>
               <RouterProvider router={router} />
             </Suspense>
+            <OfflineIndicator />
             <PWAInstallPrompt />
           </AuthProvider>
         </AntdApp>

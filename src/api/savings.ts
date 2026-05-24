@@ -160,7 +160,12 @@ const recalculatePlan = (plan: SavingsPlan): SavingsPlan => {
 
 export const getLocalSavingsPlans = (): SavingsPlan[] => {
   const data = localStorage.getItem(STORAGE_KEY);
-  const plans = data ? JSON.parse(data) : [];
+  let plans: SavingsPlan[];
+  try {
+    plans = data ? JSON.parse(data) : [];
+  } catch {
+    plans = [];
+  }
   return Array.isArray(plans) ? plans.map(recalculatePlan) : [];
 };
 
@@ -183,7 +188,12 @@ export const saveLocalSavingsPlans = (plans: SavingsPlan[]) => {
 
 export const getLocalDeposits = (planId?: string): SavingsDeposit[] => {
   const data = localStorage.getItem(DEPOSITS_KEY);
-  const allDeposits = data ? JSON.parse(data) : [];
+  let allDeposits: SavingsDeposit[];
+  try {
+    allDeposits = data ? JSON.parse(data) : [];
+  } catch {
+    allDeposits = [];
+  }
   return planId ? allDeposits.filter((d: SavingsDeposit) => d.planId === planId) : allDeposits;
 };
 

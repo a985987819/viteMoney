@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
-import { Empty, Button } from 'antd';
+import { Empty, Button, message } from 'antd';
 import { SwapOutlined } from '@ant-design/icons';
 import * as echarts from 'echarts';
 import dayjs from 'dayjs';
@@ -63,8 +63,12 @@ const CompareContent = () => {
     let records: RecordItem[] = [];
 
     if (isLoggedIn) {
-      reportData = await getReportData(year, month);
-      records = await getRecords({ startDate, endDate });
+      try {
+        reportData = await getReportData(year, month);
+        records = await getRecords({ startDate, endDate });
+      } catch {
+        message.error('加载数据失败，请重试');
+      }
     } else {
       // 从本地存储计算
       const allRecords = getLocalRecords();

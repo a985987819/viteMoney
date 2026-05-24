@@ -104,14 +104,19 @@ const Bill = () => {
           endDate: eDate.format('YYYY-MM-DD'),
           ...filter,
         };
-        const response: BillListResponse = await getBillsWithFilter(params);
-        if (isRefresh) {
-          setRecords(response.records);
-        } else {
-          setRecords(prev => [...prev, ...response.records]);
+        try {
+          const response: BillListResponse = await getBillsWithFilter(params);
+          if (isRefresh) {
+            setRecords(response.records);
+          } else {
+            setRecords(prev => [...prev, ...response.records]);
+          }
+          setSummary(response.summary);
+          setHasMore(false);
+        } catch {
+          message.error('加载数据失败');
+          setLoading(false);
         }
-        setSummary(response.summary);
-        setHasMore(false);
       } else {
         // 从本地存储获取数据
         const allRecords = getLocalRecords();

@@ -234,7 +234,13 @@ const AddRecord = () => {
 
     setLoading(true);
     try {
-      await createRecord(recordData);
+      if (isLoggedIn) {
+        await createRecord(recordData);
+      } else {
+        const localRecords = getLocalRecords();
+        const newRecord = { id: `local_${Date.now()}`, ...recordData };
+        saveLocalRecords([newRecord, ...localRecords]);
+      }
       message.success(t('addRecord.saveSuccess'));
       setRemark('');
       setSelectedCategory(null);

@@ -220,3 +220,11 @@
   font-family: 'PixelFont', monospace;
   @include winter.winter-primary-button;
 }
+
+.offlineHint {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 16px;
+}

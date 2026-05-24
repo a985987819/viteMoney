@@ -27,19 +27,20 @@ describe('storage utils - 边界值和异常处理', () => {
   describe('getLocalRecords - 边界值', () => {
     it('应该处理损坏的 JSON 数据', () => {
       localStorage.setItem('money_records', 'invalid json');
-      expect(() => getLocalRecords()).toThrow();
+      const records = getLocalRecords();
+      expect(records).toEqual([]);
     });
 
     it('应该处理 null 值存储', () => {
       localStorage.setItem('money_records', 'null');
       const records = getLocalRecords();
-      expect(records).toBeNull();
+      expect(records).toEqual([]);
     });
 
     it('应该处理非数组 JSON', () => {
       localStorage.setItem('money_records', '{"id": 1}');
       const records = getLocalRecords();
-      expect(records).toEqual({ id: 1 });
+      expect(records).toEqual([]);
     });
   });
 
@@ -294,7 +295,8 @@ describe('storage utils - 边界值和异常处理', () => {
   describe('User 相关 - 边界值', () => {
     it('应该处理损坏的用户数据', () => {
       localStorage.setItem('money_user', 'invalid json');
-      expect(() => getUser()).toThrow();
+      const user = getUser();
+      expect(user).toBeNull();
     });
 
     it('应该处理空用户对象', () => {
