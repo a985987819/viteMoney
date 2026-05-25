@@ -21,7 +21,10 @@ export default defineConfig(({ mode }) => {
           theme_color: '#8B5A2B',
           background_color: '#f5e8c7',
           display: 'standalone',
-        orientation: 'portrait-primary',
+          orientation: 'portrait-primary',
+          scope: '/',
+          start_url: '/',
+          id: '/',
           lang: 'zh-CN',
           icons: [
             {

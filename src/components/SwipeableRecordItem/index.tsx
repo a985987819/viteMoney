@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, memo, useEffect } from 'react';
+import { useState, useRef, useCallback, memo } from 'react';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import type { RecordItem } from '../../api/record';
 import RecordItemComponent from '../RecordItem';
@@ -12,88 +12,113 @@ interface SwipeableRecordItemProps {
 }
 
 const SwipeableRecordItem = memo(({ record, onEdit, onDelete, isLastItem }: SwipeableRecordItemProps) => {
-  const [translateX, setTranslateX] = useState(0);
+  const [, setTranslateX] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const startXRef = useRef(0);
-  const currentXRef = useRef(0);
   const diffXRef = useRef(0);
   const buttonWidth = 120;
   const contentRef = useRef<HTMLDivElement>(null);
   const touchStartYRef = useRef(0);
+  const isOpenRef = useRef(false);
 
-  useEffect(() => {
+  const updateTransform = useCallback((x: number) => {
     if (contentRef.current) {
-      contentRef.current.style.transform = `translateX(${translateX}px)`;
+      contentRef.current.style.transform = `translateX(${x}px)`;
     }
-  }, [translateX]);
+  }, []);
 
-  // 使用原生事件监听，设置 passive: false
-  useEffect(() => {
-    const element = contentRef.current;
-    if (!element) return;
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    const touch = e.touches[0];
+    startXRef.current = touch.clientX;
+    touchStartYRef.current = touch.clientY;
+    diffXRef.current = 0;
+    setIsDragging(true);
+  }, []);
 
-    const handleTouchStartNative = (e: TouchEvent) => {
-      const touch = e.touches[0];
-      startXRef.current = touch.clientX;
-      currentXRef.current = touch.clientX;
-      touchStartYRef.current = touch.clientY;
-      diffXRef.current = 0;
-      setIsDragging(true);
-    };
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    if (!isDragging) return;
 
-    const handleTouchMoveNative = (e: TouchEvent) => {
-      if (!isDragging) return;
+    const touch = e.touches[0];
+    const diffX = touch.clientX - startXRef.current;
+    const diffY = touch.clientY - touchStartYRef.current;
 
-      const touch = e.touches[0];
-      const diffX = touch.clientX - startXRef.current;
-      const diffY = touch.clientY - touchStartYRef.current;
+    if (Math.abs(diffX) > Math.abs(diffY) && e.cancelable) {
+      e.preventDefault();
+    }
 
-      // 水平滑动距离大于垂直滑动距离时才阻止默认行为
-      // 同时检查事件是否可取消，避免浏览器滚动时的报错
-      if (Math.abs(diffX) > Math.abs(diffY) && e.cancelable) {
-        e.preventDefault();
-      }
+    diffXRef.current = diffX;
 
-      currentXRef.current = touch.clientX;
-      diffXRef.current = diffX;
+    if (diffXRef.current < 0) {
+      const newX = Math.max(diffXRef.current, -buttonWidth);
+      updateTransform(newX);
+    } else {
+      updateTransform(0);
+    }
+  }, [isDragging, updateTransform]);
 
-      if (diffXRef.current < 0) {
-        setTranslateX(Math.max(diffXRef.current, -buttonWidth));
-      } else {
-        setTranslateX(0);
-      }
-    };
+  const handleTouchEnd = useCallback(() => {
+    setIsDragging(false);
 
-    const handleTouchEndNative = () => {
-      setIsDragging(false);
+    if (diffXRef.current < -buttonWidth / 2) {
+      isOpenRef.current = true;
+      setTranslateX(-buttonWidth);
+      updateTransform(-buttonWidth);
+    } else {
+      isOpenRef.current = false;
+      setTranslateX(0);
+      updateTransform(0);
+    }
+  }, [updateTransform]);
 
-      if (diffXRef.current < -buttonWidth / 2) {
-        setTranslateX(-buttonWidth);
-      } else {
-        setTranslateX(0);
-      }
-    };
+  const handleMouseDown = useCallback((e: React.MouseEvent) => {
+    startXRef.current = e.clientX;
+    touchStartYRef.current = e.clientY;
+    diffXRef.current = 0;
+    setIsDragging(true);
+  }, []);
 
-    element.addEventListener('touchstart', handleTouchStartNative, { passive: true });
-    element.addEventListener('touchmove', handleTouchMoveNative, { passive: false });
-    element.addEventListener('touchend', handleTouchEndNative, { passive: true });
+  const handleMouseMove = useCallback((e: React.MouseEvent) => {
+    if (!isDragging) return;
+    e.preventDefault();
 
-    return () => {
-      element.removeEventListener('touchstart', handleTouchStartNative);
-      element.removeEventListener('touchmove', handleTouchMoveNative);
-      element.removeEventListener('touchend', handleTouchEndNative);
-    };
-  }, [isDragging]);
+    const diffX = e.clientX - startXRef.current;
+    diffXRef.current = diffX;
 
-  const handleEdit = () => {
+    if (diffXRef.current < 0) {
+      const newX = Math.max(diffXRef.current, -buttonWidth);
+      updateTransform(newX);
+    } else {
+      updateTransform(0);
+    }
+  }, [isDragging, updateTransform]);
+
+  const handleMouseUp = useCallback(() => {
+    setIsDragging(false);
+
+    if (diffXRef.current < -buttonWidth / 2) {
+      isOpenRef.current = true;
+      setTranslateX(-buttonWidth);
+      updateTransform(-buttonWidth);
+    } else {
+      isOpenRef.current = false;
+      setTranslateX(0);
+      updateTransform(0);
+    }
+  }, [updateTransform]);
+
+  const handleEdit = useCallback(() => {
+    isOpenRef.current = false;
     setTranslateX(0);
+    updateTransform(0);
     onEdit(record);
-  };
+  }, [onEdit, record, updateTransform]);
 
-  const handleDelete = () => {
+  const handleDelete = useCallback(() => {
+    isOpenRef.current = false;
     setTranslateX(0);
+    updateTransform(0);
     onDelete(record);
-  };
+  }, [onDelete, record, updateTransform]);
 
   return (
     <div className={`${styles.swipeableItemWrapper} ${isLastItem ? styles.lastItem : ''}`}>
@@ -117,6 +142,13 @@ const SwipeableRecordItem = memo(({ record, onEdit, onDelete, isLastItem }: Swip
       <div
         ref={contentRef}
         className={styles.swipeableContent}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
       >
         <RecordItemComponent record={record} />
       </div>
