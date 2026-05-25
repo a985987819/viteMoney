@@ -6,7 +6,7 @@ $progress-color-dark: #c47a3a;
 $progress-bg: rgba(0, 0, 0, 0.3);
 
 .loadingScreen {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   right: 0;

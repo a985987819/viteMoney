@@ -5,16 +5,16 @@
   left: 0;
   top: 0;
   bottom: 0;
-  width: 52px;
+  width: 0;
   z-index: 1000;
   display: flex;
   flex-direction: column;
-  transform: translateX(-100%);
-  transition: transform 0.3s ease;
+  transition: width 0.3s ease;
+  overflow: hidden;
 }
 
 .quickRecordPanel.open {
-  transform: translateX(0);
+  width: 52px;
 }
 
 .quickRecordHandle {
@@ -48,7 +48,7 @@
 }
 
 .quickRecordList {
-  width: 100%;
+  width: 52px;
   height: 100%;
   background: linear-gradient(135deg, $panel-bg 0%, $content-bg 100%);
   border-radius: 0 0 16px 0;
@@ -61,6 +61,7 @@
   justify-content: center;
   gap: 6px;
   box-sizing: border-box;
+  flex-shrink: 0;
 }
 
 .quickRecordItem {

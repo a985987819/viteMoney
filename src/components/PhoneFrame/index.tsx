@@ -84,7 +84,6 @@ const PhoneFrame = ({ children, isDesktop }: { children: ReactNode; isDesktop: b
           maxHeight: 'calc(100vh - 32px)',
         }}
       >
-        <div className={styles.phoneNotch} />
         <div
           className={styles.phoneContent}
           style={{ '--app-height': `${contentHeight}px` } as React.CSSProperties}
