@@ -3,17 +3,21 @@
 .budgetPage {
   display: flex;
   flex-direction: column;
-  min-height: var(--app-height, 100vh);
-  min-height: var(--app-height, 100dvh);
+  height: var(--app-height, 100vh);
+  height: var(--app-height, 100dvh);
   @include winter.winter-page-bg;
+  overflow: hidden;
+  position: relative;
 }
 
 .loadingContainer {
-  min-height: var(--app-height, 100vh);
+  height: var(--app-height, 100vh);
   @include winter.winter-page-bg;
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
+  position: relative;
 }
 
 .addBtn,

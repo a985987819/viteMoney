@@ -30,20 +30,23 @@ $winter-blue-light: #7ab8e8;
 // 主容器 - 冬季雪景背景
 .pageContainer {
   width: 100%;
-  min-height: var(--app-height, 100vh);
+  height: var(--app-height, 100vh);
+  height: var(--app-height, 100dvh);
   background: url($winter-bg-url) no-repeat center top;
   background-size: cover;
-  background-attachment: fixed;
   display: flex;
   flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+.contentScroll {
+  flex: 1;
+  min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
-  position: relative;
-
-  .page-container {
-    height: 100%;
-  }
+  padding-bottom: calc(70px + env(safe-area-inset-bottom, 0));
 }
 
 // 顶部背景 - 带雪顶装饰
@@ -211,7 +214,6 @@ $winter-blue-light: #7ab8e8;
   grid-template-columns: repeat(3, 1fr);
   gap: 12px;
   margin: 0 16px;
-  padding-bottom: 80px;
 }
 
 // 菜单按钮 - 使用雪块背景图

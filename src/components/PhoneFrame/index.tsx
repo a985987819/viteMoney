@@ -86,6 +86,7 @@ const PhoneFrame = ({ children, isDesktop }: { children: ReactNode; isDesktop: b
       >
         <div
           className={styles.phoneContent}
+          data-phone-content
           style={{ '--app-height': `${contentHeight}px` } as React.CSSProperties}
         >
           {children}

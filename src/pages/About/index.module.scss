@@ -1,14 +1,15 @@
 @use "../../styles/winter-profile-theme.scss" as winter;
 
 .aboutPage {
-  min-height: var(--app-height, 100vh);
-  min-height: var(--app-height, 100dvh);
+  height: var(--app-height, 100vh);
+  height: var(--app-height, 100dvh);
   @include winter.winter-page-bg;
-  overflow-x: hidden;
+  overflow: hidden;
+  position: relative;
 }
 
 .backgroundDecorations {
-  position: fixed;
+  position: absolute;
   inset: 0;
   pointer-events: none;
   z-index: 0;

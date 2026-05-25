@@ -18,7 +18,6 @@ $winter-blue-light: #7ab8e8;
 @mixin winter-page-bg {
   background: url($winter-bg-url) no-repeat center top;
   background-size: cover;
-  background-attachment: fixed;
 }
 
 @mixin winter-card-shadow {

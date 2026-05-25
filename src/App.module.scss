@@ -143,8 +143,8 @@ $scrollbar-hover: $stardew-wood-dark;
       center !important;
     height: 40px !important;
     width: 40px !important;
-    z-index: 1000;
-    position: fixed;
+    z-index: 100;
+    position: absolute;
   }
 
   .ant-modal-body {
@@ -212,10 +212,7 @@ body {
   margin: 0;
   background: $stardew-farm-bg;
   position: relative;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding-bottom: calc(70px + env(safe-area-inset-bottom, 0));
-  -webkit-overflow-scrolling: touch;
+  overflow: hidden;
 }
 
 @media screen and (min-width: 768px) {
@@ -240,6 +237,6 @@ body {
 
 @media screen and (max-height: 500px) and (orientation: landscape) {
   .pageContainer {
-    min-height: var(--app-height, 100vh);
+    height: var(--app-height, 100vh);
   }
 }

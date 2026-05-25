@@ -403,6 +403,7 @@ const Profile = () => {
         <div className={styles.headerTitle}>{t('profile.title')}</div>
       </div>
 
+      <div className={styles.contentScroll}>
       {/* 用户信息卡片 */}
       <div className={styles.userCard}>
         <div className={styles.userInfo}>
@@ -487,6 +488,8 @@ const Profile = () => {
             <span className={styles.menuIcon}>{item.icon}</span>
           </div>
         ))}
+      </div>
+
       </div>
 
       {/* 设置弹窗 */}

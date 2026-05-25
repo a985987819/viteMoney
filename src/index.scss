@@ -18,6 +18,17 @@ body {
   margin: 0;
 }
 
+[data-phone-content] {
+  .ant-modal-wrap,
+  .ant-drawer {
+    position: absolute;
+  }
+
+  .ant-modal-wrap {
+    overflow: auto;
+  }
+}
+
 .ant-modal-root {
   .ant-modal-content {
     border-radius: 14px;

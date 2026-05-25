@@ -4,7 +4,7 @@
 // 错误边界容器 - 农场背景
 .errorBoundary {
   width: 100%;
-  min-height: var(--app-height, 100vh);
+  height: var(--app-height, 100vh);
   background: $stardew-farm-bg;
   position: relative;
   overflow: hidden;
@@ -12,7 +12,7 @@
 
 // 开发环境错误详情覆盖层
 .errorDetailsOverlay {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   right: 0;

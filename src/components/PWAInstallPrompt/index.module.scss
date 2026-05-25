@@ -4,11 +4,11 @@
 
 // 安装提示容器
 .installPrompt {
-  position: fixed;
+  position: absolute;
   bottom: calc(90px + env(safe-area-inset-bottom, 0));
   left: 16px;
   right: 16px;
-  z-index: 1000;
+  z-index: 100;
   animation: slideUp 0.4s ease-out;
   
   /* 适配横屏时的安全区域 */
@@ -142,11 +142,11 @@
 
 // 离线提示
 .offlineIndicator {
-  position: fixed;
+  position: absolute;
   top: env(safe-area-inset-top, 0);
   left: 0;
   right: 0;
-  z-index: 9999;
+  z-index: 100;
   background-color: $stardew-warning;
   padding: 8px 16px;
   text-align: center;
@@ -159,11 +159,11 @@
 
 // 更新提示
 .updatePrompt {
-  position: fixed;
+  position: absolute;
   top: calc(16px + env(safe-area-inset-top, 0));
   left: 16px;
   right: 16px;
-  z-index: 1000;
+  z-index: 100;
   animation: slideDown 0.4s ease-out;
   
   /* 适配横屏时的安全区域 */
@@ -228,10 +228,10 @@
 
 // 手动安装按钮
 .manualInstallButton {
-  position: fixed;
+  position: absolute;
   bottom: calc(90px + env(safe-area-inset-bottom, 0));
   right: 16px;
-  z-index: 999;
+  z-index: 100;
   
   button {
     padding: 10px 16px;

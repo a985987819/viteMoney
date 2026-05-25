@@ -1,4 +1,4 @@
-import { useEffect, useState, Suspense } from 'react';
+import { useEffect, Suspense } from 'react';
 import { RouterProvider } from 'react-router-dom';
 import { ConfigProvider, App as AntdApp } from 'antd';
 import zhCN from 'antd/locale/zh_CN';
@@ -7,9 +7,7 @@ import { PWAInstallPrompt } from './components/PWAInstallPrompt';
 import OfflineIndicator from './components/OfflineIndicator';
 import { themeManager } from './utils/theme';
 import { initializeDataStore } from './utils/dataMigration';
-import ErrorBoundary from './components/ErrorBoundary';
 import LoadingScreen from './components/LoadingScreen';
-import PhoneFrame from './components/PhoneFrame';
 import router from './router';
 import './App.module.scss';
 
@@ -44,34 +42,7 @@ const theme = {
   },
 };
 
-function useShouldShowPhoneFrame() {
-  const [showFrame, setShowFrame] = useState(() => {
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches
-      || (window.navigator as unknown as { standalone?: boolean }).standalone === true;
-    if (isStandalone) return false;
-    return window.innerWidth >= 768;
-  });
-
-  useEffect(() => {
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches
-      || (window.navigator as unknown as { standalone?: boolean }).standalone === true;
-    if (isStandalone) {
-      setShowFrame(false);
-      return;
-    }
-
-    const mql = window.matchMedia('(min-width: 768px)');
-    const handler = (e: MediaQueryListEvent) => setShowFrame(e.matches);
-    mql.addEventListener('change', handler);
-    return () => mql.removeEventListener('change', handler);
-  }, []);
-
-  return showFrame;
-}
-
 function App() {
-  const showPhoneFrame = useShouldShowPhoneFrame();
-
   useEffect(() => {
     initializeDataStore();
   }, []);
@@ -81,22 +52,24 @@ function App() {
     return () => unsubscribe();
   }, []);
 
+  const getPopupContainer = () => {
+    const phoneContent = document.querySelector('[data-phone-content]');
+    if (phoneContent) return phoneContent as HTMLElement;
+    return document.body;
+  };
+
   return (
-    <PhoneFrame isDesktop={showPhoneFrame}>
-      <ErrorBoundary>
-        <ConfigProvider locale={zhCN} theme={theme}>
-          <AntdApp>
-            <AuthProvider>
-              <Suspense fallback={<LoadingScreen />}>
-                <RouterProvider router={router} />
-              </Suspense>
-              <OfflineIndicator />
-              <PWAInstallPrompt />
-            </AuthProvider>
-          </AntdApp>
-        </ConfigProvider>
-      </ErrorBoundary>
-    </PhoneFrame>
+    <ConfigProvider locale={zhCN} theme={theme} getPopupContainer={getPopupContainer}>
+      <AntdApp>
+        <AuthProvider>
+          <Suspense fallback={<LoadingScreen />}>
+            <RouterProvider router={router} />
+          </Suspense>
+          <OfflineIndicator />
+          <PWAInstallPrompt />
+        </AuthProvider>
+      </AntdApp>
+    </ConfigProvider>
   );
 }
 

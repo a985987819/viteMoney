@@ -19,16 +19,14 @@ $winter-blue: #4a90e2;
 
 .pageContainer {
   width: 100%;
-  min-height: var(--app-height, 100vh);
-  min-height: var(--app-height, 100dvh);
+  height: var(--app-height, 100vh);
+  height: var(--app-height, 100dvh);
   background: url($winter-bg-url) no-repeat center top;
   background-size: cover;
-  background-attachment: fixed;
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
-  overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
+  position: relative;
+  overflow: hidden;
 }
 
 .headerSection {
@@ -125,10 +123,13 @@ $winter-blue: #4a90e2;
 }
 
 .contentSection {
+  flex: 1;
+  min-height: 0;
   padding: 16px;
   padding-bottom: calc(24px + env(safe-area-inset-bottom, 0));
-  overflow: visible;
-  flex-shrink: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
 }
 
 .formCard {
