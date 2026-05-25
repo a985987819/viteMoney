@@ -3,13 +3,13 @@
 .budgetPage {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
-  min-height: 100dvh;
+  min-height: var(--app-height, 100vh);
+  min-height: var(--app-height, 100dvh);
   @include winter.winter-page-bg;
 }
 
 .loadingContainer {
-  min-height: 100vh;
+  min-height: var(--app-height, 100vh);
   @include winter.winter-page-bg;
   display: flex;
   align-items: center;

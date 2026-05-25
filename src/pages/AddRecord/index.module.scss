@@ -29,7 +29,7 @@ $border-color: #aed581;
 // 主容器
 .addRecordContainer {
   width: 100%;
-  min-height: 100dvh;
+  min-height: var(--app-height, 100dvh);
   height: 100%;
   background-color: $bg-color;
   display: flex;

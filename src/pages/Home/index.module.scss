@@ -13,7 +13,7 @@ $content-bg-url: "https://vercel-icons.vercel.app/homePageBg.png";
 .homePage {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: var(--app-height, 100vh);
   background: #f4d03f;
   overflow: hidden;
 }

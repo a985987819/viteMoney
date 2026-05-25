@@ -2,7 +2,7 @@
 
 .errorContainer {
   width: 100%;
-  min-height: 100vh;
+  min-height: var(--app-height, 100vh);
   background: $stardew-farm-bg;
   position: relative;
   overflow: hidden;

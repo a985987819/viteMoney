@@ -49,8 +49,8 @@
 
 .quickRecordList {
   width: 100%;
-  height: 100vh;
-  max-height: 100vh;
+  height: var(--app-height, 100vh);
+  max-height: var(--app-height, 100vh);
   background: linear-gradient(135deg, $panel-bg 0%, $content-bg 100%);
   border-radius: 0 0 16px 0;
   padding: 60px 4px 16px 4px;

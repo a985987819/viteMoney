@@ -1,8 +1,8 @@
 @use "../../styles/winter-profile-theme.scss" as winter;
 
 .featuresPage {
-  min-height: 100vh;
-  min-height: 100dvh;
+  min-height: var(--app-height, 100vh);
+  min-height: var(--app-height, 100dvh);
   @include winter.winter-page-bg;
   overflow-x: hidden;
 }

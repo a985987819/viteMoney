@@ -1,4 +1,4 @@
-import { useEffect, Suspense } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { RouterProvider } from 'react-router-dom';
 import { ConfigProvider, App as AntdApp } from 'antd';
 import zhCN from 'antd/locale/zh_CN';
@@ -9,10 +9,10 @@ import { themeManager } from './utils/theme';
 import { initializeDataStore } from './utils/dataMigration';
 import ErrorBoundary from './components/ErrorBoundary';
 import LoadingScreen from './components/LoadingScreen';
+import PhoneFrame from './components/PhoneFrame';
 import router from './router';
 import './App.module.scss';
 
-// 自定义主题配置 - 星露谷风格
 const theme = {
   token: {
     colorPrimary: '#8B5A2B',
@@ -44,32 +44,49 @@ const theme = {
   },
 };
 
+function useIsDesktop() {
+  const [isDesktop, setIsDesktop] = useState(() =>
+    window.matchMedia('(min-width: 768px)').matches
+  );
+
+  useEffect(() => {
+    const mql = window.matchMedia('(min-width: 768px)');
+    const handler = (e: MediaQueryListEvent) => setIsDesktop(e.matches);
+    mql.addEventListener('change', handler);
+    return () => mql.removeEventListener('change', handler);
+  }, []);
+
+  return isDesktop;
+}
+
 function App() {
+  const isDesktop = useIsDesktop();
+
   useEffect(() => {
     initializeDataStore();
   }, []);
 
   useEffect(() => {
-    const unsubscribe = themeManager.subscribe(() => {
-      // 主题变化时会自动更新 CSS 变量
-    });
+    const unsubscribe = themeManager.subscribe(() => {});
     return () => unsubscribe();
   }, []);
 
   return (
-    <ErrorBoundary>
-      <ConfigProvider locale={zhCN} theme={theme}>
-        <AntdApp>
-          <AuthProvider>
-            <Suspense fallback={<LoadingScreen />}>
-              <RouterProvider router={router} />
-            </Suspense>
-            <OfflineIndicator />
-            <PWAInstallPrompt />
-          </AuthProvider>
-        </AntdApp>
-      </ConfigProvider>
-    </ErrorBoundary>
+    <PhoneFrame isDesktop={isDesktop}>
+      <ErrorBoundary>
+        <ConfigProvider locale={zhCN} theme={theme}>
+          <AntdApp>
+            <AuthProvider>
+              <Suspense fallback={<LoadingScreen />}>
+                <RouterProvider router={router} />
+              </Suspense>
+              <OfflineIndicator />
+              <PWAInstallPrompt />
+            </AuthProvider>
+          </AntdApp>
+        </ConfigProvider>
+      </ErrorBoundary>
+    </PhoneFrame>
   );
 }
 

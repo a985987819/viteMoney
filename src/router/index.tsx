@@ -23,7 +23,7 @@ const PageLoading = () => (
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    height: '100vh',
+    height: 'var(--app-height, 100vh)',
     background: '#f4d03f'
   }}>
     <Spin size="large" />
