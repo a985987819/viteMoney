@@ -9,7 +9,7 @@ import type { ReportData, CategoryStats, RecordItem } from '../../api/record';
 import { getReportData, getRecords } from '../../api/record';
 import { getLocalRecords } from '../../utils/storage';
 import { useAuth } from '../../hooks/useAuth';
-import DatePicker, { type DateMode } from '../../components/DatePicker';
+import DatePicker from '../../components/DatePicker';
 import styles from './CompareContent.module.scss';
 
 interface MonthData {
@@ -338,7 +338,7 @@ const CompareContent = () => {
   };
 
   // 确认日期选择
-  const handleDateConfirm = (date: dayjs.Dayjs, _mode: DateMode) => {
+  const handleDateConfirm = (date: dayjs.Dayjs) => {
     if (datePickerTarget === 'base') {
       setBaseMonth(date);
     } else {

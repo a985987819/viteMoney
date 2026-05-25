@@ -1,9 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Tabs, Button, Form, Input, Select, DatePicker, InputNumber, Radio, message, List, Tag, Empty, Spin, Popconfirm } from 'antd';
-import { PlusOutlined, ClockCircleOutlined, DeleteOutlined, LoginOutlined } from '@ant-design/icons';
+import { PlusOutlined, ClockCircleOutlined, DeleteOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
-import { DATE_FORMAT } from '../../utils/dateFormats';
-import { useNavigate } from 'react-router-dom';
+import { DATE_FORMAT, nowISO } from '../../utils/dateFormats';
 import BottomNav from '../../components/BottomNav';
 import StardewPanel from '../../components/StardewPanel';
 import PageHeader from '../../components/PageHeader';
@@ -15,10 +14,10 @@ import styles from './index.module.scss';
 const { Option } = Select;
 const { TabPane } = Tabs;
 
-// 账户选项
+const LOCAL_RECURRING_KEY = 'money_recurring_records';
+
 const accountOptions = ['现金', '银行卡', '支付宝', '微信支付', '信用卡'];
 
-// 频率映射
 const frequencyMap: Record<FrequencyType, string> = {
   'daily': '每天',
   'workday': '每个工作日',
@@ -27,8 +26,24 @@ const frequencyMap: Record<FrequencyType, string> = {
   'yearly': '每年',
 };
 
+const getLocalRecurringRecords = (): RecurringRecord[] => {
+  try {
+    const data = localStorage.getItem(LOCAL_RECURRING_KEY);
+    return data ? JSON.parse(data) : [];
+  } catch {
+    return [];
+  }
+};
+
+const saveLocalRecurringRecords = (records: RecurringRecord[]) => {
+  try {
+    localStorage.setItem(LOCAL_RECURRING_KEY, JSON.stringify(records));
+  } catch (e) {
+    console.error('[Storage] 保存定时记账数据失败:', e);
+  }
+};
+
 const Recurring = () => {
-  const navigate = useNavigate();
   const { isLoggedIn } = useAuth();
   const [activeTab, setActiveTab] = useState('list');
   const [form] = Form.useForm();
@@ -37,23 +52,30 @@ const Recurring = () => {
   const [records, setRecords] = useState<RecurringRecord[]>([]);
   const { allCategoryOptions, subCategoryMap, getIcon } = useCategories();
 
-  // 加载定时记账列表
-  const loadRecords = async () => {
+  const loadRecords = useCallback(async () => {
     setLoading(true);
     try {
-      const data = await getRecurringRecords();
-      setRecords(data);
+      if (isLoggedIn) {
+        const data = await getRecurringRecords();
+        setRecords(data);
+      } else {
+        setRecords(getLocalRecurringRecords());
+      }
     } catch (error) {
-      message.error('加载定时记账失败');
-      console.error('Load recurring error:', error);
+      if (!isLoggedIn) {
+        setRecords(getLocalRecurringRecords());
+      } else {
+        message.error('加载定时记账失败');
+        console.error('Load recurring error:', error);
+      }
     } finally {
       setLoading(false);
     }
-  };
+  }, [isLoggedIn]);
 
   useEffect(() => {
     loadRecords();
-  }, []);
+  }, [loadRecords]);
 
   // 提交表单
   const handleSubmit = async (values: {
@@ -85,7 +107,32 @@ const Recurring = () => {
         durationUnit: values.durationUnit || 'year',
       };
 
-      await createRecurringRecord(params);
+      if (isLoggedIn) {
+        await createRecurringRecord(params);
+      } else {
+        const localRecords = getLocalRecurringRecords();
+        const newRecord: RecurringRecord = {
+          id: `local_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`,
+          type: params.type,
+          category: params.category,
+          subCategory: params.subCategory,
+          categoryIcon: params.categoryIcon,
+          amount: params.amount,
+          remark: params.remark,
+          frequency: params.frequency,
+          startDate: params.startDate,
+          endDate: params.durationUnit === 'year'
+            ? dayjs().add(params.durationValue || 1, 'year').format(DATE_FORMAT.DATE_KEY)
+            : dayjs().add(params.durationValue || 1, 'month').format(DATE_FORMAT.DATE_KEY),
+          account: params.account,
+          isActive: true,
+          nextExecuteDate: params.startDate,
+          createdAt: nowISO(),
+          updatedAt: nowISO(),
+        };
+        localRecords.push(newRecord);
+        saveLocalRecurringRecords(localRecords);
+      }
       message.success('定时记账创建成功');
       form.resetFields();
       setActiveTab('list');
@@ -98,10 +145,14 @@ const Recurring = () => {
     }
   };
 
-  // 删除定时记账
   const handleDelete = async (id: string) => {
     try {
-      await deleteRecurringRecord(id);
+      if (isLoggedIn) {
+        await deleteRecurringRecord(id);
+      } else {
+        const localRecords = getLocalRecurringRecords();
+        saveLocalRecurringRecords(localRecords.filter(r => r.id !== id));
+      }
       message.success('删除成功');
       loadRecords();
     } catch (error) {
@@ -114,23 +165,6 @@ const Recurring = () => {
     <div className={styles.pageContainer}>
       <PageHeader title="定时记账" />
 
-      {!isLoggedIn ? (
-        <div className={styles.offlineHint}>
-          <Empty
-            description="定时记账功能需要登录后使用"
-            image={Empty.PRESENTED_IMAGE_SIMPLE}
-          >
-            <Button
-              type="primary"
-              icon={<LoginOutlined />}
-              onClick={() => navigate('/profile')}
-            >
-              去登录
-            </Button>
-          </Empty>
-        </div>
-      ) : (
-      <>
       <Tabs
         activeKey={activeTab}
         onChange={setActiveTab}
@@ -384,8 +418,6 @@ const Recurring = () => {
           </div>
         </TabPane>
       </Tabs>
-      </>
-      )}
 
       <BottomNav />
     </div>

@@ -6,6 +6,7 @@ import { AuthProvider } from './hooks/useAuth';
 import { PWAInstallPrompt } from './components/PWAInstallPrompt';
 import OfflineIndicator from './components/OfflineIndicator';
 import { themeManager } from './utils/theme';
+import { initializeDataStore } from './utils/dataMigration';
 import ErrorBoundary from './components/ErrorBoundary';
 import LoadingScreen from './components/LoadingScreen';
 import router from './router';
@@ -44,7 +45,10 @@ const theme = {
 };
 
 function App() {
-  // 初始化主题
+  useEffect(() => {
+    initializeDataStore();
+  }, []);
+
   useEffect(() => {
     const unsubscribe = themeManager.subscribe(() => {
       // 主题变化时会自动更新 CSS 变量

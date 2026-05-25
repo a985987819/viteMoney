@@ -18,7 +18,7 @@ import { useAuth } from '../../hooks/useAuth';
 import { compareDate } from '../../utils/importExport';
 import type { Category } from '../../api/category';
 import SwipeableRecordItem from '../../components/SwipeableRecordItem';
-import DatePicker, { type DateMode } from '../../components/DatePicker';
+import DatePicker from '../../components/DatePicker';
 import ShareReceipt from '../../components/ShareReceipt';
 import { getLocalCategories } from '../../utils/storage';
 import { useCategories } from '../../hooks/useCategories';
@@ -452,7 +452,7 @@ const BillContent = () => {
   }, [allCategoryOptions]);
 
   // 确认日期选择
-  const handleDateConfirm = (date: dayjs.Dayjs, _mode: DateMode) => {
+  const handleDateConfirm = (date: dayjs.Dayjs) => {
     setStartDate(date.startOf('month'));
     setEndDate(date.endOf('month'));
     setIsDatePickerVisible(false);

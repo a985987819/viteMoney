@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
-import { Radio, List, Drawer, Button, Checkbox, Empty, Calendar, Badge, message } from 'antd';
+import { Radio, List, Drawer, Button, Checkbox, Empty, Calendar, message } from 'antd';
 import type { Dayjs } from 'dayjs';
 import {
   FilterOutlined,
@@ -15,7 +15,7 @@ import type { ReportData, CategoryStats, DailyStats, RecordItem } from '../../ap
 import { getReportData, getRecords } from '../../api/record';
 import { getLocalRecords } from '../../utils/storage';
 import { useAuth } from '../../hooks/useAuth';
-import DatePicker, { type DateMode } from '../../components/DatePicker';
+import DatePicker from '../../components/DatePicker';
 import styles from './ReportContent.module.scss';
 
 type ViewType = 'chart' | 'area';
@@ -48,7 +48,7 @@ const ReportContent = () => {
 
   // 单日记录数据
   const [dailyRecords, setDailyRecords] = useState<RecordItem[]>([]);
-  const [dailyRecordsLoading, setDailyRecordsLoading] = useState(false);
+  const [, setDailyRecordsLoading] = useState(false);
 
   const chartRef = useRef<HTMLDivElement>(null);
   const chartInstance = useRef<echarts.ECharts | null>(null);
@@ -477,7 +477,7 @@ const ReportContent = () => {
   };
 
   // 确认日期选择
-  const handleDateConfirm = (date: dayjs.Dayjs, _mode: DateMode) => {
+  const handleDateConfirm = (date: dayjs.Dayjs) => {
     setCurrentDate(date);
     setIsDatePickerVisible(false);
   };

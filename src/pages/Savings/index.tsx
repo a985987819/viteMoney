@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Button, Card, DatePicker, Empty, Form, Input, InputNumber, Modal, Progress, Tag, message } from 'antd';
@@ -19,18 +19,14 @@ import styles from './index.module.scss';
 const Savings = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const [plans, setPlans] = useState<SavingsPlan[]>([]);
-  const [activePlanId, setActivePlanId] = useState<string | null>(null);
+  const [plans, setPlans] = useState<SavingsPlan[]>(() => getLocalSavingsPlans());
+  const [activePlanId, setActivePlanId] = useState<string | null>(() => getActiveSavingsPlanId());
   const [createModalVisible, setCreateModalVisible] = useState(false);
   const [form] = Form.useForm();
 
-  const loadPlans = () => {
+  const reloadPlans = useCallback(() => {
     setPlans(getLocalSavingsPlans());
     setActivePlanId(getActiveSavingsPlanId());
-  };
-
-  useEffect(() => {
-    loadPlans();
   }, []);
 
   const handleCreatePlan = (values: { name: string; targetAmount: number; endDate: dayjs.Dayjs }) => {
@@ -55,7 +51,7 @@ const Savings = () => {
     setActiveSavingsPlan(newPlan.id);
     setCreateModalVisible(false);
     form.resetFields();
-    loadPlans();
+    reloadPlans();
     message.success('攒钱计划已创建，并已设为当前操作计划');
     navigate('/savings');
   };
@@ -74,7 +70,7 @@ const Savings = () => {
       okType: 'danger',
       onOk: () => {
         deleteLocalSavingsPlan(planId);
-        loadPlans();
+        reloadPlans();
         message.success('计划已删除');
       },
     });

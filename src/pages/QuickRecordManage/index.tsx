@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { message } from 'antd';
 import { LeftOutlined } from '@ant-design/icons';
@@ -10,37 +10,39 @@ import styles from './index.module.scss';
 
 const QuickRecordManagePage = () => {
   const navigate = useNavigate();
-  const [quickRecordList, setQuickRecordList] = useState<QuickRecord[]>([]);
+  const [quickRecordList, setQuickRecordList] = useState<QuickRecord[]>(() =>
+    getQuickRecords().sort((a, b) => a.order - b.order)
+  );
   const [activeType, setActiveType] = useState<'expense' | 'income'>('expense');
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [categories, setCategories] = useState<Category[]>(() => {
+    const stored = getLocalCategories();
+    return stored?.expense || [];
+  });
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [selectedSubCategory, setSelectedSubCategory] = useState<string | null>(null);
   const [amount, setAmount] = useState('');
 
-  useEffect(() => {
-    loadQuickRecords();
-    loadCategories();
-  }, []);
-
-  const loadQuickRecords = () => {
+  const loadQuickRecords = useCallback(() => {
     const list = getQuickRecords();
     setQuickRecordList(list.sort((a, b) => a.order - b.order));
-  };
+  }, []);
 
-  const loadCategories = () => {
+  const loadCategories = useCallback((type?: 'expense' | 'income') => {
     const stored = getLocalCategories();
+    const targetType = type || activeType;
     if (stored) {
-      setCategories(stored[activeType] || []);
+      setCategories(stored[targetType] || []);
     } else {
       setCategories([]);
     }
-  };
+  }, [activeType]);
 
-  useEffect(() => {
-    loadCategories();
+  const handleTypeChange = useCallback((type: 'expense' | 'income') => {
+    setActiveType(type);
     setSelectedCategory(null);
     setSelectedSubCategory(null);
-  }, [activeType]);
+    loadCategories(type);
+  }, [loadCategories]);
 
   const subCategories = useMemo(() => {
     if (!selectedCategory?.subCategories) return [];
@@ -132,13 +134,13 @@ const QuickRecordManagePage = () => {
         <div className={styles.typeTabs}>
           <button
             className={`${styles.typeTab} ${activeType === 'expense' ? styles.active : ''}`}
-            onClick={() => setActiveType('expense')}
+            onClick={() => handleTypeChange('expense')}
           >
             支出
           </button>
           <button
             className={`${styles.typeTab} ${activeType === 'income' ? styles.active : ''}`}
-            onClick={() => setActiveType('income')}
+            onClick={() => handleTypeChange('income')}
           >
             收入
           </button>
@@ -167,7 +169,7 @@ const QuickRecordManagePage = () => {
             <div className={styles.subCategorySection}>
               <div className={styles.formLabel}>选择子分类</div>
               <div className={styles.subCategoryGrid}>
-                {subCategories.map((subCategory: any) => (
+                {subCategories.map((subCategory: { id: string; name: string; icon: string }) => (
                   <div
                     key={subCategory.id}
                     className={`${styles.subCategoryItem} ${selectedSubCategory === subCategory.id ? styles.selected : ''}`}

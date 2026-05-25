@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Empty, Form, InputNumber, Modal, Progress, Tag, message } from 'antd';
 import { FolderOpenOutlined, ThunderboltOutlined, TeamOutlined, WalletOutlined } from '@ant-design/icons';
@@ -11,23 +11,22 @@ import styles from './index.module.scss';
 
 const SavingsOperate = () => {
   const navigate = useNavigate();
-  const [currentPlan, setCurrentPlan] = useState<SavingsPlan | null>(null);
-  const [recentDeposits, setRecentDeposits] = useState<SavingsDeposit[]>([]);
+  const [currentPlan, setCurrentPlan] = useState<SavingsPlan | null>(() => getActiveSavingsPlan());
+  const [recentDeposits, setRecentDeposits] = useState<SavingsDeposit[]>(() => {
+    const plan = getActiveSavingsPlan();
+    return plan ? getLocalDeposits(plan.id).slice(-5).reverse() : [];
+  });
   const [manualDepositVisible, setManualDepositVisible] = useState(false);
   const [manualForm] = Form.useForm();
 
-  const loadCurrentPlan = () => {
+  const loadCurrentPlan = useCallback(() => {
     const plan = getActiveSavingsPlan();
     setCurrentPlan(plan);
     setRecentDeposits(plan ? getLocalDeposits(plan.id).slice(-5).reverse() : []);
-  };
-
-  useEffect(() => {
-    loadCurrentPlan();
   }, []);
 
-  const totalSaved = useMemo(() => getLocalSavingsPlans().reduce((sum, plan) => sum + plan.savedAmount, 0), [currentPlan]);
-  const totalTarget = useMemo(() => getLocalSavingsPlans().reduce((sum, plan) => sum + plan.targetAmount, 0), [currentPlan]);
+  const totalSaved = useMemo(() => getLocalSavingsPlans().reduce((sum, plan) => sum + plan.savedAmount, 0), []);
+  const totalTarget = useMemo(() => getLocalSavingsPlans().reduce((sum, plan) => sum + plan.targetAmount, 0), []);
 
   const handleDeposit = (type: 'average' | 'random' | 'manual', amount?: number) => {
     if (!currentPlan) {
@@ -63,7 +62,12 @@ const SavingsOperate = () => {
   };
 
   const progress = currentPlan?.percentage ?? 0;
-  const randomAmount = currentPlan ? Number((currentPlan.dailyAverage * (0.8 + Math.random() * 0.4)).toFixed(2)) : 0;
+  const randomAmount = useMemo(() => {
+    if (!currentPlan) return 0;
+    const seed = dayjs().valueOf() % 1000;
+    const factor = 0.8 + (seed / 1000) * 0.4;
+    return Number((currentPlan.dailyAverage * factor).toFixed(2));
+  }, [currentPlan]);
 
   return (
     <div className={styles.pageContainer}>
