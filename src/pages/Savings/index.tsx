@@ -6,6 +6,7 @@ import { DeleteOutlined, FolderOpenOutlined, PlusOutlined } from '@ant-design/ic
 import dayjs from 'dayjs';
 import { nowISO, DATE_FORMAT } from '../../utils/dateFormats';
 import PageHeader from '../../components/PageHeader';
+import BottomNav from '../../components/BottomNav';
 import type { SavingsPlan } from '../../api/savings';
 import {
   deleteLocalSavingsPlan,
@@ -175,6 +176,7 @@ const Savings = () => {
           </Form.Item>
         </Form>
       </Modal>
+      <BottomNav />
     </div>
   );
 };
