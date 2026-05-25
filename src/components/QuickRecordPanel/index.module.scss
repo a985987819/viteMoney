@@ -5,16 +5,12 @@
   left: 0;
   top: 0;
   bottom: 0;
-  width: 52px;
   z-index: 1000;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
 }
 
 .quickRecordHandle {
   position: absolute;
-  right: -28px;
+  left: 0;
   top: 50%;
   transform: translateY(-50%);
   width: 28px;
@@ -27,6 +23,7 @@
   cursor: pointer;
   box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
   z-index: 10;
+  transition: left 0.3s ease;
 
   &::after {
     content: "";
@@ -37,15 +34,22 @@
     border-left: 6px solid $white;
   }
 
-  &.open::after {
-    border-left: none;
-    border-right: 6px solid $white;
+  &.open {
+    left: 52px;
+
+    &::after {
+      border-left: none;
+      border-right: 6px solid $white;
+    }
   }
 }
 
 .quickRecordList {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
   width: 52px;
-  height: 100%;
   background: linear-gradient(135deg, $panel-bg 0%, $content-bg 100%);
   border-radius: 0 0 16px 0;
   padding: 60px 4px 16px 4px;
@@ -57,7 +61,6 @@
   justify-content: center;
   gap: 6px;
   box-sizing: border-box;
-  flex-shrink: 0;
   transition: transform 0.3s ease;
   transform: translateX(-100%);
 
