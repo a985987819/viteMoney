@@ -8,6 +8,7 @@
   flex-direction: column;
   overflow-y: auto;
   padding-bottom: calc(72px + env(safe-area-inset-bottom, 0));
+  position: relative;
 }
 
 .summarySection {

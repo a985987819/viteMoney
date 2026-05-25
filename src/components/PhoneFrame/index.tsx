@@ -77,7 +77,12 @@ const PhoneFrame = ({ children, isDesktop }: { children: ReactNode; isDesktop: b
     <div className={styles.desktopBackground}>
       <div
         className={styles.phoneFrame}
-        style={{ width: `${width}px`, height: `${height}px` }}
+        style={{
+          width: `${width}px`,
+          height: `${height}px`,
+          maxWidth: 'calc(100vw - 32px)',
+          maxHeight: 'calc(100vh - 32px)',
+        }}
       >
         <div className={styles.phoneNotch} />
         <div

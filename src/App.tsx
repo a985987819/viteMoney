@@ -44,23 +44,33 @@ const theme = {
   },
 };
 
-function useIsDesktop() {
-  const [isDesktop, setIsDesktop] = useState(() =>
-    window.matchMedia('(min-width: 768px)').matches
-  );
+function useShouldShowPhoneFrame() {
+  const [showFrame, setShowFrame] = useState(() => {
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+      || (window.navigator as unknown as { standalone?: boolean }).standalone === true;
+    if (isStandalone) return false;
+    return window.innerWidth >= 768;
+  });
 
   useEffect(() => {
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+      || (window.navigator as unknown as { standalone?: boolean }).standalone === true;
+    if (isStandalone) {
+      setShowFrame(false);
+      return;
+    }
+
     const mql = window.matchMedia('(min-width: 768px)');
-    const handler = (e: MediaQueryListEvent) => setIsDesktop(e.matches);
+    const handler = (e: MediaQueryListEvent) => setShowFrame(e.matches);
     mql.addEventListener('change', handler);
     return () => mql.removeEventListener('change', handler);
   }, []);
 
-  return isDesktop;
+  return showFrame;
 }
 
 function App() {
-  const isDesktop = useIsDesktop();
+  const showPhoneFrame = useShouldShowPhoneFrame();
 
   useEffect(() => {
     initializeDataStore();
@@ -72,7 +82,7 @@ function App() {
   }, []);
 
   return (
-    <PhoneFrame isDesktop={isDesktop}>
+    <PhoneFrame isDesktop={showPhoneFrame}>
       <ErrorBoundary>
         <ConfigProvider locale={zhCN} theme={theme}>
           <AntdApp>

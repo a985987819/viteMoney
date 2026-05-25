@@ -14,6 +14,7 @@ $autumn-wheat: #f5deb3;
   flex-direction: column;
   height: var(--app-height, 100vh);
   background: linear-gradient(180deg, $autumn-cream 0%, $autumn-wheat 100%);
+  position: relative;
 }
 
 .tabHeader {
