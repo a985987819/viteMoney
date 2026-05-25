@@ -86,12 +86,12 @@ const QuickRecordPanel = memo(({ onRecorded }: QuickRecordPanelProps) => {
         className={`${styles.backdrop} ${isOpen ? styles.visible : ''}`}
         onClick={handleBackdropClick}
       />
-      <div className={`${styles.quickRecordPanel} ${isOpen ? styles.open : ''}`}>
+      <div className={styles.quickRecordPanel}>
         <div
           className={`${styles.quickRecordHandle} ${isOpen ? styles.open : ''}`}
           onClick={handleToggle}
         />
-        <div className={styles.quickRecordList}>
+        <div className={`${styles.quickRecordList} ${isOpen ? styles.open : ''}`}>
           {quickRecords.length === 0 ? (
             <div className={styles.emptyTip} onClick={handleEmptyClick}>
               暂无快捷记账<br />点击添加
