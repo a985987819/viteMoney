@@ -68,6 +68,7 @@ $summer-ocean: #3498DB;
   color: white;
   font-size: 16px;
   transition: all 0.2s;
+  @include pixel-text-stroke;
   
   &:hover {
     background: lighten($summer-primary, 10%);
@@ -211,6 +212,7 @@ $summer-ocean: #3498DB;
   font-weight: bold;
   color: white;
   font-family: 'PixelFont', monospace;
+  @include pixel-text-stroke;
 }
 
 .dayTotal {
@@ -220,6 +222,7 @@ $summer-ocean: #3498DB;
   background: rgba(0, 0, 0, 0.2);
   padding: 4px 8px;
   border-radius: 6px;
+  @include pixel-text-stroke;
 }
 
 // 记录项
@@ -326,6 +329,7 @@ $summer-ocean: #3498DB;
   font-weight: bold;
   color: white;
   font-family: 'PixelFont', monospace;
+  @include pixel-text-stroke;
 }
 
 .closeIcon {
@@ -333,6 +337,7 @@ $summer-ocean: #3498DB;
   color: white;
   cursor: pointer;
   transition: all 0.2s;
+  @include pixel-text-stroke;
   
   &:hover {
     transform: scale(1.1);

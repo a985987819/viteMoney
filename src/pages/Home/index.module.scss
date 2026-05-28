@@ -9,14 +9,6 @@ $content-bg-url: "https://vercel-icons.vercel.app/homePageBg.png";
   flex-direction: column;
 }
 
-@mixin pixel-text-stroke {
-  text-shadow:
-    2px 2px 0 rgba(0, 0, 0, 0.35),
-    -1px -1px 0 rgba(255, 255, 255, 0.25),
-    1px -1px 0 rgba(0, 0, 0, 0.15),
-    -1px 1px 0 rgba(0, 0, 0, 0.15);
-}
-
 // 页面容器 - 与其他页面保持一致
 .homePage {
   display: flex;

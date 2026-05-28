@@ -30,6 +30,7 @@
   color: #ffffff;
   cursor: pointer;
   @include flex-center;
+  @include pixel-text-stroke;
 
   &:active {
     transform: scale(0.96);
@@ -41,6 +42,7 @@
   font-weight: 600;
   color: #ffffff;
   font-family: "PixelFont", monospace;
+  @include pixel-text-stroke;
 }
 
 .contentSection {

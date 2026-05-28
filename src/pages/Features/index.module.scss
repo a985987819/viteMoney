@@ -1,4 +1,5 @@
 @use "../../styles/winter-profile-theme.scss" as winter;
+@use "../../styles/stardew-theme.scss" as *;
 
 .featuresPage {
   min-height: var(--app-height, 100vh);
@@ -25,6 +26,7 @@
   justify-content: center;
   color: #ffffff;
   cursor: pointer;
+  @include pixel-text-stroke;
 }
 
 .title {
@@ -32,6 +34,7 @@
   color: #ffffff;
   font-family: "PixelFont", monospace;
   font-size: 17px;
+  @include pixel-text-stroke;
 }
 
 .placeholder {
