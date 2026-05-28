@@ -1,5 +1,13 @@
 @use '../../styles/stardew-theme.scss' as *;
 
+@mixin pixel-text-stroke {
+  text-shadow:
+    2px 2px 0 rgba(0, 0, 0, 0.35),
+    -1px -1px 0 rgba(255, 255, 255, 0.25),
+    1px -1px 0 rgba(0, 0, 0, 0.15),
+    -1px 1px 0 rgba(0, 0, 0, 0.15);
+}
+
 .emptyState {
   @include flex-center;
   flex-direction: column;
@@ -25,17 +33,19 @@
 .title {
   font-size: 18px;
   font-weight: 600;
-  color: $stardew-text-primary;
+  color: #fff;
   margin-bottom: 8px;
   font-family: 'PixelFont', monospace;
+  @include pixel-text-stroke;
 }
 
 .description {
   font-size: 14px;
-  color: $stardew-text-secondary;
+  color: #fff;
   margin-bottom: 24px;
   max-width: 280px;
   line-height: 1.5;
+  @include pixel-text-stroke;
 }
 
 .actionButton {

@@ -9,6 +9,14 @@ $content-bg-url: "https://vercel-icons.vercel.app/homePageBg.png";
   flex-direction: column;
 }
 
+@mixin pixel-text-stroke {
+  text-shadow:
+    2px 2px 0 rgba(0, 0, 0, 0.35),
+    -1px -1px 0 rgba(255, 255, 255, 0.25),
+    1px -1px 0 rgba(0, 0, 0, 0.15),
+    -1px 1px 0 rgba(0, 0, 0, 0.15);
+}
+
 // 页面容器 - 与其他页面保持一致
 .homePage {
   display: flex;
@@ -62,9 +70,9 @@ $content-bg-url: "https://vercel-icons.vercel.app/homePageBg.png";
 .headerTitle {
   font-size: 20px;
   font-weight: bold;
-  color: $stardew-text-primary;
+  color: #fff;
   font-family: "PixelFont", monospace;
-  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5);
+  @include pixel-text-stroke;
 }
 
 .headerSetting {
@@ -87,8 +95,9 @@ $content-bg-url: "https://vercel-icons.vercel.app/homePageBg.png";
 
 .statsLabel {
   font-size: 13px;
-  color: $stardew-text-secondary;
+  color: #fff;
   font-family: "PixelFont", monospace;
+  @include pixel-text-stroke;
 }
 
 .statsAmount {
@@ -99,9 +108,9 @@ $content-bg-url: "https://vercel-icons.vercel.app/homePageBg.png";
 .amountValue {
   font-size: 32px;
   font-weight: bold;
-  color: $stardew-text-primary;
+  color: #fff;
   font-family: "PixelFont", monospace;
-  text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.5);
+  @include pixel-text-stroke;
 }
 
 .amountEye {
@@ -138,18 +147,19 @@ $content-bg-url: "https://vercel-icons.vercel.app/homePageBg.png";
 
 .budgetLabel {
   font-size: 10px;
-  color: #5d4037;
+  color: #fff;
   font-weight: bold;
+  @include pixel-text-stroke;
 }
 
 .budgetValue {
   font-size: 19px;
-  color: #c45c48;
+  color: #ffcc80;
   font-weight: bold;
   text-align: right;
   padding-top: 3px;
-  // padding-right: 2px;
   letter-spacing: 7px;
+  @include pixel-text-stroke;
 }
 
 // 添加按钮区域
@@ -197,9 +207,10 @@ $content-bg-url: "https://vercel-icons.vercel.app/homePageBg.png";
 .noMore {
   @include flex-center;
   padding: 16px;
-  color: $stardew-text-secondary;
+  color: #fff;
   font-size: 12px;
   font-family: "PixelFont", monospace;
+  @include pixel-text-stroke;
 }
 
 // 记录列表头部
@@ -212,14 +223,16 @@ $content-bg-url: "https://vercel-icons.vercel.app/homePageBg.png";
 .recordsTitle {
   font-size: 14px;
   font-weight: bold;
-  color: $stardew-text-primary;
+  color: #fff;
   font-family: "PixelFont", monospace;
+  @include pixel-text-stroke;
 }
 
 .recordsTag {
   font-size: 12px;
-  color: $stardew-text-secondary;
+  color: #fff;
   font-family: "PixelFont", monospace;
+  @include pixel-text-stroke;
 }
 
 // 记录列表
