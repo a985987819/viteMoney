@@ -15,11 +15,13 @@ import {
   saveLocalSavingsPlans,
   setActiveSavingsPlan,
 } from '../../api/savings';
+import { useAuth } from '../../hooks/useAuth';
 import styles from './index.module.scss';
 
 const Savings = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { isLoggedIn } = useAuth();
   const [plans, setPlans] = useState<SavingsPlan[]>(() => getLocalSavingsPlans());
   const [activePlanId, setActivePlanId] = useState<string | null>(() => getActiveSavingsPlanId());
   const [createModalVisible, setCreateModalVisible] = useState(false);
@@ -95,6 +97,11 @@ const Savings = () => {
       />
 
       <div className={styles.contentSection}>
+        {!isLoggedIn && (
+          <div className={styles.offlineHint}>
+            💾 当前数据保存在本地，登录后可同步至云端
+          </div>
+        )}
         {plans.length === 0 ? (
           <div className={styles.emptyPanel}>
             <Empty description={t('savings.noPlans', '暂时还没有攒钱计划')} />

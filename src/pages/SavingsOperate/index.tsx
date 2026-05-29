@@ -7,10 +7,12 @@ import { nowISO, DATE_FORMAT } from '../../utils/dateFormats';
 import BottomNav from '../../components/BottomNav';
 import type { SavingsPlan } from '../../api/savings';
 import { getActiveSavingsPlan, getLocalDeposits, getLocalSavingsPlans, saveLocalDeposit, type SavingsDeposit } from '../../api/savings';
+import { useAuth } from '../../hooks/useAuth';
 import styles from './index.module.scss';
 
 const SavingsOperate = () => {
   const navigate = useNavigate();
+  const { isLoggedIn } = useAuth();
   const [currentPlan, setCurrentPlan] = useState<SavingsPlan | null>(() => getActiveSavingsPlan());
   const [recentDeposits, setRecentDeposits] = useState<SavingsDeposit[]>(() => {
     const plan = getActiveSavingsPlan();
@@ -80,6 +82,11 @@ const SavingsOperate = () => {
       </div>
 
       <div className={styles.contentSection}>
+        {!isLoggedIn && (
+          <div className={styles.offlineHint}>
+            💾 当前数据保存在本地，登录后可同步至云端
+          </div>
+        )}
         {!currentPlan ? (
           <div className={styles.emptyPanel}>
             <Empty description="还没有打开中的攒钱计划" />

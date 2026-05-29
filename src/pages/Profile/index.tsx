@@ -474,6 +474,49 @@ const Profile = () => {
         </div>
       )}
 
+      {/* 功能介绍卡片 */}
+      <div className={styles.featureIntroCard} onClick={() => navigate('/features')}>
+        <div className={styles.featureIntroHeader}>
+          <span className={styles.featureIntroIcon}>🌾</span>
+          <div className={styles.featureIntroText}>
+            <div className={styles.featureIntroTitle}>功能介绍与使用说明</div>
+            <div className={styles.featureIntroDesc}>了解全部功能，快速上手记账</div>
+          </div>
+          <RightOutlined className={styles.featureIntroArrow} />
+        </div>
+        <div className={styles.featureIntroGrid}>
+          <div className={styles.featureIntroItem}>
+            <span className={styles.featureItemIcon}>📝</span>
+            <span>快速记账</span>
+          </div>
+          <div className={styles.featureIntroItem}>
+            <span className={styles.featureItemIcon}>📊</span>
+            <span>统计报表</span>
+          </div>
+          <div className={styles.featureIntroItem}>
+            <span className={styles.featureItemIcon}>💰</span>
+            <span>预算管理</span>
+          </div>
+          <div className={styles.featureIntroItem}>
+            <span className={styles.featureItemIcon}>🎯</span>
+            <span>攒钱计划</span>
+          </div>
+          <div className={styles.featureIntroItem}>
+            <span className={styles.featureItemIcon}>🧊</span>
+            <span>我的冰箱</span>
+          </div>
+          <div className={styles.featureIntroItem}>
+            <span className={styles.featureItemIcon}>💾</span>
+            <span>数据管理</span>
+          </div>
+        </div>
+        {!isLoggedIn && (
+          <div className={styles.featureOfflineHint}>
+            🔓 无需登录即可使用全部本地功能
+          </div>
+        )}
+      </div>
+
       {/* 功能菜单 */}
       <div className={styles.menuSection}>
         {mainMenuItems.map((item) => (

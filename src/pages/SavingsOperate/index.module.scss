@@ -32,6 +32,17 @@
   @include winter.winter-snow-card(24px 16px 16px);
 }
 
+.offlineHint {
+  padding: 10px 16px;
+  margin-bottom: 12px;
+  background: rgba(82, 196, 26, 0.08);
+  border-radius: 8px;
+  font-size: 13px;
+  color: #52c41a;
+  text-align: center;
+  font-weight: 500;
+}
+
 .summaryCard {
   text-align: center;
 }

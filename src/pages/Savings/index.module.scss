@@ -31,6 +31,17 @@
   text-align: center;
 }
 
+.offlineHint {
+  padding: 10px 16px;
+  margin-bottom: 12px;
+  background: rgba(82, 196, 26, 0.08);
+  border-radius: 8px;
+  font-size: 13px;
+  color: #52c41a;
+  text-align: center;
+  font-weight: 500;
+}
+
 .planList {
   display: grid;
   gap: 16px;
