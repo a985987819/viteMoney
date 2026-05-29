@@ -64,7 +64,7 @@ $winter-blue-light: #7ab8e8;
   font-weight: 600;
   color: #ffffff;
   text-align: center;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  @include pixel-text-stroke;
 }
 
 // 用户信息卡片 - 雪地风格带雪顶
@@ -247,7 +247,7 @@ $winter-blue-light: #7ab8e8;
   margin-bottom: 8px;
   font-weight: 600;
   text-align: center;
-  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+  @include pixel-text-stroke;
 }
 
 .menuIcon {

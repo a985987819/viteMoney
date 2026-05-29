@@ -72,6 +72,14 @@ $stardew-shadow-pixel: 4px 4px 0 $stardew-wood-darkest;
   transition: $property $duration cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+@mixin pixel-text-stroke {
+  text-shadow:
+    2px 2px 0 rgba(0, 0, 0, 0.35),
+    -1px -1px 0 rgba(255, 255, 255, 0.25),
+    1px -1px 0 rgba(0, 0, 0, 0.15),
+    -1px 1px 0 rgba(0, 0, 0, 0.15);
+}
+
 // ==================== 组件 Mixins ====================
 @mixin stardew-wood-panel {
   background-color: $stardew-panel-bg;

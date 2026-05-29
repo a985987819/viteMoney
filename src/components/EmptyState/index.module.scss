@@ -25,17 +25,19 @@
 .title {
   font-size: 18px;
   font-weight: 600;
-  color: $stardew-text-primary;
+  color: #fff;
   margin-bottom: 8px;
   font-family: 'PixelFont', monospace;
+  @include pixel-text-stroke;
 }
 
 .description {
   font-size: 14px;
-  color: $stardew-text-secondary;
+  color: #fff;
   margin-bottom: 24px;
   max-width: 280px;
   line-height: 1.5;
+  @include pixel-text-stroke;
 }
 
 .actionButton {
