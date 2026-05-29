@@ -242,6 +242,14 @@ const BillContent = () => {
     };
   }, [stats.dailyStats, showExpense, showIncome, chartCollapsed]);
 
+  useEffect(() => {
+    const handleResize = () => {
+      chartInstance.current?.resize();
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   // 处理编辑记录
   const handleEditRecord = (record: RecordItem) => {
     navigate('/add', { state: { record } });

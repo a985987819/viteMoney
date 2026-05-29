@@ -288,6 +288,10 @@ const CompareContent = () => {
       xAxis: {
         type: 'category',
         data: ['支出', '收入', '结余'],
+        boundaryGap: true,
+        axisTick: {
+          alignWithLabel: true,
+        },
         axisLabel: {
           fontFamily: 'PixelFont, monospace',
         },
@@ -330,6 +334,14 @@ const CompareContent = () => {
       chartInstance.current = null;
     };
   }, [compareResult, baseMonth, compareMonth]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      chartInstance.current?.resize();
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // 打开日期选择器
   const openDatePicker = (target: 'base' | 'compare') => {

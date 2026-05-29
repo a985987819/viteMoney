@@ -87,14 +87,14 @@ export const getPixelBarOption = (data: any[], showExpense: boolean, showIncome:
             { offset: 1, color: pixelColors.expense }
           ]
         },
-        borderRadius: 0, // 像素风格不使用圆角
+        borderRadius: 0,
         borderWidth: 2,
         borderColor: pixelColors.woodDark,
         shadowBlur: 0,
         shadowColor: 'transparent',
       },
-      barWidth: '60%',
-      // 像素风格 - 添加边框效果
+      barMaxWidth: 20,
+      barCategoryGap: '35%',
       emphasis: {
         itemStyle: {
           borderWidth: 3,
@@ -122,7 +122,8 @@ export const getPixelBarOption = (data: any[], showExpense: boolean, showIncome:
         borderWidth: 2,
         borderColor: pixelColors.woodDark,
       },
-      barWidth: '60%',
+      barMaxWidth: 20,
+      barCategoryGap: '35%',
       emphasis: {
         itemStyle: {
           borderWidth: 3,
@@ -165,15 +166,16 @@ export const getPixelBarOption = (data: any[], showExpense: boolean, showIncome:
       },
     },
     grid: {
-      left: '2%',
-      right: '2%',
-      bottom: '8%',
+      left: '3%',
+      right: '3%',
+      bottom: '12%',
       top: '8%',
-      containLabel: false,
+      containLabel: true,
     },
     xAxis: {
       type: 'category',
       data: data.map(d => d.date),
+      boundaryGap: true,
       axisLine: {
         show: true,
         lineStyle: {
@@ -196,14 +198,6 @@ export const getPixelBarOption = (data: any[], showExpense: boolean, showIncome:
         fontFamily: pixelFont,
         fontWeight: 'bold',
       },
-      splitLine: {
-        show: true,
-        lineStyle: {
-          color: pixelColors.grid,
-          width: 1,
-          type: 'solid',
-        }
-      }
     },
     yAxis: {
       type: 'value',
@@ -254,15 +248,18 @@ export const getPixelPieOption = (data: any[]): any => {
         label: {
           show: true,
           fontFamily: pixelFont,
-          fontSize: 11,
+          fontSize: 10,
           color: pixelColors.text,
           fontWeight: 'bold',
-          formatter: '{b}\n¥{c}',
+          formatter: '{b}',
+          width: 80,
+          overflow: 'truncate',
+          ellipsis: '..',
         },
         labelLine: {
           show: true,
-          length: 15,
-          length2: 10,
+          length: 10,
+          length2: 8,
           lineStyle: {
             color: pixelColors.woodDark,
             width: 2,

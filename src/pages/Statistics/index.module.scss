@@ -13,8 +13,10 @@ $autumn-wheat: #f5deb3;
   display: flex;
   flex-direction: column;
   height: var(--app-height, 100vh);
+  height: var(--app-height, 100dvh);
   background: linear-gradient(180deg, $autumn-cream 0%, $autumn-wheat 100%);
   position: relative;
+  overflow: hidden;
 }
 
 .tabHeader {
@@ -60,8 +62,8 @@ $autumn-wheat: #f5deb3;
 
 .content {
   flex: 1;
-  overflow: auto;
+  min-height: 0;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  padding-bottom: calc(16px + 70px + env(safe-area-inset-bottom, 0));
 }

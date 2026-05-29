@@ -353,6 +353,14 @@ const ReportContent = () => {
     };
   }, [displayData, viewType, showExpense, showIncome]);
 
+  useEffect(() => {
+    const handleResize = () => {
+      chartInstance.current?.resize();
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   // 筛选后的分类统计
   const filteredCategoryStats = useMemo(() => {
     // 使用统一的数据源

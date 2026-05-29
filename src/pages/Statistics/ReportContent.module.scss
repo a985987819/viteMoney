@@ -12,10 +12,13 @@ $autumn-wheat: #f5deb3;
 .reportContent {
   flex: 1;
   padding: 16px;
+  padding-bottom: calc(16px + 70px + env(safe-area-inset-bottom, 0));
   overflow-y: auto;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
   min-height: 0;
+  -webkit-overflow-scrolling: touch;
 }
 
 .listView {
@@ -25,7 +28,6 @@ $autumn-wheat: #f5deb3;
   border-radius: 12px;
   padding: 8px;
   min-height: 0;
-  margin-bottom: 100px;
   border: 2px solid $autumn-gold;
 }
 

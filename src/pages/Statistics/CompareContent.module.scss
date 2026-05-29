@@ -12,7 +12,7 @@ $autumn-wheat: #f5deb3;
 .compareContent {
   flex: 1;
   padding: 16px;
-  padding-bottom: env(safe-area-inset-bottom, 0);
+  padding-bottom: calc(16px + 70px + env(safe-area-inset-bottom, 0));
   overflow-y: auto;
   overflow-x: hidden;
   display: flex;
