@@ -1,5 +1,4 @@
-import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
-import axios from 'axios';
+import { describe, it, expect, vi } from 'vitest';
 
 // Mock axios
 vi.mock('axios', () => {
@@ -21,14 +20,16 @@ vi.mock('axios', () => {
     },
   };
 
-  const mockAxios = vi.fn(() => mockAxiosInstance) as any;
-  mockAxios.create = vi.fn(() => mockAxiosInstance);
-  mockAxios.isCancel = vi.fn((val: unknown) => val?.constructor?.name === 'Cancel');
-  mockAxios.CancelToken = class {
-    constructor(executor: (cancel: unknown) => void) {
-      executor(vi.fn());
-    }
-  };
+  const mockAxiosFn = vi.fn(() => mockAxiosInstance);
+  const mockAxios = Object.assign(mockAxiosFn, {
+    create: vi.fn(() => mockAxiosInstance),
+    isCancel: vi.fn((val: unknown) => val?.constructor?.name === 'Cancel'),
+    CancelToken: class {
+      constructor(executor: (cancel: unknown) => void) {
+        executor(vi.fn());
+      }
+    },
+  });
 
   return {
     default: mockAxios,

@@ -67,6 +67,7 @@ export function useAsyncData<T>({
     return () => {
       mountedRef.current = false;
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchData, ...dependencies]);
 
   const refresh = useCallback(() => {

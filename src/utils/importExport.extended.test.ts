@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import {
   parseDate,
   compareDate,
@@ -64,17 +64,17 @@ describe('parseDate - 边界值和异常处理', () => {
   });
 
   it('应该处理布尔值', () => {
-    const result = parseDate(true as any);
+    const result = parseDate(true as unknown);
     expect(result).toBeGreaterThan(0);
   });
 
   it('应该处理对象类型', () => {
-    const result = parseDate({} as any);
+    const result = parseDate({} as unknown);
     expect(result).toBeGreaterThan(0);
   });
 
   it('应该处理数组类型', () => {
-    const result = parseDate([2024, 1, 15] as any);
+    const result = parseDate([2024, 1, 15] as unknown);
     expect(result).toBeGreaterThan(0);
   });
 });

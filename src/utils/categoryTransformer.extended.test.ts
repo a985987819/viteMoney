@@ -16,12 +16,12 @@ describe('transformImportRecord - 边界值和异常处理', () => {
 
   it('应该处理 null 值', () => {
     const result = transformImportRecord({
-      category: null as any,
-      subCategory: null as any,
-      amount: null as any,
-      type: null as any,
-      date: null as any,
-    });
+      category: null,
+      subCategory: null,
+      amount: null,
+      type: null,
+      date: null,
+    } as unknown as ImportRecord);
     expect(result.isMatched).toBe(false);
   });
 
@@ -29,10 +29,10 @@ describe('transformImportRecord - 边界值和异常处理', () => {
     const result = transformImportRecord({
       category: undefined,
       subCategory: undefined,
-      amount: undefined as any,
+      amount: undefined,
       type: undefined,
-      date: undefined as any,
-    });
+      date: undefined,
+    } as unknown as ImportRecord);
     expect(result.isMatched).toBe(false);
   });
 
@@ -260,12 +260,12 @@ describe('detectColumnMapping - 边界值和异常处理', () => {
 
   it('应该处理 null 表头', () => {
     // null 表头会抛出错误，这是预期行为
-    expect(() => detectColumnMapping(null as any)).toThrow();
+    expect(() => detectColumnMapping(null as unknown as string[])).toThrow();
   });
 
   it('应该处理 undefined 表头', () => {
     // undefined 表头会抛出错误，这是预期行为
-    expect(() => detectColumnMapping(undefined as any)).toThrow();
+    expect(() => detectColumnMapping(undefined as unknown as string[])).toThrow();
   });
 
   it('应该处理包含空字符串的表头', () => {

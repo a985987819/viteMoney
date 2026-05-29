@@ -1,4 +1,5 @@
 import { STORAGE_KEYS } from '../types/types';
+import { safeJsonParse, safeJsonArrayParse } from './storage';
 import type { RecordItem } from '../api/record';
 import type { Category } from '../api/category';
 import type { SavingsPlan } from '../api/savings';
@@ -9,28 +10,6 @@ const SAVINGS_DEPOSITS_KEY = 'savings_deposits';
 const SAVINGS_ACTIVE_PLAN_KEY = 'savings_active_plan_id';
 
 export const CURRENT_DATA_VERSION = 1;
-
-function safeJsonParse<T>(data: string | null, fallback: T): T {
-  if (!data) return fallback;
-  try {
-    const parsed = JSON.parse(data);
-    if (parsed === null || parsed === undefined) return fallback;
-    return parsed;
-  } catch {
-    return fallback;
-  }
-}
-
-function safeJsonArrayParse<T>(data: string | null): T[] {
-  if (!data) return [];
-  try {
-    const parsed = JSON.parse(data);
-    if (!Array.isArray(parsed)) return [];
-    return parsed;
-  } catch {
-    return [];
-  }
-}
 
 export function validateRecordItem(record: unknown): boolean {
   if (!record || typeof record !== 'object') return false;

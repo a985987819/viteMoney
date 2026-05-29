@@ -1,16 +1,10 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import {
-  exportToCSV,
-  exportToXLSX,
-  importFromCSV,
-  importFromXLSX,
   parseDate,
   compareDate,
   getTimestamp,
   generateImportReport,
 } from './importExport';
-import * as XLSX from 'xlsx';
-import Papa from 'papaparse';
 
 // Mock document.createElement for export
 vi.stubGlobal('document', {
@@ -40,7 +34,7 @@ vi.mock('papaparse');
 
 describe('parseDate', () => {
   it('should return current timestamp for empty input', () => {
-    const result = parseDate(null as any);
+    const result = parseDate(null as unknown);
     expect(result).toBeGreaterThan(0);
     expect(result).toBeLessThanOrEqual(Date.now());
   });

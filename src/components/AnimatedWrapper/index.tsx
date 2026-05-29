@@ -37,13 +37,11 @@ export const AnimatedWrapper = ({
 }: AnimatedWrapperProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(!triggerOnVisible);
-  const [hasAnimated, setHasAnimated] = useState(false);
 
   useEffect(() => {
     if (triggerOnMount && !triggerOnVisible) {
       const timer = setTimeout(() => {
         setIsVisible(true);
-        setHasAnimated(true);
       }, delay * 1000);
       return () => clearTimeout(timer);
     }
@@ -56,7 +54,6 @@ export const AnimatedWrapper = ({
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true);
-          setHasAnimated(true);
           if (once) {
             observer.disconnect();
           }

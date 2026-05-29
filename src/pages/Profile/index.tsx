@@ -6,8 +6,6 @@ import {
   Modal,
   Form,
   Input,
-  InputNumber,
-  Select,
   message,
   Upload,
   Switch,
@@ -15,7 +13,7 @@ import {
   Radio,
 } from 'antd';
 import dayjs from 'dayjs';
-import { DATE_FORMAT, formatDateKey, formatDateTimeFull } from '../../utils/dateFormats';
+import { formatDateKey, formatDateTimeFull } from '../../utils/dateFormats';
 import BottomNav from '../../components/BottomNav';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -136,7 +134,7 @@ const Profile = () => {
       message.success(t('profile.login') + t('common.success'));
       setLoginModalVisible(false);
       loginForm.resetFields();
-    } catch (error) {
+    } catch {
       message.error(t('profile.login') + t('common.failed'));
     } finally {
       setIsLoginLoading(false);
@@ -155,7 +153,7 @@ const Profile = () => {
       message.success(t('profile.register') + t('common.success'));
       setRegisterModalVisible(false);
       registerForm.resetFields();
-    } catch (error) {
+    } catch {
       message.error(t('profile.register') + t('common.failed'));
     } finally {
       setIsRegisterLoading(false);

@@ -1,19 +1,8 @@
+/* eslint-disable react-refresh/only-export-components */
 import { useState, useEffect, createContext, useContext, type ReactNode } from 'react';
 import { message } from 'antd';
-import { login as loginApi, register as registerApi, logout as logoutApi, type User } from '../api/auth';
+import { login as loginApi, register as registerApi, logout as logoutApi, type User, type AuthResponse } from '../api/auth';
 import { getUser, saveUser, saveTokens, clearUser, getRefreshToken, isLoggedIn as checkIsLoggedIn } from '../utils/storage';
-
-interface AuthTokens {
-  accessToken: string;
-  refreshToken: string;
-  expiresIn: number;
-  tokenType: string;
-}
-
-interface AuthResponse {
-  user: User;
-  tokens: AuthTokens;
-}
 
 interface AuthContextType {
   user: User | null;

@@ -24,7 +24,7 @@ import EmptyState from '../../components/EmptyState';
 import ScrollContainer from '../../components/ScrollContainer';
 import type { Category } from '../../api/category';
 import SwipeableRecordItem from '../../components/SwipeableRecordItem';
-import DatePicker, { type DateMode } from '../../components/DatePicker';
+import DatePicker from '../../components/DatePicker';
 import { getLocalCategories } from '../../utils/storage';
 import { useCategories } from '../../hooks/useCategories';
 import styles from './index.module.scss';
@@ -188,6 +188,7 @@ const Bill = () => {
   // 初始加载（当月1号到今天）
   useEffect(() => {
     loadRecords(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter, sortType, sortOrder]);
 
   // 统计数据
@@ -361,6 +362,7 @@ const Bill = () => {
     } else if (!isNearBottom) {
       setShowLoadHint(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasMore, loading, isLoadingPrevMonth, isDragging]);
 
   useEffect(() => {
@@ -524,7 +526,7 @@ const Bill = () => {
   };
 
   // 确认日期选择
-  const handleDateConfirm = (date: dayjs.Dayjs, _mode: DateMode) => {
+  const handleDateConfirm = (date: dayjs.Dayjs) => {
     // 重置到选择的月份，从该月1号开始加载
     setStartDate(date.startOf('month'));
     setEndDate(date.endOf('month'));

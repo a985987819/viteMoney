@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Button, Modal, Form, Input, message, Popconfirm } from 'antd';
+import { Button, Modal, Form, Input, message, Popconfirm, type InputRef } from 'antd';
 import {
   PlusOutlined,
   HolderOutlined,
@@ -73,21 +73,18 @@ const CategoryManage = () => {
   const typeFromUrl = searchParams.get('type') as CategoryType || 'expense';
 
   const [activeType, setActiveType] = useState<CategoryType>(typeFromUrl);
-  const [categories, setCategories] = useState<Record<CategoryType, Category[]>>(defaultCategories);
+  const [categories, setCategories] = useState<Record<CategoryType, Category[]>>(() => {
+    const stored = getLocalCategories();
+    return stored || defaultCategories;
+  });
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [selectedIcon, setSelectedIcon] = useState('');
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [form] = Form.useForm();
-  const emojiInputRef = useRef<HTMLInputElement>(null);
+  const emojiInputRef = useRef<InputRef>(null);
 
-  useEffect(() => {
-    const stored = getLocalCategories();
-    if (stored) {
-      setCategories(stored);
-    }
-  }, []);
 
   const saveCategories = (newCategories: Record<CategoryType, Category[]>) => {
     setCategories(newCategories);
@@ -140,7 +137,7 @@ const CategoryManage = () => {
     form.resetFields();
   };
 
-  const handleEmojiSelect = (emojiData: any) => {
+  const handleEmojiSelect = (emojiData: { native?: string; shortcodes?: string }) => {
     const emoji = emojiData.native || emojiData.shortcodes || '📦';
     setSelectedIcon(emoji);
   };
@@ -149,6 +146,7 @@ const CategoryManage = () => {
     const val = e.target.value;
     if (val) {
       const lastChar = val.slice(-2);
+      // eslint-disable-next-line no-misleading-character-class
       const emojiRegex = /[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA6F}\u{1FA70}-\u{1FAFF}\u{FE00}-\u{FE0F}\u{200D}\u{20E3}\u{E0020}-\u{E007F}]/u;
       if (emojiRegex.test(lastChar)) {
         setSelectedIcon(lastChar);
@@ -285,7 +283,7 @@ const CategoryManage = () => {
                 {selectedIcon || '?'}
               </div>
               <Input
-                ref={emojiInputRef as any}
+                ref={emojiInputRef}
                 placeholder="可直接输入 emoji 或点击下方选择"
                 value={selectedIcon}
                 onChange={handleEmojiInputChange}

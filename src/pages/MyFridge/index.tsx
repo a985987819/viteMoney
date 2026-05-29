@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Button,
@@ -37,16 +37,12 @@ const TAB_CONFIG: Array<{ key: FridgeTab; label: string }> = [
 
 const MyFridgePage = () => {
   const navigate = useNavigate();
-  const [items, setItems] = useState<FridgeItem[]>([]);
+  const [items, setItems] = useState<FridgeItem[]>(() => getFridgeItems());
   const [activeTab, setActiveTab] = useState<FridgeTab>('pending');
   const [searchValue, setSearchValue] = useState('');
   const [dishName, setDishName] = useState('');
   const [quantity, setQuantity] = useState('');
   const [selectedDate, setSelectedDate] = useState<Dayjs>(dayjs());
-
-  useEffect(() => {
-    setItems(getFridgeItems());
-  }, []);
 
   const sortedItems = useMemo(() => {
     return [...items].sort((a, b) => {

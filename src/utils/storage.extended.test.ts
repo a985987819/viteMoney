@@ -7,7 +7,6 @@ import {
   updateLocalRecord,
   getUser,
   saveUser,
-  clearUser,
   saveTokens,
   isTokenExpired,
   isLoggedIn,
@@ -135,14 +134,14 @@ describe('storage utils - 边界值和异常处理', () => {
 
   describe('addLocalRecord - 边界值', () => {
     it('应该处理添加 null 记录', () => {
-      addLocalRecord(null as any);
+      addLocalRecord(null as unknown as RecordItem);
       const records = getLocalRecords();
       expect(records).toHaveLength(1);
       expect(records[0]).toBeNull();
     });
 
     it('应该处理添加 undefined 记录', () => {
-      addLocalRecord(undefined as any);
+      addLocalRecord(undefined as unknown as RecordItem);
       const records = getLocalRecords();
       expect(records).toHaveLength(1);
       expect(records[0]).toBeNull();

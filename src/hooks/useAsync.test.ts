@@ -40,7 +40,7 @@ describe('useAsync hook', () => {
     await act(async () => {
       try {
         await result.current.execute();
-      } catch (error) {
+      } catch {
         // Expected error
       }
     });

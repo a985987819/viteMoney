@@ -11,6 +11,7 @@ import {
   type TransformStats,
   type ImportRecord,
 } from './categoryTransformer';
+import type { ImportTransformResult, ImportStats } from '../types/types';
 
 // 构建导出数据结构（复用映射逻辑）
 const buildExportData = (records: RecordItem[]) =>
@@ -46,36 +47,7 @@ export const exportToXLSX = (records: RecordItem[], filename: string = '记账�
 
 // ==================== 导入功能 ====================
 
-/**
- * 导入转换结果
- */
-export interface ImportTransformResult {
-  /** 转换后的记录 */
-  records: Partial<RecordItem>[];
-  /** 转换统计 */
-  stats: ImportStats;
-}
-
-/**
- * 导入统计
- */
-export interface ImportStats {
-  /** 总记录数 */
-  total: number;
-  /** 成功匹配数 */
-  matched: number;
-  /** 未匹配数 */
-  unmatched: number;
-  /** 按主分类统计 */
-  byCategory: Record<string, number>;
-  /** 未匹配的原始分类列表 */
-  unmatchedCategories: string[];
-}
-
-/**
- * 导入记录的原始数据结构（列名可能来自多种来源）
- */
-interface RawImportRow extends Record<string, unknown> {}
+type RawImportRow = Record<string, unknown>;
 
 // 从 CSV 导入
 export const importFromCSV = (file: File): Promise<ImportTransformResult> => {

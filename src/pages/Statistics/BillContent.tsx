@@ -159,6 +159,7 @@ const BillContent = () => {
   // 初始加载（当月1号到今天）
   useEffect(() => {
     loadRecords();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter, sortType, sortOrder]);
 
   // 统计数据

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
@@ -152,8 +153,9 @@ export default defineConfig(({ mode }) => {
       host: '0.0.0.0',
       proxy: {
         '/api': {
-          target: 'http://192.168.10.83:9876',
+          target: 'https://money-recordback-end.edgeone.dev',
           changeOrigin: true,
+          secure: true,
         },
       },
     },

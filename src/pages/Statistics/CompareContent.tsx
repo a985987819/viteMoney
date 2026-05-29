@@ -177,6 +177,7 @@ const CompareContent = () => {
 
   useEffect(() => {
     loadCompareData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [baseMonth, compareMonth, isLoggedIn]);
 
   // 计算对比数据

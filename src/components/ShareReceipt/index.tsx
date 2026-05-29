@@ -67,7 +67,6 @@ const ShareReceipt = ({ date, records, trigger }: ShareReceiptProps) => {
 
   // 生成条形码数据
   const generateBarcode = () => {
-    const timestamp = Date.now();
     const random = Math.floor(Math.random() * 10000);
     return `No.${dayjs().format(DATE_FORMAT.RECEIPT_DATE)}${String(random).padStart(4, '0')}`;
   };
@@ -84,8 +83,7 @@ const ShareReceipt = ({ date, records, trigger }: ShareReceiptProps) => {
     const barcode = generateBarcode();
 
     // 设置画布尺寸
-    const width = 375; // 手机宽度
-    const lineHeight = 24;
+    const width = 375;
     const headerHeight = 120;
     const categoryHeaderHeight = 40;
     const categoryRowHeight = 32;
@@ -252,7 +250,7 @@ const ShareReceipt = ({ date, records, trigger }: ShareReceiptProps) => {
     // 生成图片
     const dataUrl = canvas.toDataURL('image/png');
     setImageUrl(dataUrl);
-  }, [date, records, calculateStats]);
+  }, [date, calculateStats]);
 
   // 打开分享弹窗
   const handleOpen = () => {

@@ -197,7 +197,7 @@ const Home = () => {
           setCursor(pageData[pageData.length - 1].date);
         }
       }
-    } catch (error) {
+    } catch {
       message.error(t('common.failed'));
     } finally {
       setLoading(false);
@@ -235,7 +235,7 @@ const Home = () => {
           }
           message.success(t('bill.deleteSuccess'));
           loadRecords(true);
-        } catch (error) {
+        } catch {
           message.error(t('bill.deleteFailed'));
         }
       },

@@ -20,7 +20,6 @@ export const KeyboardAvoidingView: React.FC<KeyboardAvoidingViewProps> = ({
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [keyboardHeight, setKeyboardHeight] = useState(0);
-  const [focusedElement, setFocusedElement] = useState<HTMLElement | null>(null);
   const originalHeightRef = useRef(window.innerHeight);
 
   useEffect(() => {
@@ -33,7 +32,6 @@ export const KeyboardAvoidingView: React.FC<KeyboardAvoidingViewProps> = ({
         target.tagName === 'TEXTAREA' ||
         target.contentEditable === 'true'
       ) {
-        setFocusedElement(target);
         
         // 延迟检查键盘高度
         setTimeout(() => {
@@ -74,7 +72,6 @@ export const KeyboardAvoidingView: React.FC<KeyboardAvoidingViewProps> = ({
             (activeElement as HTMLElement).contentEditable !== 'true')
         ) {
           setKeyboardHeight(0);
-          setFocusedElement(null);
         }
       }, 100);
     };

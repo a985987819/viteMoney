@@ -11,61 +11,37 @@ export const PWAInstallPrompt: React.FC = () => {
     isInstallable,
     isOffline,
     isInstalled,
-    installApp,
     dismissInstall,
     updateAvailable,
     needRefresh,
     triggerInstall,
   } = usePWA();
 
-  const [showPrompt, setShowPrompt] = useState(false);
-  const [showManualButton, setShowManualButton] = useState(false);
-  const [isFirstVisit, setIsFirstVisit] = useState(false);
-  const [dismissed, setDismissed] = useState(false);
+  const isFirstVisit = !localStorage.getItem(FIRST_TIME_KEY);
+  const [dismissed, setDismissed] = useState(() => localStorage.getItem('pwa_install_dismissed') === 'true');
+  const [delayElapsed, setDelayElapsed] = useState(false);
 
   useEffect(() => {
-    const hasShown = localStorage.getItem(FIRST_TIME_KEY);
-    setIsFirstVisit(!hasShown);
-    setDismissed(localStorage.getItem('pwa_install_dismissed') === 'true');
-  }, []);
-
-  useEffect(() => {
-    if (isInstalled) {
-      setShowPrompt(false);
-      setShowManualButton(false);
-      return;
-    }
-
-    if (dismissed) {
-      setShowManualButton(true);
-      setShowPrompt(false);
-      return;
-    }
-
-    if (isInstallable && isFirstVisit) {
-      const timer = setTimeout(() => {
-        setShowPrompt(true);
-      }, 2000);
+    if (isInstallable && isFirstVisit && !dismissed && !isInstalled) {
+      const timer = setTimeout(() => setDelayElapsed(true), 2000);
       return () => clearTimeout(timer);
-    } else if (isInstallable) {
-      setShowManualButton(true);
     }
-  }, [isInstallable, isInstalled, isFirstVisit, dismissed]);
+  }, [isInstallable, isFirstVisit, dismissed, isInstalled]);
 
   useEffect(() => {
-    if (showPrompt) {
+    if (delayElapsed) {
       localStorage.setItem(FIRST_TIME_KEY, 'true');
-      setIsFirstVisit(false);
     }
-  }, [showPrompt]);
+  }, [delayElapsed]);
+
+  const showPrompt = delayElapsed && !dismissed && !isInstalled && isInstallable && isFirstVisit;
+  const showManualButton = isInstallable && !showPrompt && !isInstalled && (!isFirstVisit || dismissed);
 
   const handleUpdate = () => {
     window.location.reload();
   };
 
   const handleDismiss = () => {
-    setShowPrompt(false);
-    setShowManualButton(false);
     setDismissed(true);
     localStorage.setItem('pwa_install_dismissed', 'true');
     dismissInstall();
@@ -73,8 +49,6 @@ export const PWAInstallPrompt: React.FC = () => {
 
   const handleInstall = async () => {
     await triggerInstall();
-    setShowPrompt(false);
-    setShowManualButton(false);
   };
 
   return (

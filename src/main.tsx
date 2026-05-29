@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createRoot } from 'react-dom/client'
 import './index.scss'
 import './i18n'
@@ -24,6 +25,7 @@ function useShouldShowPhoneFrame() {
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches
       || (window.navigator as unknown as { standalone?: boolean }).standalone === true;
     if (isStandalone) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setShowFrame(false);
       return;
     }

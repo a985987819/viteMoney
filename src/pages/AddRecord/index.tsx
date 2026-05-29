@@ -23,7 +23,6 @@ import KeyboardAvoidingView from '../../components/KeyboardAvoidingView';
 import styles from './index.module.scss';
 
 type RecordType = 'expense' | 'income';
-type Operator = '+' | '-';
 type DatePickerMode = 'date' | 'month' | 'year';
 
 interface CategoryForSelect {
@@ -117,6 +116,7 @@ const AddRecord = () => {
         });
       }
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editingRecord]);
 
   // 获取当前类型的分类列表
@@ -246,7 +246,7 @@ const AddRecord = () => {
       setRemark('');
       setSelectedCategory(null);
       resetCalculator();
-    } catch (error) {
+    } catch {
       message.error(t('addRecord.saveFailed'));
     } finally {
       setLoading(false);

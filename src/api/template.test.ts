@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { http, createApiService } from '../utils/request';
+import { http } from '../utils/request';
 
 vi.mock('../utils/request', () => {
   const mockHttp = {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useMemo, useRef } from 'react';
 import styles from './index.module.scss';
 
 export interface DialogOption {
@@ -50,11 +50,9 @@ const StardewDialog: React.FC<StardewDialogProps> = ({
   enableMultiStep = true,
 }) => {
   const [currentPage, setCurrentPage] = useState(0);
-  const [totalPages, setTotalPages] = useState(1);
   const contentRef = useRef<HTMLDivElement>(null);
 
-  // 将内容分割成多页
-  const pages = React.useMemo(() => {
+  const pages = useMemo(() => {
     if (Array.isArray(content)) {
       return content;
     }
@@ -63,17 +61,15 @@ const StardewDialog: React.FC<StardewDialogProps> = ({
       return [content];
     }
 
-    // 按字符数分割内容
-    const pages: string[] = [];
+    const result: string[] = [];
     let currentContent = content;
     
     while (currentContent.length > 0) {
       if (currentContent.length <= maxCharsPerPage) {
-        pages.push(currentContent);
+        result.push(currentContent);
         break;
       }
       
-      // 在接近限制处找合适的断点（空格或标点）
       let breakPoint = maxCharsPerPage;
       const lastSpace = currentContent.lastIndexOf(' ', maxCharsPerPage);
       const lastPunctuation = currentContent.search(/(?<=.{80,}[,.!?.,!?])/);
@@ -84,18 +80,23 @@ const StardewDialog: React.FC<StardewDialogProps> = ({
         breakPoint = lastPunctuation + 1;
       }
       
-      pages.push(currentContent.substring(0, breakPoint).trim());
+      result.push(currentContent.substring(0, breakPoint).trim());
       currentContent = currentContent.substring(breakPoint).trim();
     }
     
-    return pages.length > 0 ? pages : [content];
+    return result.length > 0 ? result : [content];
   }, [content, maxCharsPerPage, enableMultiStep]);
 
-  useEffect(() => {
-    // 重置页码
+  const [prevPages, setPrevPages] = useState(pages);
+  const [prevVisible, setPrevVisible] = useState(visible);
+
+  if (pages !== prevPages || visible !== prevVisible) {
+    setPrevPages(pages);
+    setPrevVisible(visible);
     setCurrentPage(0);
-    setTotalPages(pages.length);
-  }, [pages, visible]);
+  }
+
+  const totalPages = pages.length;
 
   if (!visible) return null;
 

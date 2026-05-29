@@ -2,24 +2,13 @@ import type { RecordItem } from '../api/record';
 import type { Category } from '../api/category';
 import type { User, Tokens } from '../api/auth';
 import type { BudgetResponse } from '../api/budget';
+import { STORAGE_KEYS } from '../types/types';
 import { expenseCategories, incomeCategories } from '../constants/categories';
 import { nowISO } from './dateFormats';
 
 export interface LocalBudget extends Omit<BudgetResponse, 'id' | 'spent' | 'remaining' | 'percentage'> {
   id?: string;
 }
-
-const STORAGE_KEYS = {
-  RECORDS: 'money_records',
-  USER: 'money_user',
-  ACCESS_TOKEN: 'money_access_token',
-  REFRESH_TOKEN: 'money_refresh_token',
-  TOKEN_EXPIRES: 'money_token_expires',
-  CATEGORIES: 'money_categories',
-  BUDGETS: 'money_budgets',
-  QUICK_RECORDS: 'money_quick_records',
-  FRIDGE_ITEMS: 'money_fridge_items',
-};
 
 export interface QuickRecord {
   id: string;
@@ -41,7 +30,7 @@ export interface FridgeItem {
   consumedAt?: string;
 }
 
-function safeJsonParse<T>(data: string | null, fallback: T): T {
+export function safeJsonParse<T>(data: string | null, fallback: T): T {
   if (!data) return fallback;
   try {
     const parsed = JSON.parse(data);
@@ -53,7 +42,7 @@ function safeJsonParse<T>(data: string | null, fallback: T): T {
   }
 }
 
-function safeJsonArrayParse<T>(data: string | null): T[] {
+export function safeJsonArrayParse<T>(data: string | null): T[] {
   if (!data) return [];
   try {
     const parsed = JSON.parse(data);

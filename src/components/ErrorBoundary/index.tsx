@@ -42,10 +42,10 @@ class ErrorBoundary extends Component<Props, State> {
       console.error('ECharts error detected, attempting cleanup...');
       try {
         // 尝试清理所有 ECharts 实例
-        const echarts = (window as any).echarts;
-        if (echarts && typeof echarts.dispose === 'function') {
+        const win = window as unknown as { echarts?: { dispose(el: Element): void } };
+        if (win.echarts) {
           document.querySelectorAll('[data-echarts-instance]').forEach(el => {
-            echarts.dispose(el);
+            win.echarts!.dispose(el);
           });
         }
       } catch (cleanupError) {
@@ -55,12 +55,11 @@ class ErrorBoundary extends Component<Props, State> {
   }
 
   private handleRefresh = () => {
-    // 清理所有 ECharts 实例后再刷新
     try {
-      const echarts = (window as any).echarts;
-      if (echarts && typeof echarts.dispose === 'function') {
+      const win = window as unknown as { echarts?: { dispose(el: Element): void } };
+      if (win.echarts) {
         document.querySelectorAll('[data-echarts-instance]').forEach(el => {
-          echarts.dispose(el);
+          win.echarts!.dispose(el);
         });
       }
     } catch (e) {

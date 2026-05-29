@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { Modal, Button } from 'antd';
 import { DownOutlined, UpOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
-import { DATE_FORMAT, formatDisplayYearMonth, formatDisplayYear } from '../../utils/dateFormats';
+import { formatDisplayYearMonth, formatDisplayYear } from '../../utils/dateFormats';
 import styles from './index.module.scss';
 
 export type DateMode = 'month' | 'year';

@@ -186,6 +186,7 @@ const ReportContent = () => {
 
   useEffect(() => {
     loadReportData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentDate, isLoggedIn]);
 
   // 监听选中日期变化，加载单日数据
@@ -195,6 +196,7 @@ const ReportContent = () => {
     } else {
       setDailyRecords([]);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedDate, isLoggedIn]);
 
   // 获取选中日期的分类统计
@@ -351,6 +353,7 @@ const ReportContent = () => {
       chartInstance.current?.dispose();
       chartInstance.current = null;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [displayData, viewType, showExpense, showIncome]);
 
   useEffect(() => {

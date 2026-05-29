@@ -1,13 +1,6 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import useCalculator from './useCalculator';
-
-class FakeMouseEvent {
-  target: unknown;
-  constructor(type: string, props: Record<string, unknown>) {
-    Object.assign(this, props);
-  }
-}
 
 describe('useCalculator hook', () => {
   it('should handle single digit input', () => {

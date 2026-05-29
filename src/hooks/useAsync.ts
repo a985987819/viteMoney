@@ -16,7 +16,7 @@ export function useAsync<T>(
   asyncFn: (...args: unknown[]) => Promise<T>,
   options: UseAsyncOptions = {}
 ) {
-  const { immediate = true, onSuccess, onError } = options;
+  const { onSuccess, onError } = options;
   const [state, setState] = useState<AsyncState<T>>({
     data: null,
     loading: false,

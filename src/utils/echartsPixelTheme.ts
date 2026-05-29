@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * 像素风格 ECharts 主题配置
  * 模拟星露谷物语的像素艺术风格

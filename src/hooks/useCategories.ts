@@ -71,12 +71,10 @@ const convertSubCategoriesToOptions = (subCategories: SubCategoryMapping[]): Sub
 export const useCategories = () => {
   const { isLoggedIn } = useAuth();
   const [apiCategories, setApiCategories] = useState<{ expense: Category[]; income: Category[] } | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  // 从 API 获取分类
   useEffect(() => {
     if (isLoggedIn) {
-      setLoading(true);
       getAllCategories()
         .then(data => {
           setApiCategories(data);
@@ -87,6 +85,9 @@ export const useCategories = () => {
         .finally(() => {
           setLoading(false);
         });
+    } else {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setLoading(false);
     }
   }, [isLoggedIn]);
 

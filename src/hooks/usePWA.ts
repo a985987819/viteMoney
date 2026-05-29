@@ -42,7 +42,7 @@ export function usePWA() {
         window.matchMedia('(display-mode: standalone)').matches ||
         window.matchMedia('(display-mode: fullscreen)').matches ||
         window.matchMedia('(display-mode: minimal-ui)').matches ||
-        (window.navigator as any).standalone === true;
+        (window.navigator as unknown as { standalone?: boolean }).standalone === true;
 
       setState((prev) => ({ ...prev, isStandalone, isInstalled: isStandalone }));
     };
@@ -112,6 +112,7 @@ export function usePWA() {
 
     // 检查是否已经捕获了全局事件
     if (globalInstallPrompt) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setState((prev) => ({
         ...prev,
         installPrompt: globalInstallPrompt,
@@ -183,7 +184,7 @@ export function usePWA() {
             console.log('[PWA] Fallback: Manifest and SW ready, checking if can prompt...');
             // Chrome 可能不会再次触发 beforeinstallprompt，但我们仍然尝试
           }
-        } catch (err) {
+        } catch {
           // 忽略错误
         }
       }

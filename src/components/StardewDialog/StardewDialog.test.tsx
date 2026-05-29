@@ -104,7 +104,7 @@ describe('StardewDialog - Multi-step functionality', () => {
 
     it('should show continue hint for multi-page content', () => {
       const contentArray = ['第一页', '第二页', '第三页'];
-      const { container } = render(<StardewDialog {...defaultProps} content={contentArray} />);
+      render(<StardewDialog {...defaultProps} content={contentArray} />);
       
       // 应该显示继续提示（通过文本内容查询）
       expect(screen.getByText('点击继续')).toBeInTheDocument();

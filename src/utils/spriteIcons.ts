@@ -162,7 +162,7 @@ export function getCategoryEmoji(iconId: string): string {
  * @returns CSS样式对象
  */
 export function getSpriteIconStyle(iconId: string, size: number = 32): React.CSSProperties {
-  const emoji = getCategoryEmoji(iconId);
+  void iconId;
 
   return {
     width: `${size}px`,
@@ -181,6 +181,7 @@ export function getSpriteIconStyle(iconId: string, size: number = 32): React.CSS
  * @returns 索引值，未找到返回-1
  */
 export function getIconIndex(iconId: string): number {
+  void iconId;
   return -1;
 }
 
@@ -189,7 +190,8 @@ export function getIconIndex(iconId: string): number {
  * @param iconId 图标ID
  * @returns 是否存在
  */
-export function hasIcon(iconId: string): boolean {
+export function hasIcon(_iconId: string): boolean {
+  void _iconId;
   return true; // 现在所有ID都返回emoji，所以总是存在
 }
 
