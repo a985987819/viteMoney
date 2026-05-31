@@ -9,6 +9,8 @@ export type { DebtType, Debt, RepayRecord, CreateDebtParams, UpdateDebtParams, R
 export type { FrequencyType, RecurringRecord, CreateRecurringParams, UpdateRecurringParams, RecurringSummary } from '../api/recurring';
 export type { BillTemplate, CreateTemplateParams, UpdateTemplateParams, UseTemplateParams } from '../api/template';
 
+import type { RecordItem } from '../api/record';
+
 // ==================== 从 storage 模块 re-export ====================
 export type { LocalBudget, QuickRecord, FridgeItem } from '../utils/storage';
 
