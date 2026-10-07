@@ -6,9 +6,8 @@ import App from './App.tsx'
 import dayjs from 'dayjs'
 import 'dayjs/locale/zh-cn'
 import 'dayjs/locale/en'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { resourceLoader, ResourceLoadingState } from './utils/resourceLoader'
 import LoadingScreen from './components/LoadingScreen'
 import ErrorBoundary from './components/ErrorBoundary'
 import PhoneFrame from './components/PhoneFrame'
@@ -44,6 +43,11 @@ const AppLoader: React.FC = () => {
   const { i18n } = useTranslation()
   const showPhoneFrame = useShouldShowPhoneFrame()
 
+  // 稳定回调，避免因函数引用变化重启资源加载流程
+  const handleLoaded = useCallback(() => {
+    setIsLoading(false)
+  }, [])
+
   useEffect(() => {
     const lang = i18n.language
     if (lang.startsWith('en')) {
@@ -51,22 +55,13 @@ const AppLoader: React.FC = () => {
     } else {
       dayjs.locale('zh-cn')
     }
-
-    resourceLoader.setOnComplete(() => {
-      setTimeout(() => {
-        setIsLoading(false)
-        ResourceLoadingState.isLoading = false
-      }, 800)
-    })
-
-    resourceLoader.load()
   }, [i18n.language])
 
   return (
     <PhoneFrame isDesktop={showPhoneFrame}>
       <ErrorBoundary>
         {isLoading ? (
-          <LoadingScreen onComplete={() => setIsLoading(false)} />
+          <LoadingScreen onComplete={handleLoaded} />
         ) : (
           <App />
         )}

@@ -6,6 +6,9 @@
 
 import { CDN_BASE_URL } from '../constants/cdn';
 
+// 单个资源加载超时时间：超时后放行，避免网络挂起导致应用永远无法进入
+const RESOURCE_TIMEOUT = 8000;
+
 export interface ResourceItem {
   name: string;
   type: 'font' | 'image' | 'other';
@@ -145,6 +148,49 @@ class ResourceLoader {
       type: 'image',
       url: `${CDN_BASE_URL}/icon.png`,
     },
+    // 冬季主题背景与装饰
+    {
+      name: 'winterBg',
+      type: 'image',
+      url: `${CDN_BASE_URL}/winterBg.png`,
+    },
+    {
+      name: 'snowTop',
+      type: 'image',
+      url: `${CDN_BASE_URL}/snowTop.png`,
+    },
+    {
+      name: 'mineBtnBg',
+      type: 'image',
+      url: `${CDN_BASE_URL}/mineBtnBg.png`,
+    },
+    // 首页背景与预算卡片背景
+    {
+      name: 'homeBottom',
+      type: 'image',
+      url: `${CDN_BASE_URL}/home-bottom.png`,
+    },
+    {
+      name: 'budgetBg',
+      type: 'image',
+      url: `${CDN_BASE_URL}/budgetBg.png`,
+    },
+    // 其他界面装饰
+    {
+      name: 'chicken',
+      type: 'image',
+      url: `${CDN_BASE_URL}/chicken.png`,
+    },
+    {
+      name: 'closeBtn',
+      type: 'image',
+      url: `${CDN_BASE_URL}/closeBtn.png`,
+    },
+    {
+      name: 'backTop',
+      type: 'image',
+      url: `${CDN_BASE_URL}/backTop.png`,
+    },
   ];
 
   constructor() {
@@ -206,16 +252,23 @@ class ResourceLoader {
 
       const fontFace = new FontFace('PixelFont', `url(${resource.url})`);
 
+      const timer = setTimeout(() => {
+        console.warn(`字体加载超时: ${resource.name}`);
+        resolve();
+      }, RESOURCE_TIMEOUT);
+
       fontFace
         .load()
         .then((loadedFace) => {
           document.fonts.add(loadedFace);
           this.cache.set(resource.url);
+          clearTimeout(timer);
           resolve();
         })
         .catch((error) => {
           console.warn(`字体加载失败: ${resource.name}`, error);
           // 字体加载失败不阻断应用，继续执行
+          clearTimeout(timer);
           resolve();
         });
     });
@@ -234,18 +287,28 @@ class ResourceLoader {
 
       const img = new Image();
 
+      let settled = false;
+      const finish = () => {
+        if (settled) return;
+        settled = true;
+        clearTimeout(timer);
+        resolve();
+      };
+
+      const timer = setTimeout(() => {
+        console.warn(`图片加载超时: ${resource.url}`);
+        finish();
+      }, RESOURCE_TIMEOUT);
+
       img.onload = () => {
         this.cache.setImage(resource.url, img);
-        resolve();
+        finish();
       };
 
       img.onerror = () => {
         const error = new Error(`图片加载失败: ${resource.url}`);
-        if (this.onError) {
-          this.onError(error, resource.name);
-        }
-        // 图片加载失败不阻断应用
-        resolve();
+        this.onError?.(error, resource.name);
+        finish();
       };
 
       img.src = resource.url;
@@ -340,6 +403,17 @@ class ResourceLoader {
     if (this.onComplete) {
       this.onComplete();
     }
+  }
+
+  /**
+   * 清除所有回调
+   * 用于组件卸载时解绑，避免卸载后回调触发 setState
+   * 注意：不重置已加载缓存与 hasLoaded，保证再次进入时无需重复加载
+   */
+  clearCallbacks(): void {
+    this.onProgress = undefined;
+    this.onComplete = undefined;
+    this.onError = undefined;
   }
 
   /**
