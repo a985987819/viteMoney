@@ -105,8 +105,8 @@ const AddRecord = () => {
       setRemark(editingRecord.remark);
       setSelectedDate(dayjs(editingRecord.date));
 
-      // 查找并设置分类
-      const allCategories = activeType === 'expense' ? getExpenseCategoriesForSelect() : getIncomeCategoriesForSelect();
+      // 查找并设置分类（依据编辑记录本身的类型，避免 activeType 尚未更新导致的回填失败）
+      const allCategories = editingRecord.type === 'income' ? getIncomeCategoriesForSelect() : getExpenseCategoriesForSelect();
       const mainCat = allCategories.find(c => c.name === editingRecord.category);
       if (mainCat) {
         const subCat = mainCat.subCategories.find(s => s.name === editingRecord.subCategory);

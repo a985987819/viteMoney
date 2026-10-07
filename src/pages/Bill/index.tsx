@@ -327,10 +327,7 @@ const Bill = () => {
 
     // 只有在没有手动控制时，才自动收起图表
     // 且只有在下滑过程中才自动收起，上滑不自动展开
-    if (isScrollingDownRef.current) {
-      console.log(`不动`);
-
-    } else if (manualChartControl === null) {
+    if (isScrollingDownRef.current && manualChartControl === null) {
       setChartCollapsed(true);
     }
 
@@ -363,15 +360,7 @@ const Bill = () => {
       setShowLoadHint(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hasMore, loading, isLoadingPrevMonth, isDragging]);
-
-  useEffect(() => {
-    const listEl = listRef.current;
-    if (listEl) {
-      listEl.addEventListener('scroll', handleScroll);
-      return () => listEl.removeEventListener('scroll', handleScroll);
-    }
-  }, [handleScroll]);
+  }, [hasMore, loading, isLoadingPrevMonth, isDragging, manualChartControl]);
 
   // 回到顶部
   const scrollToTop = () => {
@@ -650,7 +639,7 @@ const Bill = () => {
       </div>
 
       {/* 可滚动的账单列表 */}
-      <ScrollContainer className={styles.billListScroll} onScroll={handleScroll}>
+      <ScrollContainer ref={listRef} className={styles.billListScroll} onScroll={handleScroll}>
         <Spin spinning={loading && records.length === 0}>
           {records.length === 0 && !loading ? (
             <EmptyState

@@ -462,18 +462,24 @@ const ReportContent = () => {
     const endDate = endOfMonth.format(DATE_FORMAT.DATE_KEY);
 
     let records: RecordItem[] = [];
-    if (isLoggedIn) {
-      const response = await getRecords({ startDate, endDate, type });
-      records = response.filter(r => r.category === category);
-    } else {
-      const allRecords = getLocalRecords();
-      records = allRecords.filter(r => {
-        const recordDate = dayjs(r.date);
-        return r.type === type &&
-          r.category === category &&
-          recordDate.isAfter(startOfMonth.subtract(1, 'day')) &&
-          recordDate.isBefore(endOfMonth.add(1, 'day'));
-      });
+    try {
+      if (isLoggedIn) {
+        const response = await getRecords({ startDate, endDate, type });
+        records = response.filter(r => r.category === category);
+      } else {
+        const allRecords = getLocalRecords();
+        records = allRecords.filter(r => {
+          const recordDate = dayjs(r.date);
+          return r.type === type &&
+            r.category === category &&
+            recordDate.isAfter(startOfMonth.subtract(1, 'day')) &&
+            recordDate.isBefore(endOfMonth.add(1, 'day'));
+        });
+      }
+    } catch (error) {
+      console.error('Load category records error:', error);
+      message.error('加载分类明细失败');
+      return;
     }
 
     // 按金额从大到小排序

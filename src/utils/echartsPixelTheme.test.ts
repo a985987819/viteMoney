@@ -88,11 +88,13 @@ describe('getPixelBarOption', () => {
     expect(option.series[1].itemStyle.borderRadius).toBe(0);
   });
 
-  it('should set barWidth to 60%', () => {
+  it('should cap bar width and keep category gap for pixel style', () => {
     const option = getPixelBarOption(sampleData, true, true);
 
-    expect(option.series[0].barWidth).toBe('60%');
-    expect(option.series[1].barWidth).toBe('60%');
+    expect(option.series[0].barMaxWidth).toBe(20);
+    expect(option.series[1].barMaxWidth).toBe(20);
+    expect(option.series[0].barCategoryGap).toBe('35%');
+    expect(option.series[1].barCategoryGap).toBe('35%');
   });
 });
 
