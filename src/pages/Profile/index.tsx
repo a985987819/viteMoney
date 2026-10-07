@@ -39,6 +39,7 @@ import {
   MoonOutlined,
   DesktopOutlined,
   ClockCircleOutlined,
+  CalendarOutlined,
   ThunderboltOutlined,
   DownloadOutlined,
   InboxOutlined,
@@ -108,6 +109,11 @@ const Profile = () => {
   // 打开我的冰箱页面
   const handleOpenMyFridge = () => {
     navigate('/my-fridge');
+  };
+
+  // 打开时间管理页面
+  const handleOpenTimeManage = () => {
+    navigate('/time-manage');
   };
 
   // 切换语言
@@ -374,6 +380,11 @@ const Profile = () => {
       title: '我的冰箱',
       icon: <InboxOutlined />,
       onClick: handleOpenMyFridge,
+    },
+    {
+      title: '时间管理',
+      icon: <CalendarOutlined />,
+      onClick: handleOpenTimeManage,
     },
     {
       title: t('profile.dataManagement'),

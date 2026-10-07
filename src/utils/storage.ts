@@ -30,6 +30,18 @@ export interface FridgeItem {
   consumedAt?: string;
 }
 
+export interface ScheduleItem {
+  id: string;
+  title: string;
+  date: string;
+  startTime: string;
+  endTime: string;
+  color: string;
+  remark?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export function safeJsonParse<T>(data: string | null, fallback: T): T {
   if (!data) return fallback;
   try {
@@ -199,6 +211,7 @@ const ALL_DATA_KEYS = [
   STORAGE_KEYS.REFRESH_TOKEN,
   STORAGE_KEYS.TOKEN_EXPIRES,
   STORAGE_KEYS.FRIDGE_ITEMS,
+  STORAGE_KEYS.SCHEDULES,
 ];
 
 export const clearAllData = () => {
@@ -403,4 +416,56 @@ export const deleteFridgeItem = (id: string): void => {
   const items = getFridgeItems();
   const filtered = items.filter((item) => item.id !== id);
   saveFridgeItems(filtered);
+};
+
+export const getSchedules = (): ScheduleItem[] => {
+  return safeJsonArrayParse<ScheduleItem>(localStorage.getItem(STORAGE_KEYS.SCHEDULES));
+};
+
+export const saveSchedules = (schedules: ScheduleItem[]): void => {
+  try {
+    localStorage.setItem(STORAGE_KEYS.SCHEDULES, JSON.stringify(schedules));
+  } catch (e) {
+    console.error('[Storage] 保存日程数据失败:', e);
+  }
+};
+
+export const addSchedule = (
+  schedule: Omit<ScheduleItem, 'id' | 'createdAt' | 'updatedAt'>
+): ScheduleItem => {
+  const schedules = getSchedules();
+  const now = nowISO();
+  const newSchedule: ScheduleItem = {
+    ...schedule,
+    id: `schedule_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`,
+    createdAt: now,
+    updatedAt: now,
+  };
+
+  schedules.push(newSchedule);
+  saveSchedules(schedules);
+  return newSchedule;
+};
+
+export const updateSchedule = (
+  id: string,
+  data: Partial<Omit<ScheduleItem, 'id' | 'createdAt'>>
+): void => {
+  const schedules = getSchedules();
+  const index = schedules.findIndex((item) => item.id === id);
+
+  if (index !== -1) {
+    schedules[index] = {
+      ...schedules[index],
+      ...data,
+      updatedAt: nowISO(),
+    };
+    saveSchedules(schedules);
+  }
+};
+
+export const deleteSchedule = (id: string): void => {
+  const schedules = getSchedules();
+  const filtered = schedules.filter((item) => item.id !== id);
+  saveSchedules(filtered);
 };

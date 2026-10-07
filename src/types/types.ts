@@ -12,7 +12,7 @@ export type { BillTemplate, CreateTemplateParams, UpdateTemplateParams, UseTempl
 import type { RecordItem } from '../api/record';
 
 // ==================== 从 storage 模块 re-export ====================
-export type { LocalBudget, QuickRecord, FridgeItem } from '../utils/storage';
+export type { LocalBudget, QuickRecord, FridgeItem, ScheduleItem } from '../utils/storage';
 
 // ==================== 本地存储专用类型 ====================
 export const STORAGE_KEYS = {
@@ -25,6 +25,7 @@ export const STORAGE_KEYS = {
   BUDGETS: 'money_budgets',
   QUICK_RECORDS: 'money_quick_records',
   FRIDGE_ITEMS: 'money_fridge_items',
+  SCHEDULES: 'money_schedules',
 } as const;
 
 export type StorageKeys = typeof STORAGE_KEYS;

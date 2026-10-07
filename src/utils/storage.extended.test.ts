@@ -14,9 +14,15 @@ import {
   getLocalBudget,
   setLocalBudget,
   deleteLocalBudget,
+  getSchedules,
+  saveSchedules,
+  addSchedule,
+  updateSchedule,
+  deleteSchedule,
 } from './storage';
 import type { RecordItem } from '../api/record';
 import type { User, Tokens } from '../api/auth';
+import type { ScheduleItem } from './storage';
 
 describe('storage utils - 边界值和异常处理', () => {
   beforeEach(() => {
@@ -380,6 +386,84 @@ describe('storage utils - 边界值和异常处理', () => {
       setLocalBudget({ year: -1, month: 0, amount: 1000 });
       const budget = getLocalBudget(-1, 0);
       expect(budget?.amount).toBe(1000);
+    });
+  });
+
+  describe('Schedule 日程相关', () => {
+    const baseSchedule = {
+      title: '晨跑',
+      date: '2026-10-07',
+      startTime: '07:00',
+      endTime: '08:00',
+      color: '#5aa17f',
+      remark: '公园三圈',
+    };
+
+    it('应该新增日程并自动生成 id 与时间戳', () => {
+      const created = addSchedule(baseSchedule);
+
+      expect(created.id).toMatch(/^schedule_/);
+      expect(created.createdAt).toBeTruthy();
+      expect(created.updatedAt).toBe(created.createdAt);
+      expect(getSchedules()).toHaveLength(1);
+      expect(getSchedules()[0].title).toBe('晨跑');
+    });
+
+    it('应该处理损坏的日程 JSON 数据', () => {
+      localStorage.setItem('money_schedules', 'invalid json');
+      expect(getSchedules()).toEqual([]);
+    });
+
+    it('应该处理非数组的日程数据', () => {
+      localStorage.setItem('money_schedules', '{"id": 1}');
+      expect(getSchedules()).toEqual([]);
+    });
+
+    it('应该按 id 更新日程内容', () => {
+      const created = addSchedule(baseSchedule);
+      updateSchedule(created.id, { title: '夜跑', startTime: '20:00', endTime: '21:00' });
+
+      const updated = getSchedules()[0];
+      expect(updated.title).toBe('夜跑');
+      expect(updated.startTime).toBe('20:00');
+      expect(updated.date).toBe('2026-10-07');
+    });
+
+    it('更新不存在的日程不应报错', () => {
+      saveSchedules([]);
+      updateSchedule('non-existent', { title: '无效' });
+      expect(getSchedules()).toHaveLength(0);
+    });
+
+    it('应该删除指定日程', () => {
+      const first = addSchedule(baseSchedule);
+      addSchedule({ ...baseSchedule, title: '阅读', startTime: '21:00', endTime: '22:00' });
+
+      deleteSchedule(first.id);
+
+      const remaining = getSchedules();
+      expect(remaining).toHaveLength(1);
+      expect(remaining[0].title).toBe('阅读');
+    });
+
+    it('应该保留完整的日程字段', () => {
+      saveSchedules([
+        {
+          id: 'schedule_1',
+          ...baseSchedule,
+          createdAt: '2026-10-07T00:00:00.000Z',
+          updatedAt: '2026-10-07T00:00:00.000Z',
+        } as ScheduleItem,
+      ]);
+
+      const [schedule] = getSchedules();
+      expect(schedule).toMatchObject(baseSchedule);
+    });
+
+    it('clearAllData 应该清除日程数据', () => {
+      addSchedule(baseSchedule);
+      clearAllData();
+      expect(getSchedules()).toEqual([]);
     });
   });
 });

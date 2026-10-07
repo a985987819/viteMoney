@@ -18,6 +18,7 @@ const About = lazy(() => import('../pages/About'));
 const Recurring = lazy(() => import('../pages/Recurring'));
 const QuickRecordManage = lazy(() => import('../pages/QuickRecordManage'));
 const MyFridge = lazy(() => import('../pages/MyFridge'));
+const TimeManage = lazy(() => import('../pages/TimeManage'));
 
 const PageLoading = () => (
   <div style={{
@@ -53,6 +54,7 @@ const router = createBrowserRouter([
   { path: '/recurring', element: <LazyWrapper><Recurring /></LazyWrapper>, errorElement: <RouteError /> },
   { path: '/quick-record-manage', element: <LazyWrapper><QuickRecordManage /></LazyWrapper>, errorElement: <RouteError /> },
   { path: '/my-fridge', element: <LazyWrapper><MyFridge /></LazyWrapper>, errorElement: <RouteError /> },
+  { path: '/time-manage', element: <LazyWrapper><TimeManage /></LazyWrapper>, errorElement: <RouteError /> },
   { path: '*', element: <Navigate to="/" replace />, errorElement: <RouteError /> },
 ]);
 
