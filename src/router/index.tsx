@@ -21,6 +21,34 @@ const QuickRecordManage = lazy(() => import('../pages/QuickRecordManage'));
 const MyFridge = lazy(() => import('../pages/MyFridge'));
 const TimeManage = lazy(() => import('../pages/TimeManage'));
 
+// 与 lazy() 指向相同的动态 import：同一模块 URL 由浏览器去重，
+// 预热后再点击路由时直接命中，切换零等待
+const routePreloaders: Array<() => Promise<unknown>> = [
+  () => import('../pages/AddRecord'),
+  () => import('../pages/Statistics'),
+  () => import('../pages/SavingsOperate'),
+  () => import('../pages/Savings'),
+  () => import('../pages/Profile'),
+  () => import('../pages/CategoryManage'),
+  () => import('../pages/Budget'),
+  () => import('../pages/Changelog'),
+  () => import('../pages/Features'),
+  () => import('../pages/About'),
+  () => import('../pages/Recurring'),
+  () => import('../pages/QuickRecordManage'),
+  () => import('../pages/MyFridge'),
+];
+
+/**
+ * 浏览器空闲时预热全部路由 chunk
+ * 预加载失败静默降级：点击路由时仍有主题化 PageLoading 兜底
+ */
+export const preloadRoutes = (): void => {
+  for (const load of routePreloaders) {
+    void load().catch(() => { /* 静默 */ });
+  }
+};
+
 const LazyWrapper = ({ children }: { children: React.ReactNode }) => (
   <Suspense fallback={<PageLoading />}>
     {children}

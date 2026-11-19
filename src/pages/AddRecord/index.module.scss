@@ -362,6 +362,34 @@ $border-color: #aed581;
   }
 }
 
+// 保存中状态：转圈指示 + 阻断重复点击
+.btnLoading {
+  opacity: 0.75;
+  pointer-events: none;
+}
+
+.btnSpinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: btnSpin 0.7s linear infinite;
+}
+
+// 保存并继续按钮是浅色底，spinner 用主题色
+.saveAgainBtn .btnSpinner {
+  border-color: rgba($primary-dark, 0.3);
+  border-top-color: $primary-dark;
+}
+
+@keyframes btnSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 // 日期选择弹窗
 // 宽度收窄并水平居中（max-width 挂在 .ant-modal 上，依赖 antd 默认 margin: 0 auto）；
 // 高度交给全局约束：content max-height(--app-height) + body 内部滚动

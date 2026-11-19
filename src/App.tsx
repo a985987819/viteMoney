@@ -9,7 +9,7 @@ import { themeManager } from './utils/theme';
 import { initializeDataStore } from './utils/dataMigration';
 import { requestPersistentStorage } from './utils/storageGuard';
 import LoadingScreen from './components/LoadingScreen';
-import router from './router';
+import router, { preloadRoutes } from './router';
 import './App.module.scss';
 
 const theme = {
@@ -64,6 +64,9 @@ function App() {
   useEffect(() => {
     void initializeDataStore();
     void requestPersistentStorage(); // 申请持久化存储授权，防浏览器自动清除
+    // 首屏稳定后预热全部路由 chunk，点击 tab/导航零等待（跟手）
+    const preloadTimer = setTimeout(() => preloadRoutes(), 1500);
+    return () => clearTimeout(preloadTimer);
   }, []);
 
   useEffect(() => {

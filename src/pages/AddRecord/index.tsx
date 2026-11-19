@@ -88,7 +88,7 @@ const AddRecord = () => {
   const [remark, setRemark] = useState('');
   const [selectedDate, setSelectedDate] = useState(dayjs());
   const [selectedAccount] = useState(t('addRecord.defaultAccount'));
-  const [, setLoading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
   const [datePickerMode, setDatePickerMode] = useState<DatePickerMode>('date');
   const [isSubCategoryModalVisible, setIsSubCategoryModalVisible] = useState(false);
@@ -180,7 +180,8 @@ const AddRecord = () => {
       account: selectedAccount,
     });
 
-    setLoading(true);
+    if (isSaving) return; // 防重复提交
+    setIsSaving(true);
     try {
       if (isEditMode && editingRecord) {
         if (isLoggedIn) {
@@ -208,7 +209,7 @@ const AddRecord = () => {
       message.error(isEditMode ? t('addRecord.updateFailed') : t('addRecord.saveFailed'));
       console.error('Save error:', error);
     } finally {
-      setLoading(false);
+      setIsSaving(false);
     }
   };
 
@@ -233,7 +234,8 @@ const AddRecord = () => {
       account: selectedAccount,
     });
 
-    setLoading(true);
+    if (isSaving) return; // 防重复提交
+    setIsSaving(true);
     try {
       if (isLoggedIn) {
         await createRecord(recordData);
@@ -249,7 +251,7 @@ const AddRecord = () => {
     } catch {
       message.error(t('addRecord.saveFailed'));
     } finally {
-      setLoading(false);
+      setIsSaving(false);
     }
   };
 
@@ -416,16 +418,27 @@ const AddRecord = () => {
           </div>
           <div className={styles.keyboardRow}>
             {!isEditMode && (
-              <button className={`${styles.keyBtn} ${styles.saveAgainBtn}`} onClick={handleSaveAndAdd}>{t('addRecord.saveAgain')}</button>
+              <button
+                className={`${styles.keyBtn} ${styles.saveAgainBtn}`}
+                onClick={handleSaveAndAdd}
+                disabled={isSaving}
+              >
+                {isSaving ? <span className={styles.btnSpinner} /> : t('addRecord.saveAgain')}
+              </button>
             )}
             {isEditMode && <button className={styles.keyBtn} onClick={() => handleNumberClick('0')}>0</button>}
             {!isEditMode && <button className={styles.keyBtn} onClick={() => handleNumberClick('0')}>0</button>}
             <button className={styles.keyBtn} onClick={() => handleNumberClick('.')}>.</button>
             <button
-              className={`${styles.keyBtn} ${canCalculate ? styles.calculateBtn : styles.saveBtn}`}
+              className={`${styles.keyBtn} ${canCalculate ? styles.calculateBtn : styles.saveBtn} ${isSaving ? styles.btnLoading : ''}`}
+              disabled={isSaving}
               onClick={canCalculate ? () => handleCalculate() : handleSave}
             >
-              {canCalculate ? t('addRecord.calculate') : (isEditMode ? t('addRecord.update') : t('addRecord.save'))}
+              {isSaving ? (
+                <span className={styles.btnSpinner} />
+              ) : (
+                canCalculate ? t('addRecord.calculate') : (isEditMode ? t('addRecord.update') : t('addRecord.save'))
+              )}
             </button>
           </div>
         </div>
