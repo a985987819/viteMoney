@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>星露账本</title>
+  <script>
+    sessionStorage.redirect = window.location.href;
+    var base = window.location.pathname;
+    var repoBase = base.substring(0, base.indexOf('/', 1) + 1) || '/';
+    window.location.replace(repoBase + 'index.html');
+  </script>
+</head>
+<body>
+</body>
+</html>
