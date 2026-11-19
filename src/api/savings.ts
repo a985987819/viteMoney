@@ -1,5 +1,7 @@
 import { createApiService, http } from '../utils/request';
 import { nowISO } from '../utils/dateFormats';
+import { SAVINGS_PLANS_KEY as STORAGE_KEY, SAVINGS_DEPOSITS_KEY as DEPOSITS_KEY, SAVINGS_ACTIVE_PLAN_ID_KEY as ACTIVE_PLAN_KEY } from '../utils/savingsKeys';
+import { markStorageDirty } from '../utils/storageGuard';
 
 export interface SavingsGoal {
   id: string;
@@ -143,9 +145,6 @@ export const getDeposits = (planId: string): Promise<SavingsDeposit[]> => {
 };
 
 // 本地存储相关函数
-const STORAGE_KEY = 'savings_plans';
-const DEPOSITS_KEY = 'savings_deposits';
-const ACTIVE_PLAN_KEY = 'savings_active_plan_id';
 
 const recalculatePlan = (plan: SavingsPlan): SavingsPlan => {
   const percentage = plan.targetAmount > 0
@@ -173,6 +172,7 @@ export const getLocalSavingsPlans = (): SavingsPlan[] => {
 export const saveLocalSavingsPlans = (plans: SavingsPlan[]) => {
   const normalizedPlans = plans.map(recalculatePlan);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(normalizedPlans));
+  markStorageDirty();
 
   const activePlanId = localStorage.getItem(ACTIVE_PLAN_KEY);
   const hasActivePlan = normalizedPlans.some((plan) => plan.id === activePlanId);
@@ -202,6 +202,7 @@ export const saveLocalDeposit = (deposit: SavingsDeposit) => {
   const deposits = getLocalDeposits();
   deposits.push(deposit);
   localStorage.setItem(DEPOSITS_KEY, JSON.stringify(deposits));
+  markStorageDirty();
 
   // 更新计划的已存金额
   const plans = getLocalSavingsPlans();
@@ -217,6 +218,7 @@ export const saveLocalDeposit = (deposit: SavingsDeposit) => {
 
 export const setActiveSavingsPlan = (planId: string) => {
   localStorage.setItem(ACTIVE_PLAN_KEY, planId);
+  markStorageDirty();
 };
 
 export const getActiveSavingsPlanId = (): string | null => {
@@ -246,4 +248,5 @@ export const deleteLocalSavingsPlan = (planId: string) => {
 
   const deposits = getLocalDeposits().filter((deposit) => deposit.planId !== planId);
   localStorage.setItem(DEPOSITS_KEY, JSON.stringify(deposits));
+  markStorageDirty();
 };

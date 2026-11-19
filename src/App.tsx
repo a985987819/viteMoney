@@ -7,6 +7,7 @@ import { PWAInstallPrompt } from './components/PWAInstallPrompt';
 import OfflineIndicator from './components/OfflineIndicator';
 import { themeManager } from './utils/theme';
 import { initializeDataStore } from './utils/dataMigration';
+import { requestPersistentStorage } from './utils/storageGuard';
 import LoadingScreen from './components/LoadingScreen';
 import router from './router';
 import './App.module.scss';
@@ -61,7 +62,8 @@ ConfigProvider.config({
 
 function App() {
   useEffect(() => {
-    initializeDataStore();
+    void initializeDataStore();
+    void requestPersistentStorage(); // 申请持久化存储授权，防浏览器自动清除
   }, []);
 
   useEffect(() => {

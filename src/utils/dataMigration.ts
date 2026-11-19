@@ -1,13 +1,12 @@
 import { STORAGE_KEYS } from '../types/types';
 import { safeJsonParse, safeJsonArrayParse } from './storage';
+import { SAVINGS_PLANS_KEY, SAVINGS_DEPOSITS_KEY, SAVINGS_ACTIVE_PLAN_ID_KEY as SAVINGS_ACTIVE_PLAN_KEY } from './savingsKeys';
+import { restoreIfErased, snapshotNow } from './storageGuard';
 import type { RecordItem } from '../api/record';
 import type { Category } from '../api/category';
 import type { SavingsPlan } from '../api/savings';
 
 const DATA_VERSION_KEY = 'money_data_version';
-const SAVINGS_PLANS_KEY = 'savings_plans';
-const SAVINGS_DEPOSITS_KEY = 'savings_deposits';
-const SAVINGS_ACTIVE_PLAN_KEY = 'savings_active_plan_id';
 
 export const CURRENT_DATA_VERSION = 1;
 
@@ -373,10 +372,17 @@ export function restoreAllData(jsonString: string): boolean {
   }
 }
 
-export function initializeDataStore(): void {
+export async function initializeDataStore(): Promise<void> {
   try {
     console.log('[Migration] 初始化数据存储...');
+    // 先检测本地数据是否被外部清除（iOS 系统清理/清站点数据），从影子快照恢复
+    const restored = await restoreIfErased();
+    if (restored) {
+      console.log('[Migration] 已从 IndexedDB 快照恢复数据');
+    }
     migrateData();
+    // 启动即固化一份快照，确保 seal 标记与快照始终存在
+    await snapshotNow();
     console.log('[Migration] 数据存储初始化完成');
   } catch (e) {
     console.error('[Migration] 数据存储初始化失败:', e);

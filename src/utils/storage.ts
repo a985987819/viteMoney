@@ -5,6 +5,7 @@ import type { BudgetResponse } from '../api/budget';
 import { STORAGE_KEYS } from '../types/types';
 import { expenseCategories, incomeCategories } from '../constants/categories';
 import { nowISO } from './dateFormats';
+import { markStorageDirty, purgeSnapshots } from './storageGuard';
 
 export interface LocalBudget extends Omit<BudgetResponse, 'id' | 'spent' | 'remaining' | 'percentage'> {
   id?: string;
@@ -124,6 +125,7 @@ export const getLocalRecords = (): RecordItem[] => {
 export const saveLocalRecords = (records: RecordItem[]) => {
   try {
     localStorage.setItem(STORAGE_KEYS.RECORDS, JSON.stringify(records));
+    markStorageDirty();
   } catch (e) {
     console.error('[Storage] 保存记录失败，可能存储空间不足:', e);
   }
@@ -157,6 +159,7 @@ export const getUser = (): User | null => {
 export const saveUser = (user: User) => {
   try {
     localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(user));
+    markStorageDirty();
   } catch (e) {
     console.error('[Storage] 保存用户信息失败:', e);
   }
@@ -171,6 +174,7 @@ const TOKEN_KEYS = [
 export const clearUser = () => {
   localStorage.removeItem(STORAGE_KEYS.USER);
   TOKEN_KEYS.forEach((key) => localStorage.removeItem(key));
+  markStorageDirty();
 };
 
 export const getAccessToken = (): string | null => {
@@ -187,6 +191,7 @@ export const saveTokens = (tokens: Tokens) => {
     localStorage.setItem(STORAGE_KEYS.REFRESH_TOKEN, tokens.refreshToken);
     const expiresAt = Date.now() + tokens.expiresIn * 1000;
     localStorage.setItem(STORAGE_KEYS.TOKEN_EXPIRES, expiresAt.toString());
+    markStorageDirty();
   } catch (e) {
     console.error('[Storage] 保存 Token 失败:', e);
   }
@@ -216,6 +221,7 @@ const ALL_DATA_KEYS = [
 
 export const clearAllData = () => {
   ALL_DATA_KEYS.forEach((key) => localStorage.removeItem(key));
+  void purgeSnapshots(); // 影子快照同步清除，避免下次启动被误恢复
 };
 
 type CategoryType = 'expense' | 'income' | 'transfer' | 'debt' | 'reimbursement';
@@ -239,6 +245,7 @@ export const getLocalCategories = (): CategoryMap => {
 export const saveLocalCategories = (categories: CategoryMap) => {
   try {
     localStorage.setItem(STORAGE_KEYS.CATEGORIES, JSON.stringify(categories));
+    markStorageDirty();
   } catch (e) {
     console.error('[Storage] 保存分类数据失败:', e);
   }
@@ -295,6 +302,7 @@ export const getLocalBudgets = (): LocalBudget[] => {
 export const saveLocalBudgets = (budgets: LocalBudget[]) => {
   try {
     localStorage.setItem(STORAGE_KEYS.BUDGETS, JSON.stringify(budgets));
+    markStorageDirty();
   } catch (e) {
     console.error('[Storage] 保存预算数据失败:', e);
   }
@@ -329,6 +337,7 @@ export const getQuickRecords = (): QuickRecord[] => {
 export const saveQuickRecords = (records: QuickRecord[]): void => {
   try {
     localStorage.setItem(STORAGE_KEYS.QUICK_RECORDS, JSON.stringify(records));
+    markStorageDirty();
   } catch (e) {
     console.error('[Storage] 保存快捷记账数据失败:', e);
   }
@@ -373,6 +382,7 @@ export const getFridgeItems = (): FridgeItem[] => {
 export const saveFridgeItems = (items: FridgeItem[]): void => {
   try {
     localStorage.setItem(STORAGE_KEYS.FRIDGE_ITEMS, JSON.stringify(items));
+    markStorageDirty();
   } catch (e) {
     console.error('[Storage] 保存冰箱数据失败:', e);
   }
