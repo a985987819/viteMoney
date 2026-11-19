@@ -20,9 +20,12 @@ body {
 }
 
 [data-phone-content] {
+  /* 弹窗/抽屉限定在手机内容区内：absolute 相对 phoneContent 定位，
+     必须补 inset: 0，否则塌陷到 DOM 静态位置且宽度收缩，弹窗错乱 */
   .ant-modal-wrap,
   .ant-drawer {
     position: absolute;
+    inset: 0;
   }
 
   .ant-modal-wrap {

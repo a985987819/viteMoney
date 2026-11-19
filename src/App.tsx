@@ -42,6 +42,23 @@ const theme = {
   },
 };
 
+const getPopupContainer = () => {
+  const phoneContent = document.querySelector('[data-phone-content]');
+  if (phoneContent) return phoneContent as HTMLElement;
+  return document.body;
+};
+
+// 静态方法（Modal.confirm/message/notification）无法消费组件内 Context，
+// 通过 holderRender 让它们也渲染进手机内容区并继承主题/语言，
+// 否则 fixed 定位会覆盖整个浏览器视口，脱离手机框
+ConfigProvider.config({
+  holderRender: (node) => (
+    <ConfigProvider locale={zhCN} theme={theme} getPopupContainer={getPopupContainer}>
+      <AntdApp>{node}</AntdApp>
+    </ConfigProvider>
+  ),
+});
+
 function App() {
   useEffect(() => {
     initializeDataStore();
@@ -51,12 +68,6 @@ function App() {
     const unsubscribe = themeManager.subscribe(() => {});
     return () => unsubscribe();
   }, []);
-
-  const getPopupContainer = () => {
-    const phoneContent = document.querySelector('[data-phone-content]');
-    if (phoneContent) return phoneContent as HTMLElement;
-    return document.body;
-  };
 
   return (
     <ConfigProvider locale={zhCN} theme={theme} getPopupContainer={getPopupContainer}>

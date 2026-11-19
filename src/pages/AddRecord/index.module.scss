@@ -363,28 +363,20 @@ $border-color: #aed581;
 }
 
 // 日期选择弹窗
+// 宽度收窄并水平居中（max-width 挂在 .ant-modal 上，依赖 antd 默认 margin: 0 auto）；
+// 高度交给全局约束：content max-height(--app-height) + body 内部滚动
 .datePickerModal {
-  position: absolute !important;
+  max-width: 430px;
 
   :global {
-    .ant-modal-wrap {
-      position: absolute;
-      @include flex-center;
-    }
-
     .ant-modal-content {
-      max-width: 430px;
       width: 100% !important;
-      max-height: 80vh;
       border-radius: 12px;
       overflow: hidden;
-      position: absolute;
     }
 
     .ant-modal-body {
       padding: 0;
-      max-height: calc(80vh - 55px);
-      overflow-y: auto;
     }
   }
 }

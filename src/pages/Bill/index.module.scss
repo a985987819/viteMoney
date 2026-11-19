@@ -346,7 +346,8 @@ $summer-ocean: #3498DB;
 
 .filterModalBody {
   padding: 16px;
-  max-height: 60vh;
+  // 以手机内容区高度为基准（vh 以浏览器视口为基准，桌面手机框模式下错位）
+  max-height: calc(var(--app-height, 100dvh) * 0.6);
   overflow-y: auto;
 }
 
