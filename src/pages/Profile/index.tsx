@@ -15,6 +15,8 @@ import {
 import dayjs from 'dayjs';
 import { formatDateKey, formatDateTimeFull } from '../../utils/dateFormats';
 import BottomNav from '../../components/BottomNav';
+import { AUTH_ENABLED } from '../../config/features';
+import { exportFullBackup, importFullBackup } from '../../utils/importExport';
 import { useNavigate } from 'react-router-dom';
 import {
   UserOutlined,
@@ -28,6 +30,7 @@ import {
   FileExcelOutlined,
   FileTextOutlined,
   CopyOutlined,
+  SaveOutlined,
   GlobalOutlined,
   SettingOutlined,
   WalletOutlined,
@@ -308,6 +311,39 @@ const Profile = () => {
     });
   };
 
+  // 导出全量备份（JSON，可完美复现）
+  const handleExportFullBackup = () => {
+    try {
+      exportFullBackup();
+      message.success('备份文件已导出，请妥善保存');
+    } catch (error) {
+      message.error('导出失败，请重试');
+      console.error('Export full backup error:', error);
+    }
+  };
+
+  // 导入全量备份：覆盖式恢复，导入后刷新页面使全部视图与数据一致
+  const handleFullImport = (file: File) => {
+    Modal.confirm({
+      title: '恢复备份',
+      content: '导入备份将覆盖当前所有本地数据（记录、分类、预算、攒钱计划、冰箱等），此操作不可撤销。确定继续吗？',
+      okType: 'danger',
+      onOk: async () => {
+        setIsFullImportLoading(true);
+        try {
+          const result = await importFullBackup(file);
+          message.success(`备份恢复成功：共恢复 ${result.restoredKeys.length} 项数据（${result.recordCount} 条记录），即将刷新页面`);
+          setTimeout(() => window.location.reload(), 1200);
+        } catch (error) {
+          message.error(error instanceof Error ? error.message : '恢复失败，请检查备份文件');
+          console.error('Import full backup error:', error);
+        } finally {
+          setIsFullImportLoading(false);
+        }
+      },
+    });
+  };
+
   // 数据去重
   const handleRemoveDuplicates = () => {
     Modal.confirm({
@@ -353,6 +389,9 @@ const Profile = () => {
     });
   };
 
+  // 全量备份导入中状态
+  const [isFullImportLoading, setIsFullImportLoading] = useState(false);
+
   // 一级菜单
   const mainMenuItems = [
     {
@@ -365,12 +404,12 @@ const Profile = () => {
       icon: <ThunderboltOutlined />,
       onClick: handleOpenQuickRecord,
     },
-    // 定时记账需要登录才能使用
-    ...(isLoggedIn ? [{
+    // 定时记账：登录隐藏期间本地模式也开放入口
+    ...(AUTH_ENABLED && !isLoggedIn ? [] : [{
       title: '定时记账',
       icon: <ClockCircleOutlined />,
       onClick: handleOpenRecurring,
-    }] : []),
+    }]),
     {
       title: '攒钱计划',
       icon: <WalletOutlined />,
@@ -413,7 +452,7 @@ const Profile = () => {
       </div>
 
       <div className={styles.contentScroll}>
-      {/* 用户信息卡片 */}
+      {/* 用户信息卡片：登录模块暂时隐藏（AUTH_ENABLED=false），优先本地运行 */}
       <div className={styles.userCard}>
         <div className={styles.userInfo}>
           <Avatar
@@ -423,21 +462,23 @@ const Profile = () => {
           />
           <div className={styles.userDetails}>
             <div className={styles.userName}>
-              {isLoggedIn ? user?.username : t('profile.notLoggedIn')}
+              {AUTH_ENABLED ? (isLoggedIn ? user?.username : t('profile.notLoggedIn')) : '本地模式'}
             </div>
             <div className={styles.userStatus}>
-              {isLoggedIn ? (
+              {AUTH_ENABLED && isLoggedIn ? (
                 <span className={styles.statusOnline}>
                   <CloudSyncOutlined /> 数据已同步
                 </span>
               ) : (
-                <span className={styles.statusOffline}>数据仅保存在本地</span>
+                <span className={styles.statusOffline}>
+                  {AUTH_ENABLED ? '数据仅保存在本地' : '数据保存在本机·请定期备份'}
+                </span>
               )}
             </div>
           </div>
         </div>
 
-        {isLoggedIn ? (
+        {AUTH_ENABLED && isLoggedIn ? (
           <Button
             type="primary"
             danger
@@ -448,26 +489,28 @@ const Profile = () => {
             {t('profile.logout')}
           </Button>
         ) : (
-          <div className={styles.authButtons}>
-            <Button
-              icon={<LoginOutlined />}
-              onClick={() => setLoginModalVisible(true)}
-              className={styles.authBtn}
-            >
-              {t('profile.login')}
-            </Button>
-            <Button
-              onClick={() => setRegisterModalVisible(true)}
-              className={styles.authBtn}
-            >
-              {t('common.register')}
-            </Button>
-          </div>
+          AUTH_ENABLED && (
+            <div className={styles.authButtons}>
+              <Button
+                icon={<LoginOutlined />}
+                onClick={() => setLoginModalVisible(true)}
+                className={styles.authBtn}
+              >
+                {t('profile.login')}
+              </Button>
+              <Button
+                onClick={() => setRegisterModalVisible(true)}
+                className={styles.authBtn}
+              >
+                {t('common.register')}
+              </Button>
+            </div>
+          )
         )}
       </div>
 
-      {/* 云同步开关 - 仅在登录后显示 */}
-      {isLoggedIn && (
+      {/* 云同步开关 - 仅在登录后显示（登录隐藏期间不渲染） */}
+      {AUTH_ENABLED && isLoggedIn && (
         <div className={styles.syncSection}>
           <div className={styles.syncItem}>
             <div className={styles.syncInfo}>
@@ -523,7 +566,7 @@ const Profile = () => {
         </div>
         {!isLoggedIn && (
           <div className={styles.featureOfflineHint}>
-            🔓 无需登录即可使用全部本地功能
+            {AUTH_ENABLED ? '🔓 无需登录即可使用全部本地功能' : '💾 本地模式：数据保存在本机，可在「数据管理」中备份'}
           </div>
         )}
       </div>
@@ -660,10 +703,10 @@ const Profile = () => {
         </div>
       </Modal>
 
-      {/* 登录弹窗 */}
+      {/* 登录弹窗（登录模块暂时隐藏，AUTH_ENABLED=false 时不可触发） */}
       <Modal
         title={t('profile.login')}
-        open={loginModalVisible}
+        open={AUTH_ENABLED && loginModalVisible}
         onCancel={() => setLoginModalVisible(false)}
         footer={null}
       >
@@ -695,10 +738,10 @@ const Profile = () => {
         </Form>
       </Modal>
 
-      {/* 注册弹窗 */}
+      {/* 注册弹窗（登录模块暂时隐藏，AUTH_ENABLED=false 时不可触发） */}
       <Modal
         title={t('common.register')}
-        open={registerModalVisible}
+        open={AUTH_ENABLED && registerModalVisible}
         onCancel={() => setRegisterModalVisible(false)}
         footer={null}
       >
@@ -746,6 +789,50 @@ const Profile = () => {
         maskClosable={!isImportLoading}
         closable={!isImportLoading}
       >
+        {/* 本地模式提醒：登录隐藏期间数据全靠本机，备份是唯一保险 */}
+        <div className={styles.localModeNotice}>
+          <div className={styles.noticeTitle}>💾 本地模式运行中</div>
+          <div className={styles.noticeDesc}>
+            当前版本数据仅保存在本机（浏览器），应用不会上传任何数据。
+            建议定期使用下方「完整备份」导出数据文件妥善保存，
+            更换设备或清除浏览器数据后可通过导入备份完美恢复。
+          </div>
+        </div>
+
+        {/* 完整备份：导出/导入全部数据（JSON，可完美复现） */}
+        <div className={styles.dataManageSection}>
+          <div className={styles.sectionTitle}>
+            <SaveOutlined /> 完整备份（推荐）
+          </div>
+          <div className={styles.sectionContent}>
+            <div className={styles.exportOptionsInline}>
+              <Button
+                icon={<ExportOutlined />}
+                onClick={handleExportFullBackup}
+                disabled={isFullImportLoading}
+              >
+                导出备份
+              </Button>
+              <Upload
+                accept=".json"
+                showUploadList={false}
+                beforeUpload={(file) => {
+                  handleFullImport(file as File);
+                  return false;
+                }}
+                disabled={isFullImportLoading}
+              >
+                <Button icon={<ImportOutlined />} loading={isFullImportLoading}>
+                  导入备份
+                </Button>
+              </Upload>
+            </div>
+            <div className={styles.sectionDesc}>
+              导出为 JSON 文件，包含记录、分类、预算、攒钱计划、冰箱、快捷记账等全部数据，导入后完整恢复
+            </div>
+          </div>
+        </div>
+
         {/* 导入部分 */}
         <div className={styles.dataManageSection}>
           <div className={styles.sectionTitle}>

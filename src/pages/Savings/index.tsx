@@ -16,6 +16,7 @@ import {
   setActiveSavingsPlan,
 } from '../../api/savings';
 import { useAuth } from '../../hooks/useAuth';
+import { AUTH_ENABLED } from '../../config/features';
 import styles from './index.module.scss';
 
 const Savings = () => {
@@ -99,7 +100,9 @@ const Savings = () => {
       <div className={styles.contentSection}>
         {!isLoggedIn && (
           <div className={styles.offlineHint}>
-            💾 当前数据保存在本地，登录后可同步至云端
+            {AUTH_ENABLED
+              ? '💾 当前数据保存在本地，登录后可同步至云端'
+              : '💾 本地模式：数据保存在本机，可在「我的 → 数据管理」中定期备份'}
           </div>
         )}
         {plans.length === 0 ? (

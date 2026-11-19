@@ -335,6 +335,28 @@ $winter-blue-light: #7ab8e8;
   margin-top: 8px;
 }
 
+// 本地模式提醒条（数据管理弹窗顶部）
+.localModeNotice {
+  margin: 4px 0 8px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: rgba($warning-color, 0.12);
+  border: 1px dashed rgba($warning-color, 0.5);
+}
+
+.noticeTitle {
+  font-size: 13px;
+  font-weight: bold;
+  color: $text-primary;
+  margin-bottom: 6px;
+}
+
+.noticeDesc {
+  font-size: 12px;
+  line-height: 1.7;
+  color: $text-secondary;
+}
+
 // 数据管理弹窗
 .dataManageSection {
   padding: 16px 0;

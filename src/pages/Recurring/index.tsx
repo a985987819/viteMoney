@@ -9,6 +9,7 @@ import PageHeader from '../../components/PageHeader';
 import { createRecurringRecord, getRecurringRecords, deleteRecurringRecord, type RecurringRecord, type FrequencyType } from '../../api/recurring';
 import { useCategories } from '../../hooks/useCategories';
 import { useAuth } from '../../hooks/useAuth';
+import { AUTH_ENABLED } from '../../config/features';
 import styles from './index.module.scss';
 
 const { Option } = Select;
@@ -167,7 +168,9 @@ const Recurring = () => {
 
       {!isLoggedIn && (
         <div className={styles.offlineHint}>
-          💾 未登录状态下数据保存在本地。定时记账的自动执行功能需要登录后使用。
+          {AUTH_ENABLED
+            ? '💾 未登录状态下数据保存在本地。定时记账的自动执行功能需要登录后使用。'
+            : '💾 本地模式：数据保存在本机。可在「我的 → 数据管理」中定期备份。'}
         </div>
       )}
 

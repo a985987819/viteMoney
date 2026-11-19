@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { LeftOutlined } from '@ant-design/icons';
+import { AUTH_ENABLED } from '../../config/features';
 import styles from './index.module.scss';
 
 interface GuideStep {
@@ -284,7 +285,11 @@ const Features = () => {
           </div>
           <div className={styles.offlineNote}>
             <span className={styles.offlineIcon}>📌</span>
-            <span>「定时记账」功能需要登录后使用，其余功能均可离线使用。所有本地数据保存在浏览器中，清除浏览器数据会导致记录丢失，建议定期导出备份。</span>
+            <span>
+              {AUTH_ENABLED
+                ? '「定时记账」功能需要登录后使用，其余功能均可离线使用。所有本地数据保存在浏览器中，清除浏览器数据会导致记录丢失，建议定期导出备份。'
+                : '当前为本地模式：全部数据保存在本机（浏览器）中，清除浏览器数据会导致记录丢失。请前往「我的 → 数据管理」定期使用「完整备份」导出数据文件。'}
+            </span>
           </div>
         </div>
 

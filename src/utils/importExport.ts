@@ -11,7 +11,10 @@ import {
   type TransformStats,
   type ImportRecord,
 } from './categoryTransformer';
-import type { ImportTransformResult, ImportStats } from '../types/types';
+import { STORAGE_KEYS, type ImportTransformResult, type ImportStats } from '../types/types';
+import { SAVINGS_DATA_KEYS } from './savingsKeys';
+import { DATA_VERSION_KEY } from './dataMigration';
+import { markStorageDirty } from './storageGuard';
 
 // 构建导出数据结构（复用映射逻辑）
 const buildExportData = (records: RecordItem[]) =>
@@ -292,6 +295,132 @@ export const generateImportReport = (stats: ImportStats): string => {
   return generateTransformReport(transformStats);
 };
 
+// ==================== 全量备份（导出/导入 JSON，可完美复现） ====================
+
+const BACKUP_APP = 'stardew-ledger';
+const BACKUP_TYPE = 'full-backup';
+const BACKUP_VERSION = 1;
+
+// 全量备份覆盖的存储键：全部业务数据 + 会话 + 迁移版本标记，
+// 恢复后应用状态与导出时完全一致
+const FULL_BACKUP_KEYS: string[] = [
+  STORAGE_KEYS.RECORDS,
+  STORAGE_KEYS.USER,
+  STORAGE_KEYS.ACCESS_TOKEN,
+  STORAGE_KEYS.REFRESH_TOKEN,
+  STORAGE_KEYS.TOKEN_EXPIRES,
+  STORAGE_KEYS.CATEGORIES,
+  STORAGE_KEYS.BUDGETS,
+  STORAGE_KEYS.QUICK_RECORDS,
+  STORAGE_KEYS.FRIDGE_ITEMS,
+  ...SAVINGS_DATA_KEYS,
+  DATA_VERSION_KEY,
+];
+
+export interface FullBackupFile {
+  app: string;
+  type: string;
+  version: number;
+  exportedAt: string;
+  data: Record<string, unknown>;
+}
+
+export interface FullImportResult {
+  restoredKeys: string[];
+  recordCount: number;
+  exportedAt: string;
+}
+
+/** 导出全量数据为 JSON 备份文件（下载） */
+export const exportFullBackup = (): void => {
+  const data: Record<string, unknown> = {};
+  for (const key of FULL_BACKUP_KEYS) {
+    const raw = localStorage.getItem(key);
+    if (raw === null) continue;
+    try {
+      data[key] = JSON.parse(raw);
+    } catch {
+      data[key] = raw; // 非标准 JSON 的原始值原样保留
+    }
+  }
+
+  const backup: FullBackupFile = {
+    app: BACKUP_APP,
+    type: BACKUP_TYPE,
+    version: BACKUP_VERSION,
+    exportedAt: nowISO(),
+    data,
+  };
+
+  const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `星露账本备份_${dayjs().format('YYYYMMDD_HHmmss')}.json`;
+  link.click();
+  URL.revokeObjectURL(url);
+};
+
+/** 校验备份文件结构，非法时抛出带说明的错误 */
+const validateBackupFile = (parsed: unknown): FullBackupFile => {
+  if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+    throw new Error('文件内容不是有效的备份数据');
+  }
+  const file = parsed as Partial<FullBackupFile>;
+  if (file.app !== BACKUP_APP || file.type !== BACKUP_TYPE) {
+    throw new Error('不是本应用的备份文件（缺少应用标识）');
+  }
+  if (typeof file.version !== 'number' || typeof file.data !== 'object' || file.data === null) {
+    throw new Error('备份文件版本或数据结构异常');
+  }
+  if (file.version > BACKUP_VERSION) {
+    throw new Error(`备份文件版本过新（v${file.version}），请先升级应用`);
+  }
+  return file as FullBackupFile;
+};
+
+/**
+ * 从 JSON 备份文件恢复全量数据（覆盖式写入 localStorage）
+ * 返回恢复摘要；调用方应在确认后刷新页面使全部视图与数据一致
+ */
+export const importFullBackup = async (file: File): Promise<FullImportResult> => {
+  const text = await file.text();
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(text);
+  } catch {
+    throw new Error('备份文件不是有效的 JSON 格式');
+  }
+
+  const backup = validateBackupFile(parsed);
+
+  const restoredKeys: string[] = [];
+  for (const key of FULL_BACKUP_KEYS) {
+    if (!(key in backup.data)) continue;
+    const value = backup.data[key];
+    localStorage.setItem(key, typeof value === 'string' ? value : JSON.stringify(value));
+    restoredKeys.push(key);
+  }
+
+  // 恢复后立即刷新影子快照，保持守护层与真实数据一致
+  markStorageDirty();
+
+  const records = localStorage.getItem(STORAGE_KEYS.RECORDS);
+  let recordCount = 0;
+  try {
+    const parsedRecords = records ? JSON.parse(records) : [];
+    if (Array.isArray(parsedRecords)) recordCount = parsedRecords.length;
+  } catch {
+    recordCount = 0;
+  }
+
+  return {
+    restoredKeys,
+    recordCount,
+    exportedAt: backup.exportedAt,
+  };
+};
+
 export default {
   exportToCSV,
   exportToXLSX,
@@ -301,4 +430,6 @@ export default {
   compareDate,
   getTimestamp,
   generateImportReport,
+  exportFullBackup,
+  importFullBackup,
 };

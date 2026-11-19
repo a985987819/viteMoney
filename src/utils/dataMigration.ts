@@ -6,7 +6,8 @@ import type { RecordItem } from '../api/record';
 import type { Category } from '../api/category';
 import type { SavingsPlan } from '../api/savings';
 
-const DATA_VERSION_KEY = 'money_data_version';
+// 数据版本键（导出供全量备份使用，保证备份/恢复后迁移状态一致）
+export const DATA_VERSION_KEY = 'money_data_version';
 
 export const CURRENT_DATA_VERSION = 1;
 
