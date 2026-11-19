@@ -13,7 +13,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
+  // 全局 .ant-btn 的 stardew-wood-button mixin 声明了 width: fit-content !important，
+  // 会把此处宽度压成箭头宽度（窄条按钮），需同等 !important 权重覆盖
+  width: 40px !important;
   height: 40px;
   padding: 0;
   border-radius: 10px;
