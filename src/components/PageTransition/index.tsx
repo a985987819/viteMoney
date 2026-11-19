@@ -25,6 +25,7 @@ const ROUTE_DEPTH: Record<string, number> = {
   '/features': 1,
   '/about': 1,
   '/changelog': 1,
+  '/time-manage': 1,
 };
 
 const getDepth = (pathname: string) => ROUTE_DEPTH[pathname] ?? 1;

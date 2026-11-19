@@ -435,6 +435,7 @@ export const getSchedules = (): ScheduleItem[] => {
 export const saveSchedules = (schedules: ScheduleItem[]): void => {
   try {
     localStorage.setItem(STORAGE_KEYS.SCHEDULES, JSON.stringify(schedules));
+    markStorageDirty();
   } catch (e) {
     console.error('[Storage] 保存日程数据失败:', e);
   }

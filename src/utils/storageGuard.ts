@@ -33,7 +33,7 @@ const MARK_DIRTY_DELAY = 800; // 写入防抖（ms）
 // seal 标记：快照成功写入过一次即置位，用于区分"被清"与"新用户"
 const SEAL_KEY = 'money_storage_guard_sealed';
 
-// 参与快照的数据键（含攒钱三键与迁移元数据；不含会话 token——恢复会话风险大于收益）
+// 参与快照的数据键（含攒钱三键、日程与迁移元数据；不含会话 token——恢复会话风险大于收益）
 const SNAPSHOT_KEYS = [
   STORAGE_KEYS.RECORDS,
   STORAGE_KEYS.USER,
@@ -41,6 +41,7 @@ const SNAPSHOT_KEYS = [
   STORAGE_KEYS.BUDGETS,
   STORAGE_KEYS.QUICK_RECORDS,
   STORAGE_KEYS.FRIDGE_ITEMS,
+  STORAGE_KEYS.SCHEDULES,
   ...SAVINGS_DATA_KEYS,
   'money_data_version',
 ] as string[];
