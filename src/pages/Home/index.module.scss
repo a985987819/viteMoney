@@ -146,7 +146,8 @@ $content-bg-url: "https://vercel-icons.vercel.app/homePageBg.png";
 
 .budgetValue {
   font-size: 19px;
-  color: #ffcc80;
+  // 深色字直接贴合浅色预算块背景（budgetBg.png），描边高光保留立体感
+  color: #4e2010;
   font-weight: bold;
   text-align: right;
   padding-top: 3px;
