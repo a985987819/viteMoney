@@ -1,7 +1,8 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
-import { Spin } from 'antd';
+import PageTransition from '../components/PageTransition';
+import PageLoading from '../components/PageTransition/PageLoading';
 import RouteError from '../components/RouteError';
 import Home from '../pages/Home';
 
@@ -20,18 +21,6 @@ const QuickRecordManage = lazy(() => import('../pages/QuickRecordManage'));
 const MyFridge = lazy(() => import('../pages/MyFridge'));
 const TimeManage = lazy(() => import('../pages/TimeManage'));
 
-const PageLoading = () => (
-  <div style={{
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: 'var(--app-height, 100vh)',
-    background: '#f4d03f'
-  }}>
-    <Spin size="large" />
-  </div>
-);
-
 const LazyWrapper = ({ children }: { children: React.ReactNode }) => (
   <Suspense fallback={<PageLoading />}>
     {children}
@@ -39,22 +28,22 @@ const LazyWrapper = ({ children }: { children: React.ReactNode }) => (
 );
 
 const router = createBrowserRouter([
-  { path: '/', element: <Home />, errorElement: <RouteError /> },
-  { path: '/add', element: <LazyWrapper><AddRecord /></LazyWrapper>, errorElement: <RouteError /> },
-  { path: '/add-record', element: <LazyWrapper><AddRecord /></LazyWrapper>, errorElement: <RouteError /> },
-  { path: '/statistics', element: <LazyWrapper><Statistics /></LazyWrapper>, errorElement: <RouteError /> },
-  { path: '/savings', element: <LazyWrapper><Savings /></LazyWrapper>, errorElement: <RouteError /> },
-  { path: '/savings-manage', element: <LazyWrapper><SavingsManage /></LazyWrapper>, errorElement: <RouteError /> },
-  { path: '/profile', element: <LazyWrapper><Profile /></LazyWrapper>, errorElement: <RouteError /> },
-  { path: '/category-manage', element: <LazyWrapper><CategoryManage /></LazyWrapper>, errorElement: <RouteError /> },
-  { path: '/budget', element: <LazyWrapper><Budget /></LazyWrapper>, errorElement: <RouteError /> },
-  { path: '/changelog', element: <LazyWrapper><Changelog /></LazyWrapper>, errorElement: <RouteError /> },
-  { path: '/features', element: <LazyWrapper><Features /></LazyWrapper>, errorElement: <RouteError /> },
-  { path: '/about', element: <LazyWrapper><About /></LazyWrapper>, errorElement: <RouteError /> },
-  { path: '/recurring', element: <LazyWrapper><Recurring /></LazyWrapper>, errorElement: <RouteError /> },
-  { path: '/quick-record-manage', element: <LazyWrapper><QuickRecordManage /></LazyWrapper>, errorElement: <RouteError /> },
-  { path: '/my-fridge', element: <LazyWrapper><MyFridge /></LazyWrapper>, errorElement: <RouteError /> },
-  { path: '/time-manage', element: <LazyWrapper><TimeManage /></LazyWrapper>, errorElement: <RouteError /> },
+  { path: '/', element: <PageTransition><Home /></PageTransition>, errorElement: <RouteError /> },
+  { path: '/add', element: <PageTransition><LazyWrapper><AddRecord /></LazyWrapper></PageTransition>, errorElement: <RouteError /> },
+  { path: '/add-record', element: <PageTransition><LazyWrapper><AddRecord /></LazyWrapper></PageTransition>, errorElement: <RouteError /> },
+  { path: '/statistics', element: <PageTransition><LazyWrapper><Statistics /></LazyWrapper></PageTransition>, errorElement: <RouteError /> },
+  { path: '/savings', element: <PageTransition><LazyWrapper><Savings /></LazyWrapper></PageTransition>, errorElement: <RouteError /> },
+  { path: '/savings-manage', element: <PageTransition><LazyWrapper><SavingsManage /></LazyWrapper></PageTransition>, errorElement: <RouteError /> },
+  { path: '/profile', element: <PageTransition><LazyWrapper><Profile /></LazyWrapper></PageTransition>, errorElement: <RouteError /> },
+  { path: '/category-manage', element: <PageTransition><LazyWrapper><CategoryManage /></LazyWrapper></PageTransition>, errorElement: <RouteError /> },
+  { path: '/budget', element: <PageTransition><LazyWrapper><Budget /></LazyWrapper></PageTransition>, errorElement: <RouteError /> },
+  { path: '/changelog', element: <PageTransition><LazyWrapper><Changelog /></LazyWrapper></PageTransition>, errorElement: <RouteError /> },
+  { path: '/features', element: <PageTransition><LazyWrapper><Features /></LazyWrapper></PageTransition>, errorElement: <RouteError /> },
+  { path: '/about', element: <PageTransition><LazyWrapper><About /></LazyWrapper></PageTransition>, errorElement: <RouteError /> },
+  { path: '/recurring', element: <PageTransition><LazyWrapper><Recurring /></LazyWrapper></PageTransition>, errorElement: <RouteError /> },
+  { path: '/quick-record-manage', element: <PageTransition><LazyWrapper><QuickRecordManage /></LazyWrapper></PageTransition>, errorElement: <RouteError /> },
+  { path: '/my-fridge', element: <PageTransition><LazyWrapper><MyFridge /></LazyWrapper></PageTransition>, errorElement: <RouteError /> },
+  { path: '/time-manage', element: <PageTransition><LazyWrapper><TimeManage /></LazyWrapper></PageTransition>, errorElement: <RouteError /> },
   { path: '*', element: <Navigate to="/" replace />, errorElement: <RouteError /> },
 ]);
 

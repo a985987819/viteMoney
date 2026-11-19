@@ -1,0 +1,55 @@
+// 页面转场容器
+@use "../../styles/stardew-theme.scss" as *;
+
+.page {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  // 进入动画：iOS 手感曲线，fill both 保证动画起始帧不闪现原始位置
+  animation: pageFade $duration-page $ease-ios both;
+  backface-visibility: hidden;
+
+  // 二级页面推入（前进）
+  &.forward {
+    animation-name: pageSlideForward;
+  }
+
+  // 返回上级（拉回）
+  &.back {
+    animation-name: pageSlideBack;
+  }
+}
+
+@keyframes pageFade {
+  from {
+    opacity: 0;
+    transform: scale(0.995);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pageSlideForward {
+  from {
+    opacity: 0;
+    transform: translateX(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pageSlideBack {
+  from {
+    opacity: 0;
+    transform: translateX(-28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}

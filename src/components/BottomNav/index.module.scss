@@ -100,15 +100,25 @@ $winter-sky-deep: #5dade2;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 4px;
   color: $stardew-text-primary;
   font-size: 11px;
   cursor: pointer;
-  @include transition;
-  padding: 8px 20px;
+  // 收敛过渡属性，避免 transition: all 引起的无关动画
+  transition:
+    transform $duration-fast $ease-standard,
+    background-color $duration-base $ease-standard,
+    color $duration-base $ease-standard,
+    border-color $duration-base $ease-standard,
+    box-shadow $duration-base $ease-standard;
+  padding: 0 20px;
+  height: calc(70px - 16px);
   border-radius: 12px;
   font-family: "PixelFont", monospace;
   text-shadow: 1px 1px 0 $stardew-panel-alt;
+  // 常驻边框占位：激活描边淡入，避免 border 出现/消失导致布局跳动
+  border: 2px solid transparent;
 
   &:hover {
     background-color: rgba($stardew-wood-light, 0.5);
@@ -116,29 +126,29 @@ $winter-sky-deep: #5dade2;
   }
 
   &:active {
-    transform: scale(0.98) translateY(0);
+    transform: scale(0.94);
+    transition-duration: 0.08s;
   }
 
   &.active {
-    height: calc(70px - 16px);
-    max-height: calc(70px - 16px);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
     color: $stardew-grass-deep;
-    gap: 0;
     background: $stardew-parchment;
-    border: 2px solid $stardew-wood-dark;
+    border-color: $stardew-wood-dark;
     box-shadow:
       inset 0 2px 0 rgba(255, 255, 255, 0.5),
       0 2px 4px rgba($stardew-wood-darkest, 0.3);
 
     .navLabel {
-      display: none;
+      opacity: 0;
+      transform: scale(0.6);
     }
 
     .navIcon {
+      transform: scale(1.4);
+      filter: drop-shadow(2px 2px 0 rgba(0, 0, 0, 0.1));
+    }
+
+    .navEmoji {
       transform: scale(1.4);
       filter: drop-shadow(2px 2px 0 rgba(0, 0, 0, 0.1));
     }
@@ -147,7 +157,7 @@ $winter-sky-deep: #5dade2;
   .navIcon {
     width: 28px;
     height: 28px;
-    @include transition;
+    transition: transform $duration-base $ease-spring;
     image-rendering: pixelated;
 
     img {
@@ -161,20 +171,18 @@ $winter-sky-deep: #5dade2;
   .navEmoji {
     font-size: 24px;
     line-height: 1;
-    @include transition;
-  }
-
-  &.active {
-    .navEmoji {
-      transform: scale(1.4);
-      filter: drop-shadow(2px 2px 0 rgba(0, 0, 0, 0.1));
-    }
+    transition: transform $duration-base $ease-spring;
   }
 
   .navLabel {
-    @include transition;
+    transition:
+      opacity $duration-base $ease-standard,
+      transform $duration-base $ease-standard;
     font-weight: bold;
     letter-spacing: 0.5px;
     color: $stardew-wood-darkest;
+    // 激活时淡出而非 display:none，占位保留、布局零跳动
+    opacity: 1;
+    transform: scale(1);
   }
 }

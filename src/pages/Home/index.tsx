@@ -13,6 +13,7 @@ import type { RecordItem, MonthlyStats, DateGroup } from '../../api/record';
 import { getMonthlyStats, getRecordsByDateGroups, deleteRecord } from '../../api/record';
 import { getLocalRecords, saveLocalRecords, getLocalBudget } from '../../utils/storage';
 import { useAuth } from '../../hooks/useAuth';
+import { useCountUp } from '../../hooks/useCountUp';
 import { compareDate, getTimestamp } from '../../utils/importExport';
 import BottomNav from '../../components/BottomNav';
 import SwipeableRecordItem from '../../components/SwipeableRecordItem';
@@ -40,6 +41,8 @@ const Home = () => {
   });
   const [dateGroups, setDateGroups] = useState<DateGroup[]>([]);
   const [showAmount, setShowAmount] = useState(true);
+  // 正在播放删除收起动画的记录 id
+  const [deletingIds, setDeletingIds] = useState<Set<string>>(() => new Set());
   const [hasMore, setHasMore] = useState(true);
   const [cursor, setCursor] = useState<string | undefined>(undefined);
   const loadingRef = useRef(loading);
@@ -220,27 +223,51 @@ const Home = () => {
     navigate('/add', { state: { record } });
   };
 
-  const handleDeleteRecord = async (record: RecordItem) => {
+  const handleDeleteRecord = (record: RecordItem) => {
     Modal.confirm({
       title: t('common.confirm'),
       content: t('bill.deleteConfirm'),
       okType: 'danger',
-      onOk: async () => {
-        try {
-          if (isLoggedIn) {
-            await deleteRecord(record.id);
-          } else {
-            const localRecords = getLocalRecords();
-            saveLocalRecords(localRecords.filter(r => r.id !== record.id));
-          }
-          message.success(t('bill.deleteSuccess'));
-          loadRecords(true);
-        } catch {
-          message.error(t('bill.deleteFailed'));
-        }
-      },
+      onOk: () => performDelete(record),
     });
   };
+
+  // 乐观删除：先播放收起动画并从列表移除，持久化失败时回滚刷新
+  const performDelete = async (record: RecordItem) => {
+    setDeletingIds(prev => new Set(prev).add(record.id));
+    try {
+      // 等待收起动画播完再移除，删除动作看得见
+      await new Promise(resolve => setTimeout(resolve, 220));
+
+      setDateGroups(prev => prev
+        .map(group => group.records.some(r => r.id === record.id)
+          ? { ...group, records: group.records.filter(r => r.id !== record.id) }
+          : group)
+        .filter(group => group.records.length > 0));
+      setStats(prev => record.type === 'expense'
+        ? { ...prev, totalExpense: prev.totalExpense - Number(record.amount) }
+        : { ...prev, totalIncome: prev.totalIncome - Number(record.amount) });
+
+      if (isLoggedIn) {
+        await deleteRecord(record.id);
+      } else {
+        saveLocalRecords(getLocalRecords().filter(r => r.id !== record.id));
+      }
+      message.success(t('bill.deleteSuccess'));
+    } catch {
+      message.error(t('bill.deleteFailed'));
+      loadRecords(true); // 回滚：重新拉取服务端数据
+    } finally {
+      setDeletingIds(prev => {
+        const next = new Set(prev);
+        next.delete(record.id);
+        return next;
+      });
+    }
+  };
+
+  // 月支出数字滚动动画
+  const animatedExpense = useCountUp(stats.totalExpense, { decimals: 2 });
 
   const formatAmount = (amount: number) => showAmount ? `¥${amount.toFixed(2)}` : '****';
   const formatBudgetAmount = (amount: number) => showAmount ? Math.round(amount).toString() : '****';
@@ -265,7 +292,7 @@ const Home = () => {
           <div className={styles.statsSection}>
             <div className={styles.statsLabel}>{t('home.monthlyExpense')}({t('common.yuan')})</div>
             <div className={styles.statsAmount}>
-              <span className={styles.amountValue}>{formatAmount(stats.totalExpense)}</span>
+              <span className={styles.amountValue}>{formatAmount(animatedExpense)}</span>
               <span className={styles.amountEye} onClick={() => setShowAmount(!showAmount)}>
                 {showAmount ? <EyeOutlined /> : <EyeInvisibleOutlined />}
               </span>
@@ -338,11 +365,17 @@ const Home = () => {
                             <List
                               dataSource={group.records}
                               renderItem={(record) => (
-                                <SwipeableRecordItem
-                                  record={record}
-                                  onEdit={handleEditRecord}
-                                  onDelete={handleDeleteRecord}
-                                />
+                                <div
+                                  className={
+                                    deletingIds.has(record.id) ? styles.recordCollapsing : undefined
+                                  }
+                                >
+                                  <SwipeableRecordItem
+                                    record={record}
+                                    onEdit={handleEditRecord}
+                                    onDelete={handleDeleteRecord}
+                                  />
+                                </div>
                               )}
                             />
                           </div>

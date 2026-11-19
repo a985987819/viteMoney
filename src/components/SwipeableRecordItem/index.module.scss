@@ -1,12 +1,16 @@
 @use "../../styles/stardew-theme.scss" as *;
 
 // 主容器
+// 手势进度通过 --swipe-x / --swipe-progress 两个 CSS 变量驱动，
+// 由 JS 设置在本元素上，内容层与按钮层共同继承，实现拖动时整体跟手
 .swipeableItemWrapper {
   box-sizing: border-box;
   position: relative;
   background-color: transparent;
   border: none;
   height: 56px;
+  --swipe-x: 0px;
+  --swipe-progress: 0;
 
   &::before {
     content: "";
@@ -25,7 +29,7 @@
   }
 }
 
-// 操作按钮区域
+// 操作按钮区域：随滑动进度从右侧抽出并渐显，像被内容"拖出来"一样
 .swipeableActions {
   position: absolute;
   right: 0;
@@ -36,6 +40,9 @@
   justify-content: flex-end;
   padding-right: 0;
   z-index: 0;
+  transform: translateX(calc((1 - var(--swipe-progress)) * 30px));
+  opacity: var(--swipe-progress);
+  // 跟手由变量直接驱动，这里不做 transition，避免拖动期滞后
 }
 
 .actionBtn {
@@ -49,7 +56,7 @@
   color: $white;
   font-size: 12px;
   cursor: pointer;
-  @include transition(opacity, 0.2s);
+  @include transition(opacity, $duration-fast);
 
   span {
     margin-top: 4px;
@@ -57,6 +64,7 @@
 
   &:active {
     opacity: 0.8;
+    transform: scale(0.94);
   }
 
   &.editBtn {
@@ -70,10 +78,13 @@
 }
 
 // 内容区域
+// 位移完全由 --swipe-x 驱动；transition 只负责松手后的弹性回弹，
+// 拖动期间由 JS 内联 transition: none 关闭，保证 1:1 跟手
 .swipeableContent {
   @include flex-between;
   background-color: $content-bg;
-  @include transition(transform);
+  transform: translateX(var(--swipe-x));
+  transition: transform 0.3s $ease-swipe;
   padding: 0 4px;
   cursor: grab;
   user-select: none;
@@ -83,6 +94,7 @@
   right: 0;
   bottom: 0;
   z-index: 2;
+  // 水平手势交给 JS，纵向滚动保留浏览器默认行为
   touch-action: pan-y;
   -webkit-touch-callout: none;
 

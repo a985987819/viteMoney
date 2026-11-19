@@ -55,6 +55,19 @@ $stardew-shadow-wood: inset 0 0 0 3px $stardew-wood-light;
 $stardew-shadow-soft: 0 4px 8px rgba(60, 47, 31, 0.2);
 $stardew-shadow-pixel: 4px 4px 0 $stardew-wood-darkest;
 
+// ==================== 动效 Token ====================
+// 缓动曲线：统一全局交互动效的手感
+$ease-standard: cubic-bezier(0.4, 0, 0.2, 1); // 常规状态切换
+$ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1); // 快进缓出，适合入场
+$ease-ios: cubic-bezier(0.32, 0.72, 0, 1); // iOS 页面转场手感
+$ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1); // 轻微回弹，适合弹出/激活
+$ease-swipe: cubic-bezier(0.175, 0.885, 0.32, 1); // 手势释放后的收敛
+
+// 时长：微交互要短，转场要稳
+$duration-fast: 0.15s; // 按压反馈、开关切换
+$duration-base: 0.25s; // 悬停、小元素入场
+$duration-page: 0.3s; // 页面转场、弹窗
+
 // ==================== 基础 Mixins ====================
 @mixin flex-center {
   display: flex;
@@ -68,8 +81,18 @@ $stardew-shadow-pixel: 4px 4px 0 $stardew-wood-darkest;
   justify-content: space-between;
 }
 
-@mixin transition($property: all, $duration: 0.3s) {
-  transition: $property $duration cubic-bezier(0.4, 0, 0.2, 1);
+@mixin transition($property: all, $duration: $duration-base, $easing: $ease-standard) {
+  transition: $property $duration $easing;
+}
+
+// 移动端通用按压反馈：按下轻微下压，松手弹回
+@mixin press-feedback($scale: 0.96) {
+  transition: transform $duration-fast $ease-standard;
+  will-change: transform;
+
+  &:active {
+    transform: scale($scale);
+  }
 }
 
 @mixin pixel-text-stroke {

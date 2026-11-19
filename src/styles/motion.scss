@@ -1,0 +1,23 @@
+/**
+ * 全局动效基础设施
+ * - 性能：只动画 transform/opacity，提示浏览器提前分层
+ * - 无障碍：prefers-reduced-motion 时将所有动画与过渡压缩到瞬时
+ * 注意：本文件是普通 SCSS（非 CSS Modules），规则天然全局生效，
+ * 不能用 :global 包装 —— 浏览器无法识别 :global 伪类会丢弃整条规则
+ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* 统一滚动容器的顺滑滚动（iOS 惯性 + 防橡皮筋溢出） */
+[data-phone-content] {
+  -webkit-overflow-scrolling: touch;
+}

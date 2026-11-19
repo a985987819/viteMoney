@@ -1,6 +1,7 @@
 /* 导入主题变量 */
 @use './styles/theme-variables.scss' as *;
 @use './styles/winter-profile-theme.scss' as winter;
+@use './styles/motion.scss';
 
 /* CDN 基础地址 */
 $cdn-base-url: 'https://vercel-icons.vercel.app';

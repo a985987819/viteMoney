@@ -205,6 +205,21 @@ $content-bg-url: "https://vercel-icons.vercel.app/homePageBg.png";
   @include pixel-text-stroke;
 }
 
+// 删除确认后的收起退场：左滑淡出并塌缩，时序与 Home performDelete 的等待对齐
+.recordCollapsing {
+  max-height: 56px;
+  overflow: hidden;
+  animation: recordCollapse 0.22s ease-in both;
+}
+
+@keyframes recordCollapse {
+  to {
+    max-height: 0;
+    opacity: 0;
+    transform: translateX(-24px);
+  }
+}
+
 // 记录列表头部
 .recordsHeader {
   @include flex-between;

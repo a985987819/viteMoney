@@ -12,6 +12,7 @@
   position: absolute;
   left: 0;
   top: 50%;
+  // 位移走 transform，避免 left 触发 layout 重排
   transform: translateY(-50%);
   width: 28px;
   height: 60px;
@@ -23,7 +24,7 @@
   cursor: pointer;
   box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
   z-index: 10;
-  transition: left 0.3s ease;
+  transition: transform 0.3s $ease-standard;
 
   &::after {
     content: "";
@@ -32,14 +33,16 @@
     border-top: 6px solid transparent;
     border-bottom: 6px solid transparent;
     border-left: 6px solid $white;
+    transition: transform 0.3s $ease-standard;
   }
 
   &.open {
-    left: 52px;
+    transform: translate(52px, -50%);
 
     &::after {
-      border-left: none;
-      border-right: 6px solid $white;
+      // 箭头方向翻转用 transform 完成，可平滑过渡
+      border-left: 6px solid $white;
+      transform: rotate(180deg);
     }
   }
 }

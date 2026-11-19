@@ -1,5 +1,8 @@
-import React, { useState, useMemo, useRef } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import styles from './index.module.scss';
+
+// 退出动画时长（ms），需与 index.module.scss 中 $dialog-exit-duration 保持一致
+const EXIT_ANIMATION_DURATION = 240;
 
 export interface DialogOption {
   text: string;
@@ -52,6 +55,30 @@ const StardewDialog: React.FC<StardewDialogProps> = ({
   const [currentPage, setCurrentPage] = useState(0);
   const contentRef = useRef<HTMLDivElement>(null);
 
+  // 出入场动画：visible 卸载前先播放退出动画
+  // mounted 决定是否渲染 DOM，closing 决定播放哪段动画
+  const [animationState, setAnimationState] = useState({
+    visible,
+    mounted: visible,
+    closing: false,
+  });
+
+  if (visible !== animationState.visible) {
+    setAnimationState({
+      visible,
+      mounted: visible ? true : animationState.mounted,
+      closing: !visible && animationState.mounted,
+    });
+  }
+
+  useEffect(() => {
+    if (!animationState.closing) return;
+    const timer = setTimeout(() => {
+      setAnimationState((prev) => ({ ...prev, mounted: false, closing: false }));
+    }, EXIT_ANIMATION_DURATION);
+    return () => clearTimeout(timer);
+  }, [animationState.closing]);
+
   const pages = useMemo(() => {
     if (Array.isArray(content)) {
       return content;
@@ -98,7 +125,7 @@ const StardewDialog: React.FC<StardewDialogProps> = ({
 
   const totalPages = pages.length;
 
-  if (!visible) return null;
+  if (!animationState.mounted) return null;
 
   // 判断是否是多步骤模式且有多个页面
   const hasMultiplePages = pages.length > 1;
@@ -141,8 +168,11 @@ const StardewDialog: React.FC<StardewDialogProps> = ({
   };
 
   return (
-    <div className={styles.dialogOverlay}>
-      <div className={styles.dialogContainer} onClick={handleDialogClick}>
+    <div className={`${styles.dialogOverlay} ${animationState.closing ? styles.overlayClosing : ''}`}>
+      <div
+        className={`${styles.dialogContainer} ${animationState.closing ? styles.containerClosing : ''}`}
+        onClick={handleDialogClick}
+      >
         {/* 左侧对话内容区域 */}
         <div className={styles.contentSection}>
           <div className={styles.contentText} ref={contentRef}>
