@@ -2,9 +2,13 @@
  * 资源加载管理器
  * 集中管理所有静态资源的预加载，包括字体、图片等
  * 支持缓存机制，避免重复加载
+ *
+ * 加载顺序：critical（加载页 + 首页主视觉 + 全局按钮皮肤）先行，
+ * secondary（其余页面素材）紧随其后 —— 全部完成后才进入应用，
+ * 页面渲染时图片直接命中 HTTP 缓存，不再逐张闪现
  */
 
-import { CDN_BASE_URL } from '../constants/cdn';
+import { CDN_PRELOAD_CRITICAL, CDN_PRELOAD_SECONDARY } from '../constants/cdn';
 
 // 单个资源加载超时时间：超时后放行，避免网络挂起导致应用永远无法进入
 const RESOURCE_TIMEOUT = 8000;
@@ -13,6 +17,8 @@ export interface ResourceItem {
   name: string;
   type: 'font' | 'image' | 'other';
   url: string;
+  /** 关键资源：优先加载，决定进入应用的临界路径 */
+  critical?: boolean;
 }
 
 export interface LoadProgress {
@@ -80,118 +86,16 @@ class ResourceLoader {
   private isLoading = false;
   private hasLoaded = false; // 标记是否已经加载过
 
-  // 默认资源列表 - 使用CDN
+  // 默认资源列表 - 从 cdn.ts 的预加载清单构建（critical 分组优先加载）
   private defaultResources: ResourceItem[] = [
-    // 字体
-    {
-      name: 'mainFont',
-      type: 'font',
-      url: `${CDN_BASE_URL}/fonts/Cubic_11.ttf`,
-    },
-    // 加载页背景
-    {
-      name: 'loadingBg',
-      type: 'image',
-      url: `${CDN_BASE_URL}/loadingBg.png`,
-    },
-    // UI 背景图
-    {
-      name: 'dialogBg',
-      type: 'image',
-      url: `${CDN_BASE_URL}/dialogBg.png`,
-    },
-    // 按钮背景
-    {
-      name: 'shortBtn',
-      type: 'image',
-      url: `${CDN_BASE_URL}/shortBtn.png`,
-    },
-    {
-      name: 'midBtn',
-      type: 'image',
-      url: `${CDN_BASE_URL}/midBtn.png`,
-    },
-    // 角色/头像图片
-    {
-      name: 'fallInFaint',
-      type: 'image',
-      url: `${CDN_BASE_URL}/fall in faint.png`,
-    },
-    {
-      name: 'profile',
-      type: 'image',
-      url: `${CDN_BASE_URL}/profile.png`,
-    },
-    {
-      name: 'hero',
-      type: 'image',
-      url: `${CDN_BASE_URL}/hero.png`,
-    },
-    // 导航图标
-    {
-      name: 'bill',
-      type: 'image',
-      url: `${CDN_BASE_URL}/bill.png`,
-    },
-    {
-      name: 'report',
-      type: 'image',
-      url: `${CDN_BASE_URL}/report.png`,
-    },
-    {
-      name: 'stardewvalley',
-      type: 'image',
-      url: `${CDN_BASE_URL}/stardewvalley.png`,
-    },
-    {
-      name: 'icon',
-      type: 'image',
-      url: `${CDN_BASE_URL}/icon.png`,
-    },
-    // 冬季主题背景与装饰
-    {
-      name: 'winterBg',
-      type: 'image',
-      url: `${CDN_BASE_URL}/winterBg.png`,
-    },
-    {
-      name: 'snowTop',
-      type: 'image',
-      url: `${CDN_BASE_URL}/snowTop.png`,
-    },
-    {
-      name: 'mineBtnBg',
-      type: 'image',
-      url: `${CDN_BASE_URL}/mineBtnBg.png`,
-    },
-    // 首页背景与预算卡片背景
-    {
-      name: 'homeBottom',
-      type: 'image',
-      url: `${CDN_BASE_URL}/home-bottom.png`,
-    },
-    {
-      name: 'budgetBg',
-      type: 'image',
-      url: `${CDN_BASE_URL}/budgetBg.png`,
-    },
-    // 其他界面装饰
-    {
-      name: 'chicken',
-      type: 'image',
-      url: `${CDN_BASE_URL}/chicken.png`,
-    },
-    {
-      name: 'closeBtn',
-      type: 'image',
-      url: `${CDN_BASE_URL}/closeBtn.png`,
-    },
-    {
-      name: 'backTop',
-      type: 'image',
-      url: `${CDN_BASE_URL}/backTop.png`,
-    },
-  ];
+    ...CDN_PRELOAD_CRITICAL,
+    ...CDN_PRELOAD_SECONDARY,
+  ].map((url): ResourceItem => ({
+    name: decodeURIComponent(url.split('/').pop() || url),
+    type: url.endsWith('.ttf') || url.endsWith('.otf') ? 'font' : 'image',
+    url,
+    critical: CDN_PRELOAD_CRITICAL.includes(url),
+  }));
 
   constructor() {
     this.resources = [...this.defaultResources];
@@ -373,8 +277,12 @@ class ResourceLoader {
       });
     }
 
-    // 并行加载所有资源
-    const loadPromises = this.resources.map(async (resource) => {
+    // 分两波加载：critical 决定进入应用的临界路径，先完成；
+    // secondary 紧随其后，进入对应页面时图片已在 HTTP 缓存中
+    const criticalResources = this.resources.filter(r => r.critical);
+    const secondaryResources = this.resources.filter(r => !r.critical);
+
+    const loadOne = async (resource: ResourceItem) => {
       try {
         switch (resource.type) {
           case 'font':
@@ -392,9 +300,10 @@ class ResourceLoader {
         console.error(`资源加载失败: ${resource.name}`, error);
         this.updateProgress(resource.name);
       }
-    });
+    };
 
-    await Promise.all(loadPromises);
+    await Promise.all(criticalResources.map(loadOne));
+    await Promise.all(secondaryResources.map(loadOne));
 
     // 所有资源加载完成
     this.hasLoaded = true;
