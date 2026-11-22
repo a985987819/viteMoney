@@ -459,5 +459,3 @@ var Budget = () => {
 };
 //#endregion
 export { Budget as default };
-
-//# sourceMappingURL=Budget-nriRcgml.js.map

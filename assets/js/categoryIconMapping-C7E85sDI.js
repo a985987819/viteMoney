@@ -1106,5 +1106,3 @@ function getSubCategories(mainCategoryName) {
 }
 //#endregion
 export { getSubCategories as a, matchCategory as c, getCategoryMapping as i, expenseCategoryList as n, getSubCategoryMapping as o, getCategoryIcon as r, incomeCategoryList as s, categoryIconMapping as t };
-
-//# sourceMappingURL=categoryIconMapping-C7E85sDI.js.map

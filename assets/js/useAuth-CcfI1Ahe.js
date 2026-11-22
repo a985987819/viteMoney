@@ -224,5 +224,3 @@ var useAuth = () => {
 };
 //#endregion
 export { http as i, useAuth as n, createApiService as r, AuthProvider as t };
-
-//# sourceMappingURL=useAuth-CcfI1Ahe.js.map

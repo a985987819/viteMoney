@@ -22941,5 +22941,3 @@ var require_zh_CN = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 }));
 //#endregion
 export { ConfigProvider as A, Radio as C, Select as D, Avatar as E, Empty as O, Calendar as S, button_default as T, Slider as _, Tag as a, Card as b, Popconfirm as c, List as d, Spin as f, DatePicker as g, drawer_default as h, TimePicker as i, App as k, Modal as l, Form as m, Upload as n, Switch as o, Input as p, timeline_default as r, progress_default as s, require_zh_CN as t, staticMethods as u, TypedInputNumber as v, require_dayjs_min as w, Tabs as x, Checkbox as y };
-
-//# sourceMappingURL=vendor-ui-BCl3WSDB.js.map

@@ -69692,5 +69692,3 @@ use(installUniversalTransition);
 use(installLabelLayout);
 //#endregion
 export { init$1 as t };
-
-//# sourceMappingURL=vendor-charts--BsBbs0R.js.map

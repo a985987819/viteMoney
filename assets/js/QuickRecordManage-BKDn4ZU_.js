@@ -285,5 +285,3 @@ var QuickRecordManagePage = () => {
 };
 //#endregion
 export { QuickRecordManagePage as default };
-
-//# sourceMappingURL=QuickRecordManage-BKDn4ZU_.js.map

@@ -366,5 +366,3 @@ var MyFridgePage = () => {
 };
 //#endregion
 export { MyFridgePage as default };
-
-//# sourceMappingURL=MyFridge-C9nNtLBd.js.map

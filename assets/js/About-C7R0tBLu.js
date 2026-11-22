@@ -271,5 +271,3 @@ var About = () => {
 };
 //#endregion
 export { About as default };
-
-//# sourceMappingURL=About-C7R0tBLu.js.map

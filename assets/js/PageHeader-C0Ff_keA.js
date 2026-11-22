@@ -40,5 +40,3 @@ var PageHeader = ({ title, onBack, backPath, rightContent, showBack = true, clas
 };
 //#endregion
 export { PageHeader as t };
-
-//# sourceMappingURL=PageHeader-C0Ff_keA.js.map

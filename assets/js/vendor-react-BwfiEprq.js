@@ -5281,5 +5281,3 @@ function $e5534fc185f7111e$export$2e2bcd8739ae039(props) {
 }
 //#endregion
 export { initReactI18next as _, replaceElement as a, createBrowserRouter as c, useNavigate as d, useRouteError as f, useTranslation as g, withTranslation as h, isFragment as i, isRouteErrorResponse as l, __vitePreload as m, require_jsx_runtime as n, RouterProvider2 as o, useSearchParams as p, cloneElement as r, Navigate as s, $e5534fc185f7111e$export$2e2bcd8739ae039 as t, useLocation as u };
-
-//# sourceMappingURL=vendor-react-BwfiEprq.js.map

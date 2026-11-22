@@ -2975,5 +2975,3 @@ var require_en = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 }));
 //#endregion
 export { require_zh_cn as n, axios as r, require_en as t };
-
-//# sourceMappingURL=vendor-utils-BEedu1iR.js.map

@@ -293,5 +293,3 @@ var SavingsOperate = () => {
 };
 //#endregion
 export { SavingsOperate as default };
-
-//# sourceMappingURL=SavingsOperate-DZwVWi7j.js.map

@@ -342,5 +342,3 @@ var CategoryManage = () => {
 };
 //#endregion
 export { CategoryManage as default };
-
-//# sourceMappingURL=CategoryManage-BGk2nbY-.js.map

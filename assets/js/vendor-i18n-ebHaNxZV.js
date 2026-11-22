@@ -2296,5 +2296,3 @@ var Browser = class {
 Browser.type = "languageDetector";
 //#endregion
 export { instance as n, Browser as t };
-
-//# sourceMappingURL=vendor-i18n-ebHaNxZV.js.map

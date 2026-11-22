@@ -87,5 +87,3 @@ var deleteLocalSavingsPlan = (planId) => {
 };
 //#endregion
 export { getLocalSavingsPlans as a, setActiveSavingsPlan as c, getLocalDeposits as i, getActiveSavingsPlan as n, saveLocalDeposit as o, getActiveSavingsPlanId as r, saveLocalSavingsPlans as s, deleteLocalSavingsPlan as t };
-
-//# sourceMappingURL=savings-Cyt6y-yF.js.map

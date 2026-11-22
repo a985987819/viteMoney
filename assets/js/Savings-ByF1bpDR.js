@@ -244,5 +244,3 @@ var Savings = () => {
 };
 //#endregion
 export { Savings as default };
-
-//# sourceMappingURL=Savings-ByF1bpDR.js.map

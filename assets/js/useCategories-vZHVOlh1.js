@@ -177,5 +177,3 @@ var useCategories = () => {
 };
 //#endregion
 export { useCategories as t };
-
-//# sourceMappingURL=useCategories-vZHVOlh1.js.map

@@ -89,5 +89,3 @@ function getCategoryEmoji(iconId) {
 }
 //#endregion
 export { getCategoryEmoji as t };
-
-//# sourceMappingURL=spriteIcons-D-QipidE.js.map

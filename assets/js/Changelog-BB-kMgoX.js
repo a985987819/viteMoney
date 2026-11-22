@@ -167,5 +167,3 @@ var Changelog = () => {
 };
 //#endregion
 export { Changelog as default };
-
-//# sourceMappingURL=Changelog-BB-kMgoX.js.map

@@ -567,5 +567,3 @@ var Features = () => {
 };
 //#endregion
 export { Features as default };
-
-//# sourceMappingURL=Features-BT4KgcUk.js.map

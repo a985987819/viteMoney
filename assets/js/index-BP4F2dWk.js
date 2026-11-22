@@ -3817,5 +3817,3 @@ var rootElement = document.getElementById("root");
 if (rootElement) (0, import_client.createRoot)(rootElement).render(/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root, {}));
 //#endregion
 export { setStoredLanguage as _, BottomNav as a, deleteRecord as c, getReportData as d, importRecords as f, usePWA as g, themeManager as h, SwipeableRecordItem as i, getBillsWithFilter as l, updateRecord as m, SpriteIcon as n, createRecord as o, removeDuplicates as p, ShareReceipt as r, deleteImportedRecords as s, StardewPanel as t, getRecords as u };
-
-//# sourceMappingURL=index-BP4F2dWk.js.map
