@@ -164,12 +164,14 @@ export default defineConfig(({ mode }) => {
         '@': path.resolve(__dirname, './src')
       }
     },
-    build: {
-      outDir: 'dist',
-      target: 'esnext',
-      minify: false,
-      cssMinify: true,
-      sourcemap: true,
+      build: {
+        outDir: 'dist',
+        target: 'esnext',
+        minify: false,
+        cssMinify: true,
+        // 生产构建默认不产出 sourcemap，避免暴露源码结构；
+        // 需要排查线上问题时以 GENERATE_SOURCEMAP=true 显式开启
+        sourcemap: process.env.GENERATE_SOURCEMAP === 'true',
       rollupOptions: {
         output: {
           manualChunks(id: string) {
