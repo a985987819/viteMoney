@@ -167,7 +167,9 @@ export default defineConfig(({ mode }) => {
       build: {
         outDir: 'dist',
         target: 'esnext',
-        minify: false,
+        // terser 压缩：线上 JS 体积约减半，PWA precache 与路由 chunk 下载量显著下降
+        // drop_console: false 保留日志便于线上排查
+        minify: 'terser',
         cssMinify: true,
         // 生产构建默认不产出 sourcemap，避免暴露源码结构；
         // 需要排查线上问题时以 GENERATE_SOURCEMAP=true 显式开启
